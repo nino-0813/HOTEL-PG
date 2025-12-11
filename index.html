@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HOTEL PG - INNOSHIMA - | 瀬戸内・因島の隠れ家リゾート</title>
+    <meta name="description" content="瀬戸内の凪に包まれる、因島の隠れ家リゾート「HOTEL PG」。全室オーシャンビューの客室、地産地消のダイニング、しまなみの絶景と共に、心安らぐひとときをお過ごしください。" />
+    <meta name="keywords" content="因島, 尾道, ホテル, 瀬戸内, しまなみ海道, リゾート, 宿泊, 旅行, 隠れ家" />
+    <meta property="og:title" content="HOTEL PG - INNOSHIMA - | 瀬戸内・因島の隠れ家リゾート" />
+    <meta property="og:description" content="瀬戸内の凪に包まれる、因島の隠れ家リゾート「HOTEL PG」。全室オーシャンビューの客室、地産地消のダイニング、しまなみの絶景と共に、心安らぐひとときをお過ごしください。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1549144405-b0b979a40679?q=80&w=2560&auto=format&fit=crop" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#fafafa" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500&family=Shippori+Mincho:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Noto Sans JP"', 'sans-serif'],
+              serif: ['"Shippori Mincho"', 'serif'],
+              display: ['"Cormorant Garamond"', 'serif'],
+              body: ['"Figtree"', 'sans-serif'],
+            },
+            colors: {
+              background: '#fafafa',
+              textMain: '#1c1c1c',
+              textLight: '#666666',
+              accent: '#8c8c8c',
+              divider: '#e0e0e0',
+            },
+            letterSpacing: {
+              tighter: '-0.02em',
+              widest: '.2em',
+              ultra: '.3em',
+            },
+            transitionTimingFunction: {
+              'expo-out': 'cubic-bezier(0.19, 1, 0.22, 1)',
+              'expo-in-out': 'cubic-bezier(0.19, 1, 0.22, 1)',
+            },
+            animation: {
+              'fade-in-up': 'fadeInUp 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards',
+            },
+            keyframes: {
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(40px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #fdfdfd; /* 少し明るめに変更 */
+      }
+      
+      /* Noise Texture Class */
+      .bg-noise {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -50;
+        pointer-events: none;
+        opacity: 0.4;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.5'/%3E%3C/svg%3E");
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      
+      .writing-vertical {
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+      }
+      
+      /* Smooth Scroll Adjustment for Framer Motion Parallax */
+      /* lenis.js or similar would be better for production smooth scroll, 
+         but keeping it simple with CSS for now */
+    </style>
+  </head>
+  <body class="text-textMain font-sans selection:bg-gray-200 selection:text-textMain">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
