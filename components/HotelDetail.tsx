@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ChevronRight, ChevronLeft, MapPin, Calendar } from 'lucide-react';
+import { ArrowLeft, ChevronRight, ChevronLeft, MapPin, Calendar, X } from 'lucide-react';
 
 interface Room {
   id: string;
@@ -32,22 +32,16 @@ const HotelDetail: React.FC<HotelDetailProps> = ({ hotel, onClose }) => {
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
   return (
-    <div className="fixed inset-0 z-[100] overflow-y-auto bg-background">
-      {/* Header */}
-      <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200">
-        <div className="container mx-auto px-6 md:px-12 py-6 flex items-center justify-between">
-          <button
-            onClick={onClose}
-            className="flex items-center gap-2 text-textMain hover:text-textLight transition-colors"
-          >
-            <ArrowLeft size={20} />
-            <span className="font-display text-sm tracking-[0.1em]">Back</span>
-          </button>
-          <h1 className="font-display text-2xl md:text-3xl font-light text-textMain tracking-[0.15em]">
-            {hotel.name}
-          </h1>
-          <div className="w-20"></div> {/* Spacer for centering */}
-        </div>
+    <div className="fixed inset-0 z-[100] overflow-y-auto bg-background pt-20">
+      {/* Back Button */}
+      <div className="fixed top-24 left-6 md:left-12 z-[102]">
+        <button
+          onClick={onClose}
+          className="flex items-center gap-2 text-textMain hover:text-textLight transition-colors bg-white/90 hover:bg-white px-4 py-2 rounded-full shadow-lg backdrop-blur-sm"
+        >
+          <ArrowLeft size={18} />
+          <span className="font-display text-sm tracking-[0.1em]">Back</span>
+        </button>
       </div>
 
       {/* Hero Image Gallery */}

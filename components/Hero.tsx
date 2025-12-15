@@ -38,7 +38,7 @@ const Hero: React.FC = () => {
   }, [currentImageUrl]);
 
   return (
-    <div id="home" className="relative w-full h-screen overflow-hidden">
+    <div id="home" className="relative w-full h-[70vh] sm:h-[80vh] md:h-screen overflow-hidden">
       {/* 背景画像を確実に表示 - backgroundImageスタイルを使用 */}
       <div 
         className="absolute inset-0 w-full h-full z-0"
@@ -52,7 +52,7 @@ const Hero: React.FC = () => {
         }}
       >
         {/* オーバーレイ */}
-        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-black/30 z-10" />
       </div>
 
       {/* ズームアニメーション用の別レイヤー */}
@@ -72,43 +72,44 @@ const Hero: React.FC = () => {
             repeat: Infinity,
             repeatType: "reverse"
           }}
-        >
-          <div className="absolute inset-0 bg-black/20" />
-        </motion.div>
+        />
       )}
+      
+      {/* オーバーレイレイヤー（常に表示） */}
+      <div className="absolute inset-0 bg-black/20 z-20" />
 
       {/* Content - タイトルとSCROLLインジケーター */}
-      <div className="relative z-10 h-full flex flex-col justify-center items-center text-white pb-12 pointer-events-none">
-        <div className="flex flex-col items-center">
+      <div className="relative z-10 h-full flex flex-col justify-center items-center text-white pointer-events-none">
+        <div className="flex flex-col items-center space-y-3 sm:space-y-4 md:space-y-6">
           {/* メインタイトル */}
           <motion.div
-            className="overflow-hidden mb-8"
+            className="overflow-hidden"
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
           >
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl tracking-[0.15em] font-light text-center leading-none text-white">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl tracking-[0.1em] sm:tracking-[0.15em] font-light text-center leading-tight text-white px-4">
               因島の夜に
             </h1>
           </motion.div>
 
           {/* サブタイトル */}
           <motion.div
-            className="overflow-hidden mb-12"
+            className="overflow-hidden"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
           >
-            <p className="font-serif text-sm md:text-base tracking-[0.3em] uppercase opacity-90 text-center drop-shadow-md">
+            <p className="font-serif text-xs sm:text-sm md:text-base tracking-[0.2em] sm:tracking-[0.3em] uppercase opacity-90 text-center drop-shadow-md px-4">
               INNOSHIMA, HIROSHIMA
             </p>
           </motion.div>
 
           {/* 装飾的な区切り線 */}
           <motion.div
-            className="w-[1px] bg-white/60 mb-12"
+            className="w-[1px] bg-white/60"
             initial={{ height: 0 }}
-            animate={{ height: 80 }}
+            animate={{ height: 40 }}
             transition={{ duration: 1, delay: 1, ease: "circOut" }}
           />
 
@@ -119,20 +120,20 @@ const Hero: React.FC = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1.2, delay: 1.2, ease: "easeOut" }}
           >
-            <p className="font-serif text-xs md:text-sm tracking-widest opacity-80 text-center font-light drop-shadow-md max-w-md px-6">
-              瀬戸内の凪に包まれる、<br className="hidden md:block" />
+            <p className="font-serif text-xs sm:text-sm md:text-sm tracking-widest opacity-80 text-center font-light drop-shadow-md max-w-md px-4 sm:px-6">
+              瀬戸内の凪に包まれる、<br className="hidden sm:block" />
               隠れ家リゾート
             </p>
           </motion.div>
 
           {/* HOTEL PG ブランド名 */}
           <motion.div
-            className="overflow-hidden mt-10 md:mt-12"
+            className="overflow-hidden"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1.2, delay: 1.5, ease: "easeOut" }}
           >
-            <p className="font-display text-2xl md:text-3xl lg:text-4xl tracking-[0.25em] text-white text-center font-normal drop-shadow-lg">
+            <p className="font-display text-xl sm:text-2xl md:text-3xl lg:text-4xl tracking-[0.2em] sm:tracking-[0.25em] text-white text-center font-normal drop-shadow-lg px-4">
               HOTEL PG
             </p>
           </motion.div>
@@ -140,7 +141,7 @@ const Hero: React.FC = () => {
 
         {/* Scroll Indicator */}
         <motion.div 
-          className="absolute bottom-12 flex flex-col items-center gap-2 opacity-60"
+          className="absolute bottom-8 sm:bottom-12 flex flex-col items-center gap-2 opacity-60"
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.6 }}
           transition={{ delay: 2, duration: 1 }}

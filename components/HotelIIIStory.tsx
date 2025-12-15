@@ -11,6 +11,7 @@ interface StoryStep {
   status: 'completed' | 'in-progress' | 'upcoming';
   image?: string;
   images?: string[];
+  video?: string; // 動画URL（YouTube、Vimeo、または直接動画ファイル）
   details?: string;
 }
 
@@ -32,6 +33,15 @@ const HotelIIIStory: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         '/images/gallery/3b28601b853b111ff30dfbe827b53f76e3b7ad52.47.9.26.3.jpg',
         '/images/gallery/82dfe2c3189024a50b197d92a5436f68492ab111.47.9.26.3.jpg'
       ],
+      // 動画を追加する場合の例（いずれかの形式で追加）:
+      // video: 'https://www.youtube.com/watch?v=VIDEO_ID', // YouTube動画（通常URL）
+      // video: 'https://youtu.be/VIDEO_ID', // YouTube短縮URL
+      // video: 'https://www.youtube.com/embed/VIDEO_ID', // YouTube埋め込みURL
+      // video: 'https://vimeo.com/VIDEO_ID', // Vimeo動画
+      // video: '/videos/construction.mp4', // ローカル動画ファイル（public/videos/に配置）
+      // 
+      // 注意: 動画を追加する場合は、上記のいずれかの形式でvideoプロパティを追加するだけで
+      // 自動的に動画プレビューと3倍速再生機能が有効になります。
       details: 'コンセプト設計では、HOTEL PG -I-、-II-で培った経験を活かし、さらに洗練された空間設計を目指しました。因島の自然環境と調和しながら、現代的な快適さを両立させる設計思想が確立されました。'
     },
     {
@@ -52,6 +62,7 @@ const HotelIIIStory: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       date: '2024.06',
       description: '建設工事が開始されました。因島の景観を損なわないよう、慎重に進められています。',
       status: 'completed',
+      video: '/videos/9264621d-2988-4217-b042-7f05aaf5f265.mp4',
       images: [
         '/images/hero/innnoshima1-1280.jpg'
       ],
@@ -136,23 +147,18 @@ const HotelIIIStory: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     }
   };
 
+
   return (
-    <div className="fixed inset-0 z-[100] overflow-y-auto bg-background">
-      {/* Header */}
-      <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200">
-        <div className="container mx-auto px-6 md:px-12 py-6 flex items-center justify-between">
-          <button
-            onClick={onClose}
-            className="flex items-center gap-2 text-textMain hover:text-textLight transition-colors"
-          >
-            <ArrowLeft size={20} />
-            <span className="font-display text-sm tracking-[0.1em]">Back</span>
-          </button>
-          <h1 className="font-display text-2xl md:text-3xl font-light text-textMain tracking-[0.15em]">
-            HOTEL PG -III-
-          </h1>
-          <div className="w-20"></div> {/* Spacer for centering */}
-        </div>
+    <div className="fixed inset-0 z-[100] overflow-y-auto bg-background pt-20">
+      {/* Back Button */}
+      <div className="fixed top-24 left-6 md:left-12 z-[102]">
+        <button
+          onClick={onClose}
+          className="flex items-center gap-2 text-textMain hover:text-textLight transition-colors bg-white/90 hover:bg-white px-4 py-2 rounded-full shadow-lg backdrop-blur-sm"
+        >
+          <ArrowLeft size={18} />
+          <span className="font-display text-sm tracking-[0.1em]">Back</span>
+        </button>
       </div>
 
       {/* Hero Section */}
@@ -208,51 +214,148 @@ const HotelIIIStory: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                       setSelectedStep(step);
                       setCurrentImageIndex(0);
                     }}
-                    className="w-full bg-white border border-gray-200 p-8 hover:border-textMain hover:shadow-lg transition-all duration-300 text-left group cursor-pointer"
+                    className="w-full bg-white border border-gray-200 overflow-hidden rounded-lg hover:border-textMain hover:shadow-xl transition-all duration-500 text-left group cursor-pointer transform hover:-translate-y-1"
                   >
-                    {/* Status Badge */}
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className={`w-2 h-2 rounded-full ${getStatusColor(step.status)}`}></div>
-                      <span className="font-display text-xs tracking-[0.2em] text-gray-500 uppercase">
-                        {getStatusText(step.status)}
-                      </span>
-                    </div>
-
-                    {/* Date */}
-                    {step.date && (
-                      <div className="flex items-center gap-2 mb-4 text-gray-500">
-                        <Calendar size={14} />
-                        <span className="font-body text-xs tracking-widest">{step.date}</span>
+                    {/* Image/Video Preview - 上部に配置 */}
+                    {(step.video || (step.images && step.images.length > 0) || step.status === 'in-progress' || step.status === 'upcoming') && (
+                      <div className="relative aspect-video bg-gray-100 overflow-hidden">
+                        {/* 動画がない場合 - メッセージを表示（画像は非表示） */}
+                        {!step.video ? (
+                          <div className="relative w-full h-full bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 flex items-center justify-center">
+                            <div className="text-center px-6">
+                              <div className="inline-block px-6 py-3 rounded-full mb-4 bg-gray-500 text-white shadow-lg">
+                                <span className="font-body text-sm font-medium tracking-widest uppercase">
+                                  {step.status === 'completed' ? '完了' : step.status === 'in-progress' ? '進行中' : '予定'}
+                                </span>
+                              </div>
+                              <div className="bg-white/90 backdrop-blur-sm text-textMain px-6 py-3 rounded-full shadow-lg">
+                                <span className="font-body text-sm tracking-widest">今後動画を追加予定</span>
+                              </div>
+                              {/* 動画アイコン */}
+                              <div className="mt-6 flex justify-center">
+                                <svg className="w-16 h-16 text-gray-500 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
+                        ) : step.video ? (
+                          <>
+                            {/* Video Thumbnail */}
+                            {(() => {
+                              if (step.video.includes('youtube.com') || step.video.includes('youtu.be')) {
+                                let videoId = '';
+                                if (step.video.includes('youtu.be/')) {
+                                  videoId = step.video.split('youtu.be/')[1]?.split('?')[0] || '';
+                                } else if (step.video.includes('youtube.com/watch?v=')) {
+                                  videoId = step.video.split('v=')[1]?.split('&')[0] || '';
+                                } else if (step.video.includes('youtube.com/embed/')) {
+                                  videoId = step.video.split('youtube.com/embed/')[1]?.split('?')[0] || '';
+                                }
+                                
+                                if (videoId) {
+                                  return (
+                                    <img 
+                                      src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+                                      alt={step.title}
+                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                      onError={(e) => {
+                                        const target = e.target as HTMLImageElement;
+                                        target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                                      }}
+                                    />
+                                  );
+                                }
+                              }
+                              
+                              if (step.video.endsWith('.mp4') || step.video.endsWith('.webm') || step.video.endsWith('.mov')) {
+                                return (
+                                  <video
+                                    src={step.video}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    muted
+                                    preload="metadata"
+                                    onLoadedMetadata={(e) => {
+                                      const video = e.target as HTMLVideoElement;
+                                      video.currentTime = 0.1;
+                                    }}
+                                  />
+                                );
+                              }
+                              
+                              return null;
+                            })()}
+                            
+                            {/* Play Button Overlay */}
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+                              <div className="w-16 h-16 bg-white/95 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-2xl">
+                                <svg className="w-8 h-8 text-textMain ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M8 5v14l11-7z"/>
+                                </svg>
+                              </div>
+                            </div>
+                            
+                            {/* Video Badge */}
+                            <div className="absolute bottom-3 right-3 bg-textMain/90 backdrop-blur-sm text-white text-xs font-body tracking-widest px-3 py-1.5 rounded-full flex items-center gap-2 z-10">
+                              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                              </svg>
+                              動画
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            {/* 完了ステップのみ画像を表示 */}
+                            <img 
+                              src={step.images![0]} 
+                              alt={step.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                              }}
+                            />
+                            {step.images!.length > 1 && (
+                              <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs font-body tracking-widest px-3 py-1.5 rounded-full z-10">
+                                +{step.images!.length - 1}
+                              </div>
+                            )}
+                          </>
+                        )}
                       </div>
                     )}
 
-                    {/* Title */}
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-display text-2xl md:text-3xl font-light text-textMain tracking-[0.1em]">
+                    {/* Content Section */}
+                    <div className="p-6 md:p-8">
+                      {/* Date & Status Row */}
+                      <div className="flex items-center justify-between mb-4">
+                        {step.date && (
+                          <div className="flex items-center gap-2 text-textMain">
+                            <Calendar size={16} className="text-textMain/60" />
+                            <span className="font-display text-sm font-medium tracking-widest">{step.date}</span>
+                          </div>
+                        )}
+                        <div className="px-3 py-1 rounded-full text-xs font-body tracking-widest uppercase bg-gray-100 text-gray-600">
+                          {getStatusText(step.status)}
+                        </div>
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="font-display text-2xl md:text-3xl font-light text-textMain mb-3 tracking-[0.1em] group-hover:text-textMain/80 transition-colors">
                         {step.title}
                       </h3>
-                      <ChevronRight size={20} className="text-gray-400 group-hover:text-textMain group-hover:translate-x-1 transition-all duration-300" />
-                    </div>
 
-                    {/* Description */}
-                    <p className="font-serif text-sm text-gray-700 leading-relaxed mb-4">
-                      {step.description}
-                    </p>
+                      {/* Description */}
+                      <p className="font-serif text-sm text-gray-600 leading-relaxed mb-4 line-clamp-3">
+                        {step.description}
+                      </p>
 
-                    {/* Image Preview */}
-                    {step.images && step.images.length > 0 && (
-                      <div className="mt-6 aspect-video bg-gray-100 overflow-hidden rounded">
-                        <img 
-                          src={step.images[0]} 
-                          alt={step.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                          }}
-                        />
+                      {/* View More Indicator */}
+                      <div className="flex items-center gap-2 text-textMain/60 group-hover:text-textMain transition-colors">
+                        <span className="font-body text-xs tracking-widest uppercase">詳細を見る</span>
+                        <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
                       </div>
-                    )}
+                    </div>
                   </button>
                 </div>
               </motion.div>
@@ -290,6 +393,15 @@ const HotelIIIStory: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="relative">
+                  {/* Back Button */}
+                  <button
+                    onClick={() => setSelectedStep(null)}
+                    className="absolute top-6 left-6 z-10 flex items-center gap-2 bg-white/90 hover:bg-white px-4 py-2 rounded-full shadow-lg transition-all"
+                  >
+                    <ArrowLeft size={18} className="text-textMain" />
+                    <span className="font-display text-sm tracking-[0.1em] text-textMain">Back</span>
+                  </button>
+
                   {/* Close Button */}
                   <button
                     onClick={() => setSelectedStep(null)}
@@ -298,8 +410,73 @@ const HotelIIIStory: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     <X size={20} className="text-textMain" />
                   </button>
 
+                  {/* Video Player */}
+                  {selectedStep.video && (
+                    <div className="relative aspect-video bg-black rounded-t-lg overflow-hidden">
+                      {(() => {
+                        // YouTube動画のURL解析
+                        if (selectedStep.video.includes('youtube.com') || selectedStep.video.includes('youtu.be')) {
+                          let videoId = '';
+                          if (selectedStep.video.includes('youtu.be/')) {
+                            videoId = selectedStep.video.split('youtu.be/')[1]?.split('?')[0] || '';
+                          } else if (selectedStep.video.includes('youtube.com/embed/')) {
+                            videoId = selectedStep.video.split('youtube.com/embed/')[1]?.split('?')[0] || '';
+                          } else if (selectedStep.video.includes('youtube.com/watch?v=')) {
+                            videoId = selectedStep.video.split('v=')[1]?.split('&')[0] || '';
+                          }
+                          
+                          if (videoId) {
+                            return (
+                              <iframe
+                                className="w-full h-full"
+                                src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`}
+                                title={selectedStep.title}
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                              />
+                            );
+                          }
+                        }
+                        
+                        // Vimeo動画
+                        if (selectedStep.video.includes('vimeo.com')) {
+                          const vimeoId = selectedStep.video.split('vimeo.com/')[1]?.split('?')[0] || '';
+                          if (vimeoId) {
+                            return (
+                              <iframe
+                                className="w-full h-full"
+                                src={`https://player.vimeo.com/video/${vimeoId}?title=0&byline=0&portrait=0`}
+                                title={selectedStep.title}
+                                allow="autoplay; fullscreen; picture-in-picture"
+                                allowFullScreen
+                              />
+                            );
+                          }
+                        }
+                        
+                        // 直接動画ファイル
+                        return (
+                          <video
+                            className="w-full h-full object-contain"
+                            controls
+                            autoPlay={false}
+                            playsInline
+                            src={selectedStep.video}
+                            ref={(video) => {
+                              if (video) {
+                                video.playbackRate = 3.0; // 3倍速で再生
+                              }
+                            }}
+                          >
+                            お使いのブラウザは動画タグをサポートしていません。
+                          </video>
+                        );
+                      })()}
+                    </div>
+                  )}
+
                   {/* Images Gallery */}
-                  {selectedStep.images && selectedStep.images.length > 0 && (
+                  {selectedStep.images && selectedStep.images.length > 0 && !selectedStep.video && (
                     <div className="relative">
                       {/* Main Image */}
                       <div className="aspect-video bg-gray-100 overflow-hidden">

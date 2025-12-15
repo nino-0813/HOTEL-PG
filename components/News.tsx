@@ -4,11 +4,11 @@ import { NEWS_ITEMS } from '../constants';
 
 const News: React.FC = () => {
   return (
-    <section id="news" className="relative py-32 md:py-48">
-      <div className="container mx-auto px-6 md:px-12 flex flex-col lg:flex-row gap-16 lg:gap-32">
+    <section id="news" className="relative py-20 sm:py-32 md:py-48">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 flex flex-col lg:flex-row gap-12 sm:gap-16 lg:gap-32">
          {/* Title */}
          <div className="lg:w-1/4">
-            <h2 className="font-display text-4xl md:text-5xl font-light text-textMain mb-6">Journal</h2>
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-light text-textMain mb-6">Journal</h2>
             <p className="font-serif text-sm text-gray-500 tracking-widest mb-8">お知らせ・読み物</p>
             <div className="w-12 h-[1px] bg-gray-300"></div>
          </div>

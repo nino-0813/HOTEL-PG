@@ -6,8 +6,12 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Rooms', href: '#rooms' },
   { label: 'Dining', href: '#dining' },
   { label: 'Activity', href: '#activity' },
-  { label: 'Access', href: '#access' },
-  { label: 'Reserve', href: '#reserve' },
+  { label: 'Gallery', href: '#gallery' },
+  { label: 'Reservation', href: '#reservation' },
+  { label: 'Hotels', href: '#hotels' },
+  { label: 'News', href: '#news' },
+  { label: 'FAQ', href: '#faq' },
+  { label: 'Contact', href: '#contact' },
 ];
 
 export const NEWS_ITEMS: NewsItem[] = [
@@ -32,21 +36,23 @@ export const CONTENT = {
     ],
     images: [
       // 穏やかな瀬戸内海、抽象的な水面
-      '/images/hero/9c5f3db7fb9775e6024e61d0162738da919bfda1.47.9.26.3.jpg',
+      '/images/gallery/DSC04519.png',
       // 光の差し込む静かな空間
       'https://images.unsplash.com/photo-1595820849301-49658b1e4b95?q=80&w=1200&auto=format&fit=crop'
     ]
   },
   rooms: {
     title: 'Rooms',
-    subtitle: '海と空に溶け込む、全室オーシャンビュー',
+    subtitle: '因島に佇む、静かな時間の器',
     description: [
-      'わずか5室の客室は、すべて海に面したスイートルーム。',
-      '窓を開ければ、しまなみの風が通り抜け、',
-      'テラスに出れば、手が届きそうな星空が広がります。',
+      '瀬戸内海に浮かぶ因島。',
+      'この島で生まれ、この島で育まれる時間があります。',
+      'HOTEL PGの客室は、因島の空気を感じ、',
+      '島のリズムに合わせて過ごすための空間。',
       'インテリアには、尾道の帆布や因島の除虫菊など、',
       '地域の素材をモダンにアレンジ。',
-      '時間を忘れて、ただ海を眺めるための特等席です。'
+      '窓を開ければ、しまなみの風が通り抜け、',
+      '因島の日常が、あなたの時間に溶け込みます。'
     ],
     images: [
       // ミニマルでモダンな客室、窓から海

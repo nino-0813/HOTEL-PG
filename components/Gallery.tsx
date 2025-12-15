@@ -5,28 +5,59 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface GalleryImage {
   src: string;
   alt: string;
-  category: 'view' | 'room' | 'food' | 'activity';
+  category: 'room' | 'food';
+  hotel?: 'I' | 'II' | 'III';
+  roomType?: 'single' | 'family';
 }
 
 const GALLERY_IMAGES: GalleryImage[] = [
-  { src: 'https://images.unsplash.com/photo-1549144405-b0b979a40679?q=80&w=1600&auto=format&fit=crop', alt: '瀬戸内海', category: 'view' },
-  { src: 'https://images.unsplash.com/photo-1548261314-9989f66085a8?q=80&w=1200&auto=format&fit=crop', alt: '島並み', category: 'view' },
-  { src: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1600&auto=format&fit=crop', alt: '客室', category: 'room' },
-  { src: 'https://images.unsplash.com/photo-1606744888344-4932389566b1?q=80&w=1200&auto=format&fit=crop', alt: 'テラス', category: 'room' },
-  { src: 'https://images.unsplash.com/photo-1600266046467-f472643a531e?q=80&w=1600&auto=format&fit=crop', alt: '料理', category: 'food' },
-  { src: 'https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?q=80&w=1200&auto=format&fit=crop', alt: 'レストラン', category: 'food' },
-  { src: 'https://images.unsplash.com/photo-1565673661608-d1445b2323cc?q=80&w=1600&auto=format&fit=crop', alt: 'サイクリング', category: 'activity' },
-  { src: 'https://images.unsplash.com/photo-1621235654575-e018df56c336?q=80&w=2560&auto=format&fit=crop', alt: '水面', category: 'view' },
-  { src: 'https://images.unsplash.com/photo-1595820849301-49658b1e4b95?q=80&w=1200&auto=format&fit=crop', alt: '館内', category: 'room' },
+  // ALL category images (6 images for 3x3 grid)
+  { src: '/images/gallery/DSC04514.png', alt: 'ホテル', category: 'room' },
+  { src: '/images/gallery/DSC04542.png', alt: 'ホテル', category: 'room' },
+  { src: '/images/gallery/DSC04555.png', alt: '客室', category: 'room' },
+  { src: '/images/gallery/DSC04582.png', alt: '客室', category: 'room' },
+  { src: '/images/gallery/DSC04591.png', alt: '客室', category: 'room' },
+  { src: '/images/gallery/DSC04605.png', alt: '客室', category: 'room' },
+  // ROOM category images - HOTEL PG -I- (7 images)
+  { src: '/images/gallery/スクリーンショット 2025-12-15 0.30.00.png', alt: '客室', category: 'room', hotel: 'I' },
+  { src: '/images/gallery/スクリーンショット 2025-12-15 0.30.12.png', alt: '客室', category: 'room', hotel: 'I' },
+  { src: '/images/gallery/スクリーンショット 2025-12-15 0.30.20.png', alt: '客室', category: 'room', hotel: 'I' },
+  { src: '/images/gallery/スクリーンショット 2025-12-15 0.30.32.png', alt: '客室', category: 'room', hotel: 'I' },
+  { src: '/images/gallery/スクリーンショット 2025-12-15 0.30.41.png', alt: '客室', category: 'room', hotel: 'I' },
+  { src: '/images/gallery/スクリーンショット 2025-12-15 0.30.53.png', alt: '客室', category: 'room', hotel: 'I' },
+  { src: '/images/gallery/スクリーンショット 2025-12-15 0.31.02.png', alt: '客室', category: 'room', hotel: 'I' },
+  // ROOM category images - HOTEL PG -II- シングルタイプ (3 images)
+  { src: '/images/gallery/DSC04635.png', alt: '客室', category: 'room', hotel: 'II', roomType: 'single' },
+  { src: '/images/gallery/スクリーンショット 2025-12-15 0.28.39.png', alt: '客室', category: 'room', hotel: 'II', roomType: 'single' },
+  { src: '/images/gallery/スクリーンショット 2025-12-15 0.28.56.png', alt: '客室', category: 'room', hotel: 'II', roomType: 'single' },
+  // ROOM category images - HOTEL PG -II- ファミリータイプ (6 images)
+  { src: '/images/gallery/DSC04582.png', alt: '客室', category: 'room', hotel: 'II', roomType: 'family' },
+  { src: '/images/gallery/DSC04613.png', alt: '客室', category: 'room', hotel: 'II', roomType: 'family' },
+  { src: '/images/gallery/DSC04591.png', alt: '客室', category: 'room', hotel: 'II', roomType: 'family' },
+  { src: '/images/gallery/DSC04593.png', alt: '客室', category: 'room', hotel: 'II', roomType: 'family' },
+  { src: '/images/gallery/DSC04605.png', alt: '客室', category: 'room', hotel: 'II', roomType: 'family' },
+  { src: '/images/gallery/DSC04576.png', alt: '客室', category: 'room', hotel: 'II', roomType: 'family' },
+  // FOOD category images
+  { src: '/images/gallery/82dfe2c3189024a50b197d92a5436f68492ab111.47.9.26.3.jpg', alt: '料理', category: 'food' },
+  { src: '/images/gallery/DSC04467 (1).png', alt: '料理', category: 'food' },
+  { src: '/images/gallery/DSC04496.png', alt: '料理', category: 'food' },
+  { src: '/images/gallery/DSC04494.png', alt: '料理', category: 'food' },
+  { src: '/images/gallery/DSC04487.png', alt: '料理', category: 'food' },
+  { src: '/images/gallery/DSC04480.png', alt: '料理', category: 'food' },
 ];
 
 const Gallery: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'view' | 'room' | 'food' | 'activity'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'room' | 'food'>('all');
   const [lightboxImage, setLightboxImage] = useState<number | null>(null);
 
   const filteredImages = selectedCategory === 'all' 
-    ? GALLERY_IMAGES 
+    ? GALLERY_IMAGES.slice(0, 6) // ALL category shows first 6 images (3x3 grid)
     : GALLERY_IMAGES.filter(img => img.category === selectedCategory);
+
+  // Separate room images by hotel
+  const roomImagesI = GALLERY_IMAGES.filter(img => img.category === 'room' && img.hotel === 'I');
+  const roomImagesIISingle = GALLERY_IMAGES.filter(img => img.category === 'room' && img.hotel === 'II' && img.roomType === 'single');
+  const roomImagesIIFamily = GALLERY_IMAGES.filter(img => img.category === 'room' && img.hotel === 'II' && img.roomType === 'family');
 
   const openLightbox = (index: number) => {
     setLightboxImage(index);
@@ -40,27 +71,28 @@ const Gallery: React.FC = () => {
 
   const navigateLightbox = (direction: 'prev' | 'next') => {
     if (lightboxImage === null) return;
-    const currentIndex = GALLERY_IMAGES.findIndex(img => 
-      filteredImages[lightboxImage] === img
+    const currentImages = selectedCategory === 'room' 
+      ? GALLERY_IMAGES.filter(img => img.category === 'room')
+      : filteredImages;
+    const currentIndex = currentImages.findIndex(img => 
+      currentImages[lightboxImage] === img
     );
     const newIndex = direction === 'next' 
-      ? (currentIndex + 1) % GALLERY_IMAGES.length
-      : (currentIndex - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length;
-    setLightboxImage(GALLERY_IMAGES.findIndex(img => img === filteredImages[newIndex]));
+      ? (currentIndex + 1) % currentImages.length
+      : (currentIndex - 1 + currentImages.length) % currentImages.length;
+    setLightboxImage(newIndex);
   };
 
   const categories = [
     { value: 'all' as const, label: 'All' },
-    { value: 'view' as const, label: 'View' },
     { value: 'room' as const, label: 'Room' },
     { value: 'food' as const, label: 'Food' },
-    { value: 'activity' as const, label: 'Activity' },
   ];
 
   return (
     <>
-      <section id="gallery" className="relative py-32 md:py-48">
-        <div className="container mx-auto px-6 md:px-12">
+      <section id="gallery" className="relative py-20 sm:py-32 md:py-48">
+        <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="flex flex-col items-center mb-20 text-center">
             <h2 className="font-display text-4xl md:text-6xl font-light text-textMain mb-6">Gallery</h2>
             <p className="font-serif text-sm text-gray-500 tracking-widest mb-10">因島の記憶</p>
@@ -87,37 +119,152 @@ const Gallery: React.FC = () => {
           </div>
 
           {/* Image Grid */}
-          <motion.div 
-            layout
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1"
-          >
-            <AnimatePresence>
-                {filteredImages.map((image, index) => (
-                <motion.div
-                    layout
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    key={`${image.src}-${index}`}
-                    onClick={() => openLightbox(index)}
-                    className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
+          {selectedCategory === 'room' ? (
+            // ROOM category: Show by hotel sections
+            <div className="space-y-16 md:space-y-24">
+              {/* HOTEL PG -I- */}
+              <div>
+                <h3 className="font-display text-2xl md:text-3xl font-light text-textMain mb-8 text-center">HOTEL PG -I-</h3>
+                <motion.div 
+                  layout
+                  className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1"
                 >
-                    <img
-                        src={image.src}
-                        alt={image.alt}
-                        className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
-                        loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500"></div>
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <span className="text-white text-xs font-serif tracking-widest border border-white/50 px-6 py-3 bg-black/10 backdrop-blur-sm">
-                            拡大
-                        </span>
-                    </div>
+                  <AnimatePresence>
+                    {roomImagesI.map((image, index) => (
+                      <motion.div
+                        layout
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        key={`${image.src}-${index}`}
+                        onClick={() => {
+                          const allRoomImages = GALLERY_IMAGES.filter(img => img.category === 'room');
+                          const roomIndex = allRoomImages.findIndex(img => img === image);
+                          openLightbox(roomIndex);
+                        }}
+                        className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
+                      >
+                        <img
+                          src={image.src}
+                          alt={image.alt}
+                          className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
+                          loading="lazy"
+                        />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 </motion.div>
-                ))}
-            </AnimatePresence>
-          </motion.div>
+              </div>
+
+              {/* HOTEL PG -II- */}
+              <div className="space-y-12 md:space-y-16">
+                <h3 className="font-display text-2xl md:text-3xl font-light text-textMain mb-8 text-center">HOTEL PG -II-</h3>
+                
+                {/* シングルタイプ */}
+                <div>
+                  <h4 className="font-display text-xl md:text-2xl font-light text-textMain mb-6 text-center">シングルタイプ</h4>
+                  <motion.div 
+                    layout
+                    className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1"
+                  >
+                    <AnimatePresence>
+                      {roomImagesIISingle.map((image, index) => (
+                        <motion.div
+                          layout
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          key={`${image.src}-${index}`}
+                          onClick={() => {
+                            const allRoomImages = GALLERY_IMAGES.filter(img => img.category === 'room');
+                            const roomIndex = allRoomImages.findIndex(img => img === image);
+                            openLightbox(roomIndex);
+                          }}
+                          className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
+                        >
+                          <img
+                            src={image.src}
+                            alt={image.alt}
+                            className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
+                            loading="lazy"
+                          />
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </motion.div>
+                </div>
+
+                {/* ファミリータイプ */}
+                <div>
+                  <h4 className="font-display text-xl md:text-2xl font-light text-textMain mb-6 text-center">ファミリータイプ</h4>
+                  <motion.div 
+                    layout
+                    className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1"
+                  >
+                    <AnimatePresence>
+                      {roomImagesIIFamily.map((image, index) => (
+                        <motion.div
+                          layout
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          key={`${image.src}-${index}`}
+                          onClick={() => {
+                            const allRoomImages = GALLERY_IMAGES.filter(img => img.category === 'room');
+                            const roomIndex = allRoomImages.findIndex(img => img === image);
+                            openLightbox(roomIndex);
+                          }}
+                          className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
+                        >
+                          <img
+                            src={image.src}
+                            alt={image.alt}
+                            className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
+                            loading="lazy"
+                          />
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* HOTEL PG -III- */}
+              <div>
+                <h3 className="font-display text-2xl md:text-3xl font-light text-textMain mb-8 text-center">HOTEL PG -III-</h3>
+                <div className="text-center py-12 md:py-16">
+                  <p className="font-serif text-base md:text-lg text-gray-500">オープンまで、もうしばらくお待ちください</p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            // Other categories: Normal grid
+            <motion.div 
+              layout
+              className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1"
+            >
+              <AnimatePresence>
+                  {filteredImages.map((image, index) => (
+                  <motion.div
+                      layout
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      key={`${image.src}-${index}`}
+                      onClick={() => openLightbox(index)}
+                      className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
+                  >
+                      <img
+                          src={image.src}
+                          alt={image.alt}
+                          className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
+                          loading="lazy"
+                      />
+                  </motion.div>
+                  ))}
+              </AnimatePresence>
+            </motion.div>
+          )}
         </div>
       </section>
 
@@ -163,18 +310,18 @@ const Gallery: React.FC = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <motion.img
-              key={filteredImages[lightboxImage].src}
+              key={(selectedCategory === 'room' ? GALLERY_IMAGES.filter(img => img.category === 'room') : filteredImages)[lightboxImage].src}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
-              src={filteredImages[lightboxImage].src}
-              alt={filteredImages[lightboxImage].alt}
+              src={(selectedCategory === 'room' ? GALLERY_IMAGES.filter(img => img.category === 'room') : filteredImages)[lightboxImage].src}
+              alt={(selectedCategory === 'room' ? GALLERY_IMAGES.filter(img => img.category === 'room') : filteredImages)[lightboxImage].alt}
               className="max-w-full max-h-full object-contain shadow-2xl"
             />
           </div>
 
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60 text-xs font-serif tracking-widest">
-            {filteredImages[lightboxImage].alt}
+            {(selectedCategory === 'room' ? GALLERY_IMAGES.filter(img => img.category === 'room') : filteredImages)[lightboxImage].alt}
           </div>
         </motion.div>
       )}

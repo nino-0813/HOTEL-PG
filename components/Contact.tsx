@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, Phone, Mail, MapPin, Calendar, Users } from 'lucide-react';
+import { Send, Phone, Mail, MapPin, Calendar, Users, Instagram } from 'lucide-react';
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -44,12 +44,12 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="relative py-32 md:py-48">
-      <div className="container mx-auto px-6 md:px-12">
-        <div className="flex flex-col lg:flex-row gap-16 lg:gap-32">
+    <section id="contact" className="relative py-20 sm:py-32 md:py-48">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12">
+        <div className="flex flex-col lg:flex-row gap-12 sm:gap-16 lg:gap-32">
           {/* Left Side - Info */}
           <div className="lg:w-2/5">
-            <h2 className="font-display text-4xl md:text-5xl font-light text-textMain mb-6">Contact</h2>
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-light text-textMain mb-6">Contact</h2>
             <p className="font-serif text-sm text-gray-500 tracking-widest mb-12">お問い合わせ・ご予約</p>
             <div className="w-12 h-[1px] bg-gray-300 mb-12"></div>
 
@@ -59,7 +59,7 @@ const Contact: React.FC = () => {
                 <div>
                   <p className="font-serif text-sm text-textMain mb-2">住所</p>
                   <p className="font-serif text-xs text-textLight leading-relaxed">
-                    広島県尾道市因島田熊町
+                    広島県尾道市因島土生町1896-17
                   </p>
                 </div>
               </div>
@@ -68,18 +68,23 @@ const Contact: React.FC = () => {
                 <Phone size={20} className="text-textMain mt-1 flex-shrink-0" />
                 <div>
                   <p className="font-serif text-sm text-textMain mb-2">電話番号</p>
-                  <a href="tel:0845000000" className="font-serif text-xs text-textLight hover:text-textMain transition-colors">
-                    0845-00-0000
+                  <a href="tel:05054446620" className="font-serif text-xs text-textLight hover:text-textMain transition-colors">
+                    050-5444-6620
                   </a>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <Mail size={20} className="text-textMain mt-1 flex-shrink-0" />
+                <Instagram size={20} className="text-textMain mt-1 flex-shrink-0" />
                 <div>
-                  <p className="font-serif text-sm text-textMain mb-2">メール</p>
-                  <a href="mailto:info@hotelpg-innoshima.jp" className="font-serif text-xs text-textLight hover:text-textMain transition-colors">
-                    info@hotelpg-innoshima.jp
+                  <p className="font-serif text-sm text-textMain mb-2">Instagram</p>
+                  <a 
+                    href="https://www.instagram.com/hotel_pg_/" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-serif text-xs text-textLight hover:text-textMain transition-colors"
+                  >
+                    @hotel_pg_
                   </a>
                 </div>
               </div>
@@ -95,147 +100,177 @@ const Contact: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Side - Form */}
+          {/* Right Side - Reservation Links */}
           <div className="lg:w-3/5">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="name" className="block font-serif text-xs text-textMain mb-2 tracking-wider">
-                    お名前 <span className="text-gray-400">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border-b border-gray-300 bg-transparent font-serif text-sm text-textMain focus:outline-none focus:border-textMain transition-colors"
-                    placeholder="山田 太郎"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block font-serif text-xs text-textMain mb-2 tracking-wider">
-                    メールアドレス <span className="text-gray-400">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border-b border-gray-300 bg-transparent font-serif text-sm text-textMain focus:outline-none focus:border-textMain transition-colors"
-                    placeholder="example@email.com"
-                  />
-                </div>
+            <div className="space-y-6">
+              {/* HOTEL PG -I- */}
+              <div className="border border-gray-200 p-6 sm:p-8 hover:border-textMain transition-all duration-300 group">
+                <h3 className="font-display text-2xl font-light text-textMain mb-3 tracking-[0.1em]">
+                  HOTEL PG -I-
+                </h3>
+                <p className="font-serif text-sm text-gray-600 mb-6 leading-relaxed">
+                  瀬戸内の静寂に包まれた、最初の隠れ家リゾート
+                </p>
+                <a
+                  href="https://vacation-stay.jp/listings/917598?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg w-full sm:w-auto text-center"
+                >
+                  予約する →
+                </a>
               </div>
 
-              <div>
-                <label htmlFor="phone" className="block font-serif text-xs text-textMain mb-2 tracking-wider">
-                  電話番号
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-b border-gray-300 bg-transparent font-serif text-sm text-textMain focus:outline-none focus:border-textMain transition-colors"
-                  placeholder="090-1234-5678"
-                />
+              {/* HOTEL PG -II- シングルタイプ */}
+              <div className="border border-gray-200 p-6 sm:p-8 hover:border-textMain transition-all duration-300 group">
+                <h3 className="font-display text-2xl font-light text-textMain mb-3 tracking-[0.1em]">
+                  HOTEL PG -II- 【シングルタイプ】
+                </h3>
+                <p className="font-serif text-sm text-gray-600 mb-6 leading-relaxed">
+                  海と空が交わる場所に佇む、第二の特別な空間
+                </p>
+                <a
+                  href="https://vacation-stay.jp/listings/1138330?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg w-full sm:w-auto text-center"
+                >
+                  予約する →
+                </a>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* HOTEL PG -II- ファミリータイプ */}
+              <div className="border border-gray-200 p-6 sm:p-8 hover:border-textMain transition-all duration-300 group">
+                <h3 className="font-display text-2xl font-light text-textMain mb-3 tracking-[0.1em]">
+                  HOTEL PG -II- 【ファミリータイプ】
+                </h3>
+                <p className="font-serif text-sm text-gray-600 mb-6 leading-relaxed">
+                  ご家族での滞在に最適な広々とした空間
+                </p>
+                <a
+                  href="https://vacation-stay.jp/listings/1138335?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg w-full sm:w-auto text-center"
+                >
+                  予約する →
+                </a>
+              </div>
+
+              {/* ITMツーリストサービス */}
+              <div className="border border-gray-200 p-8 hover:border-textMain transition-all duration-300 bg-gray-50 group">
+                <h3 className="font-display text-xl font-light text-textMain mb-2 tracking-[0.1em]">
+                  有限会社ITMツーリストサービス
+                </h3>
+                <p className="font-serif text-xs text-gray-500 mb-6">
+                  因島の旅行会社
+                </p>
+                <a
+                  href="https://itm-t.jp/?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block font-display text-sm tracking-[0.2em] uppercase text-textMain border-2 border-textMain px-8 py-4 hover:bg-textMain hover:text-white transition-colors duration-300"
+                >
+                  詳細を見る →
+                </a>
+              </div>
+            </div>
+
+            {/* Contact Form Section */}
+            <div className="mt-12 pt-12 border-t border-gray-200">
+              <h3 className="font-display text-2xl font-light text-textMain mb-6 tracking-[0.1em]">
+                お問い合わせフォーム
+              </h3>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="name" className="block font-serif text-xs text-textMain mb-2 tracking-wider">
+                      お名前 <span className="text-gray-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      required
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border-b border-gray-300 bg-transparent font-serif text-sm text-textMain focus:outline-none focus:border-textMain transition-colors"
+                      placeholder="山田 太郎"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="email" className="block font-serif text-xs text-textMain mb-2 tracking-wider">
+                      メールアドレス <span className="text-gray-400">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border-b border-gray-300 bg-transparent font-serif text-sm text-textMain focus:outline-none focus:border-textMain transition-colors"
+                      placeholder="example@email.com"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label htmlFor="checkIn" className="block font-serif text-xs text-textMain mb-2 tracking-wider flex items-center gap-2">
-                    <Calendar size={14} />
-                    チェックイン
+                  <label htmlFor="phone" className="block font-serif text-xs text-textMain mb-2 tracking-wider">
+                    電話番号
                   </label>
                   <input
-                    type="date"
-                    id="checkIn"
-                    name="checkIn"
-                    value={formData.checkIn}
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border-b border-gray-300 bg-transparent font-serif text-sm text-textMain focus:outline-none focus:border-textMain transition-colors"
+                    placeholder="090-1234-5678"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="checkOut" className="block font-serif text-xs text-textMain mb-2 tracking-wider flex items-center gap-2">
-                    <Calendar size={14} />
-                    チェックアウト
+                  <label htmlFor="message" className="block font-serif text-xs text-textMain mb-2 tracking-wider">
+                    メッセージ
                   </label>
-                  <input
-                    type="date"
-                    id="checkOut"
-                    name="checkOut"
-                    value={formData.checkOut}
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    value={formData.message}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border-b border-gray-300 bg-transparent font-serif text-sm text-textMain focus:outline-none focus:border-textMain transition-colors"
+                    className="w-full px-4 py-3 border-b border-gray-300 bg-transparent font-serif text-sm text-textMain focus:outline-none focus:border-textMain transition-colors resize-none"
+                    placeholder="ご質問やご要望がございましたら、お気軽にお書きください。"
                   />
                 </div>
 
-                <div>
-                  <label htmlFor="guests" className="block font-serif text-xs text-textMain mb-2 tracking-wider flex items-center gap-2">
-                    <Users size={14} />
-                    人数
-                  </label>
-                  <input
-                    type="number"
-                    id="guests"
-                    name="guests"
-                    min="1"
-                    max="8"
-                    value={formData.guests}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border-b border-gray-300 bg-transparent font-serif text-sm text-textMain focus:outline-none focus:border-textMain transition-colors"
-                    placeholder="2"
-                  />
-                </div>
-              </div>
+                {submitStatus === 'success' && (
+                  <div className="p-4 bg-green-50 border border-green-200">
+                    <p className="font-serif text-sm text-green-800">
+                      お問い合わせありがとうございます。担当者より2営業日以内にご連絡いたします。
+                    </p>
+                  </div>
+                )}
 
-              <div>
-                <label htmlFor="message" className="block font-serif text-xs text-textMain mb-2 tracking-wider">
-                  メッセージ
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  value={formData.message}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-b border-gray-300 bg-transparent font-serif text-sm text-textMain focus:outline-none focus:border-textMain transition-colors resize-none"
-                  placeholder="ご質問やご要望がございましたら、お気軽にお書きください。"
-                />
-              </div>
-
-              {submitStatus === 'success' && (
-                <div className="p-4 bg-green-50 border border-green-200">
-                  <p className="font-serif text-sm text-green-800">
-                    お問い合わせありがとうございます。担当者より2営業日以内にご連絡いたします。
-                  </p>
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="group relative w-full md:w-auto px-12 py-4 border border-textMain text-textMain overflow-hidden transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed mt-8"
-              >
-                <span className="absolute inset-0 bg-textMain translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)]"></span>
-                <span className="relative font-body text-xs tracking-[0.2em] uppercase group-hover:text-white transition-colors duration-500 flex items-center justify-center gap-2">
-                  {isSubmitting ? '送信中...' : (
-                    <>
-                      <Send size={14} />
-                      送信する
-                    </>
-                  )}
-                </span>
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="group relative w-full md:w-auto px-12 py-4 border border-textMain text-textMain overflow-hidden transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed mt-8"
+                >
+                  <span className="absolute inset-0 bg-textMain translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)]"></span>
+                  <span className="relative font-body text-xs tracking-[0.2em] uppercase group-hover:text-white transition-colors duration-500 flex items-center justify-center gap-2">
+                    {isSubmitting ? '送信中...' : (
+                      <>
+                        <Send size={14} />
+                        送信する
+                      </>
+                    )}
+                  </span>
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>

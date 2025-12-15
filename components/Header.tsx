@@ -27,24 +27,34 @@ const Header: React.FC = () => {
   return (
     <>
       <motion.header
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 w-full z-[101] transition-all duration-500 ${
           isScrolled 
-            ? 'py-4 backdrop-blur-md bg-gray-100/90' 
-            : 'bg-transparent py-8'
+            ? 'py-3 sm:py-4 backdrop-blur-md bg-gray-100/90' 
+            : 'bg-transparent py-4 sm:py-8'
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <div className="container mx-auto px-6 md:px-12 flex justify-end items-center">
+        <div className="container mx-auto px-4 sm:px-6 md:px-12 flex justify-end items-center">
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-12">
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
             {NAV_ITEMS.map((item) => (
               <a
                 key={item.label}
                 href={item.href}
-                className={`font-body text-[11px] tracking-[0.2em] uppercase hover:opacity-60 transition-all duration-300 relative group ${
+                onClick={(e) => {
+                  e.preventDefault();
+                  const targetId = item.href.substring(1);
+                  const targetElement = document.getElementById(targetId);
+                  if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  } else if (item.href === '#home') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                className={`font-body text-[10px] xl:text-[11px] tracking-[0.2em] uppercase hover:opacity-60 transition-all duration-300 relative group ${
                   isScrolled ? 'text-textMain' : 'text-white drop-shadow-sm'
                 }`}
               >
@@ -54,17 +64,6 @@ const Header: React.FC = () => {
                 }`}></span>
               </a>
             ))}
-            
-            <a
-              href="#reserve"
-              className={`ml-6 px-10 py-3 font-serif text-xs tracking-widest uppercase transition-all duration-500 border ${
-                isScrolled
-                  ? 'border-textMain text-textMain hover:bg-textMain hover:text-white'
-                  : 'border-white text-white hover:bg-white hover:text-textMain backdrop-blur-sm bg-white/5'
-              }`}
-            >
-              Reserve
-            </a>
           </nav>
 
           {/* Mobile Actions */}
@@ -106,7 +105,21 @@ const Header: React.FC = () => {
                   >
                     <a
                       href={item.href}
-                      onClick={() => setIsMenuOpen(false)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsMenuOpen(false);
+                        const targetId = item.href.substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        if (targetElement) {
+                          setTimeout(() => {
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }, 300);
+                        } else if (item.href === '#home') {
+                          setTimeout(() => {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }, 300);
+                        }
+                      }}
                       className="block font-display text-5xl md:text-7xl font-light text-textMain hover:text-gray-500 transition-colors"
                     >
                       <span className="text-sm font-body mr-6 text-gray-400 tracking-widest align-middle">0{idx + 1}</span>

@@ -25,7 +25,7 @@ const Footer: React.FC = () => {
               transition={{ duration: 0.8 }}
               className="font-display text-5xl md:text-7xl tracking-wider mb-10 text-white font-light"
             >
-              Reserve a Stay
+              HOTEL PG
             </motion.h2>
             
             <motion.a 
@@ -43,11 +43,18 @@ const Footer: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-end border-t border-white/10 pt-10 gap-8">
            <div className="flex flex-col gap-4">
               <h3 className="font-display text-2xl tracking-widest">HOTEL PG</h3>
-              <p className="text-xs text-white/50 font-serif">広島県尾道市因島田熊町</p>
+              <p className="text-xs text-white/50 font-serif">広島県尾道市因島土生町1896-17</p>
            </div>
 
            <div className="flex gap-8 text-[10px] tracking-widest uppercase text-white/50">
-              <a href="#" className="hover:text-white transition-colors">Instagram</a>
+              <a 
+                href="https://www.instagram.com/hotel_pg_/" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors"
+              >
+                Instagram
+              </a>
               <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
               <span>© HOTEL PG</span>
            </div>
