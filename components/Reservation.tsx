@@ -96,28 +96,6 @@ const Reservation: React.FC = () => {
             </a>
           </motion.div>
 
-          {/* ITMツーリストサービス */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="border border-gray-200 p-6 sm:p-8 hover:border-textMain transition-all duration-300 bg-gray-50 group"
-          >
-            <h3 className="font-display text-xl font-light text-textMain mb-2 tracking-[0.1em]">
-              有限会社ITMツーリストサービス
-            </h3>
-            <p className="font-serif text-xs text-gray-500 mb-6">
-              因島の旅行会社
-            </p>
-            <a
-              href="https://itm-t.jp/?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block font-display text-sm tracking-[0.2em] uppercase text-textMain border-2 border-textMain px-8 py-4 hover:bg-textMain hover:text-white transition-colors duration-300"
-            >
-              詳細を見る →
-            </a>
-          </motion.div>
         </div>
       </div>
     </section>

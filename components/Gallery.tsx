@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -49,6 +49,34 @@ const GALLERY_IMAGES: GalleryImage[] = [
 const Gallery: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'room' | 'food'>('all');
   const [lightboxImage, setLightboxImage] = useState<number | null>(null);
+  const [visibleImages, setVisibleImages] = useState<Set<string>>(new Set());
+  const imageRefs = useRef<Map<string, HTMLImageElement>>(new Map());
+
+  // IntersectionObserver for lazy loading optimization
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const img = entry.target as HTMLImageElement;
+            setVisibleImages((prev) => new Set([...prev, img.src]));
+            observer.unobserve(img);
+          }
+        });
+      },
+      { rootMargin: '50px' }
+    );
+
+    imageRefs.current.forEach((img) => {
+      if (img) observer.observe(img);
+    });
+
+    return () => {
+      imageRefs.current.forEach((img) => {
+        if (img) observer.unobserve(img);
+      });
+    };
+  }, [selectedCategory]);
 
   const filteredImages = selectedCategory === 'all' 
     ? GALLERY_IMAGES.slice(0, 6) // ALL category shows first 6 images (3x3 grid)
@@ -125,35 +153,31 @@ const Gallery: React.FC = () => {
               {/* HOTEL PG -I- */}
               <div>
                 <h3 className="font-display text-2xl md:text-3xl font-light text-textMain mb-8 text-center">HOTEL PG -I-</h3>
-                <motion.div 
-                  layout
-                  className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1"
-                >
-                  <AnimatePresence>
-                    {roomImagesI.map((image, index) => (
-                      <motion.div
-                        layout
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        key={`${image.src}-${index}`}
-                        onClick={() => {
-                          const allRoomImages = GALLERY_IMAGES.filter(img => img.category === 'room');
-                          const roomIndex = allRoomImages.findIndex(img => img === image);
-                          openLightbox(roomIndex);
+                <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1">
+                  {roomImagesI.map((image, index) => (
+                    <div
+                      key={`${image.src}-${index}`}
+                      onClick={() => {
+                        const allRoomImages = GALLERY_IMAGES.filter(img => img.category === 'room');
+                        const roomIndex = allRoomImages.findIndex(img => img === image);
+                        openLightbox(roomIndex);
+                      }}
+                      className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
+                    >
+                      <img
+                        ref={(el) => {
+                          if (el) imageRefs.current.set(image.src, el);
                         }}
-                        className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
-                      >
-                        <img
-                          src={image.src}
-                          alt={image.alt}
-                          className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
-                          loading="lazy"
-                        />
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </motion.div>
+                        src={image.src}
+                        alt={image.alt}
+                        className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
+                        loading={index < 6 ? "eager" : "lazy"}
+                        fetchPriority={index < 3 ? "high" : "auto"}
+                        decoding="async"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* HOTEL PG -II- */}
@@ -163,69 +187,61 @@ const Gallery: React.FC = () => {
                 {/* シングルタイプ */}
                 <div>
                   <h4 className="font-display text-xl md:text-2xl font-light text-textMain mb-6 text-center">シングルタイプ</h4>
-                  <motion.div 
-                    layout
-                    className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1"
-                  >
-                    <AnimatePresence>
-                      {roomImagesIISingle.map((image, index) => (
-                        <motion.div
-                          layout
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          key={`${image.src}-${index}`}
-                          onClick={() => {
-                            const allRoomImages = GALLERY_IMAGES.filter(img => img.category === 'room');
-                            const roomIndex = allRoomImages.findIndex(img => img === image);
-                            openLightbox(roomIndex);
+                  <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1">
+                    {roomImagesIISingle.map((image, index) => (
+                      <div
+                        key={`${image.src}-${index}`}
+                        onClick={() => {
+                          const allRoomImages = GALLERY_IMAGES.filter(img => img.category === 'room');
+                          const roomIndex = allRoomImages.findIndex(img => img === image);
+                          openLightbox(roomIndex);
+                        }}
+                        className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
+                      >
+                        <img
+                          ref={(el) => {
+                            if (el) imageRefs.current.set(image.src, el);
                           }}
-                          className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
-                        >
-                          <img
-                            src={image.src}
-                            alt={image.alt}
-                            className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
-                            loading="lazy"
-                          />
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                  </motion.div>
+                          src={image.src}
+                          alt={image.alt}
+                          className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
+                          loading={index < 3 ? "eager" : "lazy"}
+                          fetchPriority={index < 2 ? "high" : "auto"}
+                          decoding="async"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* ファミリータイプ */}
                 <div>
                   <h4 className="font-display text-xl md:text-2xl font-light text-textMain mb-6 text-center">ファミリータイプ</h4>
-                  <motion.div 
-                    layout
-                    className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1"
-                  >
-                    <AnimatePresence>
-                      {roomImagesIIFamily.map((image, index) => (
-                        <motion.div
-                          layout
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          key={`${image.src}-${index}`}
-                          onClick={() => {
-                            const allRoomImages = GALLERY_IMAGES.filter(img => img.category === 'room');
-                            const roomIndex = allRoomImages.findIndex(img => img === image);
-                            openLightbox(roomIndex);
+                  <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1">
+                    {roomImagesIIFamily.map((image, index) => (
+                      <div
+                        key={`${image.src}-${index}`}
+                        onClick={() => {
+                          const allRoomImages = GALLERY_IMAGES.filter(img => img.category === 'room');
+                          const roomIndex = allRoomImages.findIndex(img => img === image);
+                          openLightbox(roomIndex);
+                        }}
+                        className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
+                      >
+                        <img
+                          ref={(el) => {
+                            if (el) imageRefs.current.set(image.src, el);
                           }}
-                          className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
-                        >
-                          <img
-                            src={image.src}
-                            alt={image.alt}
-                            className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
-                            loading="lazy"
-                          />
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                  </motion.div>
+                          src={image.src}
+                          alt={image.alt}
+                          className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
+                          loading={index < 6 ? "eager" : "lazy"}
+                          fetchPriority={index < 3 ? "high" : "auto"}
+                          decoding="async"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -239,31 +255,27 @@ const Gallery: React.FC = () => {
             </div>
           ) : (
             // Other categories: Normal grid
-            <motion.div 
-              layout
-              className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1"
-            >
-              <AnimatePresence>
-                  {filteredImages.map((image, index) => (
-                  <motion.div
-                      layout
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
+            <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1">
+                {filteredImages.map((image, index) => (
+                  <div
                       key={`${image.src}-${index}`}
                       onClick={() => openLightbox(index)}
                       className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
                   >
                       <img
+                          ref={(el) => {
+                            if (el) imageRefs.current.set(image.src, el);
+                          }}
                           src={image.src}
                           alt={image.alt}
                           className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
-                          loading="lazy"
+                          loading={index < 6 ? "eager" : "lazy"}
+                          fetchPriority={index < 3 ? "high" : "auto"}
+                          decoding="async"
                       />
-                  </motion.div>
-                  ))}
-              </AnimatePresence>
-            </motion.div>
+                  </div>
+                ))}
+            </div>
           )}
         </div>
       </section>

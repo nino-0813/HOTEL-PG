@@ -145,7 +145,7 @@ const StayPlans: React.FC = () => {
           transition={{ duration: 0.8 }}
         >
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-textMain mb-4">
-            因島で過ごす、あなたの時間
+            因島で過ごす<br />あなたの時間
           </h2>
           <p className="font-serif text-sm sm:text-base text-gray-500 tracking-widest mb-6">
             理想の1日・2日を選ぶ
