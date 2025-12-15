@@ -34,7 +34,7 @@ const HotelDetail: React.FC<HotelDetailProps> = ({ hotel, onClose }) => {
   return (
     <div className="fixed inset-0 z-[100] overflow-y-auto bg-background pt-20">
       {/* Back Button */}
-      <div className="fixed top-24 left-6 md:left-12 z-[102]">
+      <div className="fixed top-20 sm:top-24 left-6 md:left-12 z-[110]">
         <button
           onClick={onClose}
           className="flex items-center gap-2 text-textMain hover:text-textLight transition-colors bg-white/90 hover:bg-white px-4 py-2 rounded-full shadow-lg backdrop-blur-sm"
@@ -275,7 +275,7 @@ const HotelDetail: React.FC<HotelDetailProps> = ({ hotel, onClose }) => {
                   {/* Close Button */}
                   <button
                     onClick={() => setSelectedRoom(null)}
-                    className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors z-10 bg-white rounded-full shadow-lg"
+                    className="fixed top-20 sm:top-6 right-6 w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors z-[110] bg-white rounded-full shadow-lg"
                   >
                     <X size={20} className="text-textMain" />
                   </button>

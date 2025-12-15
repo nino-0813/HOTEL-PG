@@ -263,7 +263,7 @@ const StayPlans: React.FC = () => {
                   {/* Close Button */}
                   <button
                     onClick={() => setSelectedPlan(null)}
-                    className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors z-10 bg-white rounded-full shadow-lg"
+                    className="fixed top-20 sm:top-6 right-6 w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors z-[110] bg-white rounded-full shadow-lg"
                   >
                     <X size={20} className="text-textMain" />
                   </button>

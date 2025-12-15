@@ -287,12 +287,12 @@ const Gallery: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] bg-black/98 flex items-center justify-center"
+          className="fixed inset-0 z-[110] bg-black/98 flex items-center justify-center"
           onClick={closeLightbox}
         >
           <button
             onClick={closeLightbox}
-            className="absolute top-8 right-8 text-white/50 hover:text-white transition-colors z-20"
+            className="fixed top-20 sm:top-8 right-8 text-white/50 hover:text-white transition-colors z-[120]"
           >
             <X size={32} strokeWidth={1} />
           </button>
@@ -302,7 +302,7 @@ const Gallery: React.FC = () => {
               e.stopPropagation();
               navigateLightbox('prev');
             }}
-            className="absolute left-4 md:left-8 text-white/50 hover:text-white transition-colors z-20 hidden md:block"
+            className="absolute left-4 md:left-8 text-white/50 hover:text-white transition-colors z-[120] hidden md:block"
           >
             <ChevronLeft size={48} strokeWidth={1} />
           </button>
@@ -312,7 +312,7 @@ const Gallery: React.FC = () => {
               e.stopPropagation();
               navigateLightbox('next');
             }}
-            className="absolute right-4 md:right-8 text-white/50 hover:text-white transition-colors z-20 hidden md:block"
+            className="absolute right-4 md:right-8 text-white/50 hover:text-white transition-colors z-[120] hidden md:block"
           >
             <ChevronRight size={48} strokeWidth={1} />
           </button>
