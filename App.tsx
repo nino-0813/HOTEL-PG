@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import Section from './components/Section';
 import News from './components/News';
 import Reservation from './components/Reservation';
+import StayPlans from './components/StayPlans';
 import Hotels from './components/Hotels';
 import Gallery from './components/Gallery';
 import FAQ from './components/FAQ';
@@ -38,6 +39,7 @@ const App: React.FC = () => {
              <Section id="dining" data={CONTENT.dining} index={2} />
              <Section id="activity" data={CONTENT.activity} reverse index={3} />
              <Gallery />
+             <StayPlans />
              <Reservation />
              <Hotels />
              <News />

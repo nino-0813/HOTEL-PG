@@ -18,10 +18,23 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     if (isMenuOpen) {
+      // モバイルメニューが開いているときは、bodyのスクロールを無効化
+      // ただし、メニュー内でスクロールできるようにする
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     }
+    
+    return () => {
+      // クリーンアップ
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    };
   }, [isMenuOpen]);
 
   return (
@@ -87,13 +100,13 @@ const Header: React.FC = () => {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            className="fixed inset-0 bg-[#f5f5f5] z-40 flex flex-col"
+            className="fixed inset-0 bg-[#f5f5f5] z-40 flex flex-col overflow-y-auto"
             initial={{ opacity: 0, clipPath: 'inset(0 0 100% 0)' }}
             animate={{ opacity: 1, clipPath: 'inset(0 0 0% 0)' }}
             exit={{ opacity: 0, clipPath: 'inset(0 0 100% 0)' }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="flex flex-col h-full pt-32 px-8 pb-10 container mx-auto">
+            <div className="flex flex-col min-h-full pt-32 px-8 pb-10 container mx-auto">
               <nav className="flex flex-col gap-4 md:gap-6 items-start">
                 {NAV_ITEMS.map((item, idx) => (
                   <motion.div 
