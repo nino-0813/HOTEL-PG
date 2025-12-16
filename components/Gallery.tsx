@@ -89,12 +89,13 @@ const Gallery: React.FC = () => {
 
   const openLightbox = (index: number) => {
     setLightboxImage(index);
-    document.body.style.overflow = 'hidden';
+    // モバイルでもスクロール可能にするため、bodyのoverflowはロックしない
+    // 代わりにライトボックス内でスクロール可能にする
   };
 
   const closeLightbox = () => {
     setLightboxImage(null);
-    document.body.style.overflow = 'unset';
+    // bodyのoverflowは変更していないので、何もしない
   };
 
   const navigateLightbox = (direction: 'prev' | 'next') => {
@@ -287,53 +288,55 @@ const Gallery: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[110] bg-black/98 flex items-center justify-center"
+          className="fixed inset-0 z-[110] bg-black/98 overflow-y-auto"
           onClick={closeLightbox}
         >
-          <button
-            onClick={closeLightbox}
-            className="fixed top-20 sm:top-8 right-8 text-white/50 hover:text-white transition-colors z-[120]"
-          >
-            <X size={32} strokeWidth={1} />
-          </button>
+          <div className="min-h-full flex flex-col items-center justify-center py-20 px-4">
+            <button
+              onClick={closeLightbox}
+              className="fixed top-20 sm:top-8 right-8 text-white/50 hover:text-white transition-colors z-[120] bg-black/50 rounded-full p-2"
+            >
+              <X size={32} strokeWidth={1} />
+            </button>
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              navigateLightbox('prev');
-            }}
-            className="absolute left-4 md:left-8 text-white/50 hover:text-white transition-colors z-[120] hidden md:block"
-          >
-            <ChevronLeft size={48} strokeWidth={1} />
-          </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                navigateLightbox('prev');
+              }}
+              className="fixed left-4 md:left-8 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-[120] hidden md:block bg-black/50 rounded-full p-2"
+            >
+              <ChevronLeft size={48} strokeWidth={1} />
+            </button>
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              navigateLightbox('next');
-            }}
-            className="absolute right-4 md:right-8 text-white/50 hover:text-white transition-colors z-[120] hidden md:block"
-          >
-            <ChevronRight size={48} strokeWidth={1} />
-          </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                navigateLightbox('next');
+              }}
+              className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-[120] hidden md:block bg-black/50 rounded-full p-2"
+            >
+              <ChevronRight size={48} strokeWidth={1} />
+            </button>
 
-          <div
-            className="relative max-w-7xl max-h-[85vh] w-full h-full px-4 flex items-center justify-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <motion.img
-              key={(selectedCategory === 'room' ? GALLERY_IMAGES.filter(img => img.category === 'room') : filteredImages)[lightboxImage].src}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4 }}
-              src={(selectedCategory === 'room' ? GALLERY_IMAGES.filter(img => img.category === 'room') : filteredImages)[lightboxImage].src}
-              alt={(selectedCategory === 'room' ? GALLERY_IMAGES.filter(img => img.category === 'room') : filteredImages)[lightboxImage].alt}
-              className="max-w-full max-h-full object-contain shadow-2xl"
-            />
-          </div>
+            <div
+              className="relative max-w-7xl w-full flex flex-col items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <motion.img
+                key={(selectedCategory === 'room' ? GALLERY_IMAGES.filter(img => img.category === 'room') : filteredImages)[lightboxImage].src}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4 }}
+                src={(selectedCategory === 'room' ? GALLERY_IMAGES.filter(img => img.category === 'room') : filteredImages)[lightboxImage].src}
+                alt={(selectedCategory === 'room' ? GALLERY_IMAGES.filter(img => img.category === 'room') : filteredImages)[lightboxImage].alt}
+                className="w-full max-w-full h-auto max-h-[85vh] object-contain shadow-2xl"
+              />
+            </div>
 
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60 text-xs font-serif tracking-widest">
-            {(selectedCategory === 'room' ? GALLERY_IMAGES.filter(img => img.category === 'room') : filteredImages)[lightboxImage].alt}
+            <div className="mt-4 text-white/60 text-xs font-serif tracking-widest text-center">
+              {(selectedCategory === 'room' ? GALLERY_IMAGES.filter(img => img.category === 'room') : filteredImages)[lightboxImage].alt}
+            </div>
           </div>
         </motion.div>
       )}

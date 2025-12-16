@@ -27,9 +27,40 @@ const Contact: React.FC = () => {
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      // Google Apps Script Web App URL
+      // 環境変数から取得、なければデフォルト値を使用
+      const scriptURL = import.meta.env.VITE_GOOGLE_SCRIPT_URL || '';
+
+      if (!scriptURL) {
+        console.error('Google Apps Script URL is not configured');
+        setSubmitStatus('error');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // フォームデータをJSON形式で送信
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || '',
+        message: formData.message || '',
+      };
+
+      // GASの場合はレスポンスを読まずに成功扱いにする（鉄板の方法）
+      // CORSエラーを回避するため、mode: 'no-cors'を使用
+      // ただし、レスポンスは読めないので、エラーが発生しても成功扱いになる
+      await fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors', // CORSエラーを回避
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      // レスポンスを読まずに成功扱い（GASは200を返す）
+      // mode: 'no-cors'の場合は常に成功として扱われる
       setSubmitStatus('success');
       setFormData({
         name: '',
@@ -40,7 +71,12 @@ const Contact: React.FC = () => {
         guests: '',
         message: ''
       });
-    }, 1500);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -233,6 +269,14 @@ const Contact: React.FC = () => {
                   <div className="p-4 bg-green-50 border border-green-200">
                     <p className="font-serif text-sm text-green-800">
                       お問い合わせありがとうございます。担当者より2営業日以内にご連絡いたします。
+                    </p>
+                  </div>
+                )}
+
+                {submitStatus === 'error' && (
+                  <div className="p-4 bg-red-50 border border-red-200">
+                    <p className="font-serif text-sm text-red-800">
+                      送信に失敗しました。しばらく時間をおいて再度お試しいただくか、お電話でご連絡ください。
                     </p>
                   </div>
                 )}
