@@ -28,8 +28,8 @@ const Contact: React.FC = () => {
                 <Phone size={20} className="text-textMain mt-1 flex-shrink-0" />
                 <div>
                   <p className="font-serif text-sm text-textMain mb-2">電話番号</p>
-                  <a href="tel:05054446620" className="font-serif text-xs text-textLight hover:text-textMain transition-colors">
-                    050-5444-6620
+                  <a href="tel:07083289154" className="font-serif text-xs text-textLight hover:text-textMain transition-colors">
+                    070-8328-9154
                   </a>
                 </div>
               </div>
@@ -55,7 +55,7 @@ const Contact: React.FC = () => {
                 ご予約・お問い合わせは、お電話よりお願いいたします。
               </p>
               <p className="font-serif text-xs text-textLight">
-                受付時間: 9:00 - 18:00
+                受付時間: 9:00 - 20:00
               </p>
             </div>
           </div>
