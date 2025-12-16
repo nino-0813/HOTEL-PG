@@ -24,31 +24,6 @@ npm run dev
    - 以下のコードを貼り付けて保存：
 
 ```javascript
-// CORSヘッダーを設定するヘルパー関数
-function setCORSHeaders() {
-  return {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Max-Age': '3600'
-  };
-}
-
-// GETリクエスト（WebアプリのURLに直接アクセスした場合）
-function doGet(e) {
-  const output = ContentService.createTextOutput(JSON.stringify({
-    status: 'ok',
-    message: 'This is a POST endpoint. Please use POST method to submit form data.'
-  }));
-  
-  // CORSヘッダーを設定
-  Object.entries(setCORSHeaders()).forEach(([key, value]) => {
-    output.setHeaders({ [key]: value });
-  });
-  
-  return output.setMimeType(ContentService.MimeType.JSON);
-}
-
 // POSTリクエスト（フォーム送信時）
 function doPost(e) {
   try {
@@ -62,34 +37,17 @@ function doPost(e) {
       try {
         data = JSON.parse(e.postData.contents);
       } catch (parseError) {
-        const output = ContentService.createTextOutput(JSON.stringify({
-          status: 'error',
-          message: 'Failed to parse JSON: ' + parseError.toString()
-        }));
-        
-        // CORSヘッダーを設定
-        Object.entries(setCORSHeaders()).forEach(([key, value]) => {
-          output.setHeaders({ [key]: value });
-        });
-        
-        return output.setMimeType(ContentService.MimeType.JSON);
+        // エラーログを出力
+        Logger.log('JSON parse error: ' + parseError.toString());
+        return;
       }
     } 
     // FormData形式の場合
     else if (e.parameter && Object.keys(e.parameter).length > 0) {
       data = e.parameter;
     } else {
-      const output = ContentService.createTextOutput(JSON.stringify({
-        status: 'error',
-        message: 'No data received'
-      }));
-      
-      // CORSヘッダーを設定
-      Object.entries(setCORSHeaders()).forEach(([key, value]) => {
-        output.setHeaders({ [key]: value });
-      });
-      
-      return output.setMimeType(ContentService.MimeType.JSON);
+      Logger.log('No data received');
+      return;
     }
     
     // データをスプレッドシートに書き込む
@@ -103,44 +61,19 @@ function doPost(e) {
     
     sheet.appendRow(row);
     
-    const output = ContentService.createTextOutput(JSON.stringify({
-      status: 'success',
-      message: 'Data saved successfully'
-    }));
-    
-    // CORSヘッダーを設定
-    Object.entries(setCORSHeaders()).forEach(([key, value]) => {
-      output.setHeaders({ [key]: value });
-    });
-    
-    return output.setMimeType(ContentService.MimeType.JSON);
+    // 成功を返す（シンプルなテキストレスポンス）
+    return ContentService.createTextOutput('success');
       
   } catch (error) {
-    // エラーが発生した場合
-    const output = ContentService.createTextOutput(JSON.stringify({
-      status: 'error',
-      message: error.toString()
-    }));
-    
-    // CORSヘッダーを設定
-    Object.entries(setCORSHeaders()).forEach(([key, value]) => {
-      output.setHeaders({ [key]: value });
-    });
-    
-    return output.setMimeType(ContentService.MimeType.JSON);
+    // エラーログを出力
+    Logger.log('Error in doPost: ' + error.toString());
+    return ContentService.createTextOutput('error');
   }
 }
 
-// CORSプリフライトリクエスト（OPTIONS）に対応
-function doOptions(e) {
-  const output = ContentService.createTextOutput('');
-  
-  // CORSヘッダーを設定
-  Object.entries(setCORSHeaders()).forEach(([key, value]) => {
-    output.setHeaders({ [key]: value });
-  });
-  
-  return output.setMimeType(ContentService.MimeType.JSON);
+// GETリクエスト（WebアプリのURLに直接アクセスした場合）
+function doGet(e) {
+  return ContentService.createTextOutput('This endpoint accepts POST requests only.');
 }
 ```
 
@@ -153,15 +86,25 @@ function doOptions(e) {
    - 「デプロイ」をクリック
    - 表示されたURLをコピー
 
-4. **環境変数を設定**
-   - プロジェクトルートに`.env`ファイルを作成
+4. **Vercel環境変数を設定**
+   - Vercelダッシュボードで環境変数を設定：
+     - `GOOGLE_SCRIPT_URL` = コピーしたGoogle Apps ScriptのURL
+   - **重要**: `VITE_`プレフィックスは使わない（サーバー側の環境変数）
+
+5. **ローカル開発用の環境変数（オプション）**
+   - プロジェクトルートに`.env.local`ファイルを作成（`.env`ではなく`.env.local`）
    - 以下の内容を追加：
 
 ```
-VITE_GOOGLE_SCRIPT_URL=ここにコピーしたURLを貼り付け
+GOOGLE_SCRIPT_URL=ここにコピーしたURLを貼り付け
 ```
 
-5. **再起動**
+6. **パッケージのインストール**
+   ```bash
+   npm install
+   ```
+
+7. **再起動**
    - 開発サーバーを再起動して環境変数を読み込む
 
 ## ビルド
