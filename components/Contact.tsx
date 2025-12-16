@@ -24,6 +24,7 @@ const Contact: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Form submit started');
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
@@ -31,9 +32,16 @@ const Contact: React.FC = () => {
       // Google Apps Script Web App URL
       // 環境変数から取得、なければデフォルト値を使用
       const scriptURL = import.meta.env.VITE_GOOGLE_SCRIPT_URL || '';
+      
+      console.log('Environment variable check:', {
+        hasURL: !!scriptURL,
+        urlLength: scriptURL.length,
+        urlPreview: scriptURL.substring(0, 50) + '...'
+      });
 
       if (!scriptURL) {
         console.error('Google Apps Script URL is not configured');
+        console.error('VITE_GOOGLE_SCRIPT_URL:', import.meta.env.VITE_GOOGLE_SCRIPT_URL);
         setSubmitStatus('error');
         setIsSubmitting(false);
         return;
@@ -47,30 +55,65 @@ const Contact: React.FC = () => {
         message: formData.message || '',
       };
 
-      // GASの場合はレスポンスを読まずに成功扱いにする（鉄板の方法）
-      // CORSエラーを回避するため、mode: 'no-cors'を使用
-      // ただし、レスポンスは読めないので、エラーが発生しても成功扱いになる
-      await fetch(scriptURL, {
-        method: 'POST',
-        mode: 'no-cors', // CORSエラーを回避
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      console.log('Sending form data to:', scriptURL);
+      console.log('Payload:', payload);
 
-      // レスポンスを読まずに成功扱い（GASは200を返す）
-      // mode: 'no-cors'の場合は常に成功として扱われる
-      setSubmitStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        checkIn: '',
-        checkOut: '',
-        guests: '',
-        message: ''
-      });
+      // Google Apps Scriptに送信
+      // まず通常のfetchで試す（CORSが正しく設定されていれば動作する）
+      try {
+        const response = await fetch(scriptURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+
+        // レスポンスを読まずに成功扱い（GASは200を返す）
+        // エラーが発生しなければ成功とみなす
+        setSubmitStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          checkIn: '',
+          checkOut: '',
+          guests: '',
+          message: ''
+        });
+      } catch (fetchError) {
+        // CORSエラーなどが発生した場合、no-corsモードで再試行
+        console.warn('First attempt failed, trying with no-cors mode:', fetchError);
+        
+        try {
+          await fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors', // CORSエラーを回避
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          });
+
+          // no-corsモードの場合は常に成功として扱われる
+          setSubmitStatus('success');
+          setFormData({
+            name: '',
+            email: '',
+            phone: '',
+            checkIn: '',
+            checkOut: '',
+            guests: '',
+            message: ''
+          });
+        } catch (noCorsError) {
+          console.error('Both attempts failed:', noCorsError);
+          throw noCorsError;
+        }
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitStatus('error');
