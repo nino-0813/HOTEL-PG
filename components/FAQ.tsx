@@ -74,7 +74,7 @@ const FAQ: React.FC = () => {
   };
 
   return (
-    <section id="faq" className="relative py-20 sm:py-32 md:py-48">
+    <section id="faq" className="relative py-12 sm:py-20 md:py-32 lg:py-48">
       <div className="container mx-auto px-4 sm:px-6 md:px-12">
         <div className="flex flex-col lg:flex-row gap-12 sm:gap-16 lg:gap-32">
           {/* Title */}
@@ -86,26 +86,26 @@ const FAQ: React.FC = () => {
 
           {/* FAQ List */}
           <div className="lg:w-3/4">
-            <div className="space-y-4">
+            <div className="space-y-2 sm:space-y-3 md:space-y-4">
               {FAQ_ITEMS.map((item, index) => (
                 <div
                   key={index}
-                  className="border-b border-gray-200"
+                  className="border border-gray-200 rounded-lg overflow-hidden bg-white hover:border-textMain/30 transition-colors"
                 >
                   <button
                     onClick={() => toggleItem(index)}
-                    className="w-full flex items-center justify-between py-6 text-left group"
+                    className="w-full flex items-center justify-between py-3 sm:py-4 px-4 sm:px-6 text-left group"
                     aria-expanded={openIndex === index}
                   >
-                    <span className="font-serif text-sm sm:text-base md:text-lg text-textMain group-hover:text-textLight transition-colors pr-4 sm:pr-8 flex-1">
+                    <span className="font-serif text-xs sm:text-sm md:text-base text-textMain group-hover:text-textLight transition-colors pr-4 flex-1 leading-snug">
                       {item.question}
                     </span>
                     <motion.div 
                         animate={{ rotate: openIndex === index ? 180 : 0 }}
-                        transition={{ duration: 0.4 }}
+                        transition={{ duration: 0.3 }}
                         className="flex-shrink-0"
                     >
-                      <ChevronDown size={20} className="text-gray-400 group-hover:text-textMain transition-colors" />
+                      <ChevronDown size={16} className="sm:w-5 sm:h-5 text-gray-400 group-hover:text-textMain transition-colors" />
                     </motion.div>
                   </button>
                   <AnimatePresence>
@@ -114,11 +114,11 @@ const FAQ: React.FC = () => {
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: "auto", opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+                            transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
                             className="overflow-hidden"
                         >
-                            <div className="pb-6 pl-0 md:pl-8">
-                            <p className="font-serif text-sm md:text-base text-textLight leading-relaxed whitespace-pre-line">
+                            <div className="px-4 sm:px-6 pb-4 sm:pb-6 pt-0 border-t border-gray-100">
+                            <p className="font-serif text-xs sm:text-sm text-textLight leading-relaxed whitespace-pre-line pt-3 sm:pt-4">
                                 {item.answer.replace(/\*\*(.*?)\*\*/g, '$1')}
                             </p>
                             </div>
@@ -127,18 +127,6 @@ const FAQ: React.FC = () => {
                   </AnimatePresence>
                 </div>
               ))}
-            </div>
-
-            <div className="mt-16 text-center">
-              <p className="font-serif text-sm text-gray-500 mb-6">
-                その他のご質問がございましたら、お気軽にお問い合わせください。
-              </p>
-              <a
-                href="#contact"
-                className="inline-block font-display text-sm tracking-[0.2em] uppercase text-textMain border-b border-textMain pb-2 hover:opacity-60 transition-opacity"
-              >
-                Contact Us
-              </a>
             </div>
           </div>
         </div>

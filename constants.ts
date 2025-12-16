@@ -15,9 +15,9 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 export const NEWS_ITEMS: NewsItem[] = [
-  { date: '2025.10.15', title: '【期間限定】瀬戸内の冬を味わう、蟹と柑橘の特別コース', href: '#' },
-  { date: '2025.09.20', title: 'しまなみ海道サイクリングサポートプランの開始', href: '#' },
-  { date: '2025.08.01', title: 'HOTEL PG - INNOSHIMA - グランドオープンのお知らせ', href: '#' },
+  { date: '2025.10.15', title: '因島の秋を楽しむ、おばんざいアゲハ食堂とのコラボレーション', href: '#' },
+  { date: '2025.09.20', title: 'しまなみ海道サイクリングのお客様向け、自転車預かりサービス開始', href: '#' },
+  { date: '2025.12.10', title: 'HOTEL PG -III- 新築完成予定。最新の設備と洗練されたデザインで、新しい滞在体験を。', href: '#hotels' },
 ];
 
 export const CONTENT = {
@@ -38,7 +38,7 @@ export const CONTENT = {
       // 穏やかな瀬戸内海、抽象的な水面
       '/images/gallery/DSC04519.png',
       // 光の差し込む静かな空間
-      'https://images.unsplash.com/photo-1595820849301-49658b1e4b95?q=80&w=1200&auto=format&fit=crop'
+      '/images/gallery/DSC04542.png'
     ]
   },
   rooms: {
@@ -58,7 +58,7 @@ export const CONTENT = {
       // ミニマルでモダンな客室、窓から海
       '/images/gallery/3b28601b853b111ff30dfbe827b53f76e3b7ad52.47.9.26.3.jpg',
       // バスルームやテラス
-      'https://images.unsplash.com/photo-1606744888344-4932389566b1?q=80&w=1200&auto=format&fit=crop'
+      '/images/gallery/DSC04635.png'
     ]
   },
   dining: {
@@ -74,7 +74,7 @@ export const CONTENT = {
       // 洗練された料理
       '/images/gallery/82dfe2c3189024a50b197d92a5436f68492ab111.47.9.26.3.jpg',
       // レストランの雰囲気、オープンキッチン
-      'https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?q=80&w=1200&auto=format&fit=crop'
+      '/images/gallery/DSC04480.png'
     ]
   },
   activity: {
@@ -92,7 +92,7 @@ export const CONTENT = {
       // サイクリングやしまなみ海道
       '/images/gallery/shimanami-kaidou-route_thumb.webp',
       // 瀬戸内海の風景
-      'https://images.unsplash.com/photo-1548261314-9989f66085a8?q=80&w=1200&auto=format&fit=crop'
+      '/images/gallery/スクリーンショット 2025-12-16 16.33.58.png'
     ]
   }
 };

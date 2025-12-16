@@ -120,7 +120,7 @@ const Gallery: React.FC = () => {
 
   return (
     <>
-      <section id="gallery" className="relative py-20 sm:py-32 md:py-48">
+      <section id="gallery" className="relative py-12 sm:py-20 md:py-32 lg:py-48">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <div className="flex flex-col items-center mb-20 text-center">
             <h2 className="font-display text-4xl md:text-6xl font-light text-textMain mb-6">Gallery</h2>

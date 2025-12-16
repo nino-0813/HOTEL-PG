@@ -10,7 +10,7 @@ const Hotels: React.FC = () => {
   const [showStory, setShowStory] = useState(false);
 
   return (
-    <section id="hotels" className="relative py-20 sm:py-32 md:py-48 bg-background">
+    <section id="hotels" className="relative py-12 sm:py-20 md:py-32 lg:py-48 bg-background">
       <div ref={ref} className="container mx-auto px-4 sm:px-6 md:px-12">
         {/* Section Title */}
         <motion.div
@@ -37,26 +37,26 @@ const Hotels: React.FC = () => {
         >
           <button
             onClick={() => setShowStory(true)}
-            className="relative w-full bg-white border border-gray-200 p-12 md:p-16 hover:border-textMain transition-all duration-500 hover:shadow-lg text-left group"
+            className="relative w-full bg-white border border-gray-200 p-6 sm:p-8 md:p-12 lg:p-16 hover:border-textMain transition-all duration-500 hover:shadow-lg text-left group"
           >
             {/* Status Badge */}
-            <div className="absolute top-6 right-6 bg-textMain text-white text-xs tracking-widest px-4 py-2">
+            <div className="absolute top-4 right-4 sm:top-6 sm:right-6 bg-textMain text-white text-[10px] sm:text-xs tracking-widest px-3 py-1.5 sm:px-4 sm:py-2">
               COMING SOON
             </div>
 
             {/* Hotel Name */}
-            <h3 className="font-display text-3xl md:text-4xl font-light text-textMain mb-6 tracking-[0.15em]">
+            <h3 className="font-display text-2xl sm:text-3xl md:text-4xl font-light text-textMain mb-4 sm:mb-6 tracking-[0.15em] pr-20 sm:pr-24">
               HOTEL PG -III-
             </h3>
 
             {/* Description */}
-            <p className="font-serif text-base md:text-lg text-gray-700 leading-relaxed mb-8">
+            <p className="font-serif text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed mb-4 sm:mb-6 md:mb-8">
               新築完成予定。最新の設備と洗練されたデザインで、新しい滞在体験を。
             </p>
 
             {/* Concept Preview */}
-            <div className="mb-8">
-              <p className="font-serif text-sm text-gray-600 leading-relaxed">
+            <div className="mb-6 sm:mb-8">
+              <p className="font-serif text-xs sm:text-sm text-gray-600 leading-relaxed">
                 HOTEL PG -I-、-II-の成功を踏まえ、さらなる進化を目指した第三のホテル。
                 最新の設備と洗練されたデザインで、これまでにない新しい滞在体験をお届けする準備を進めております。
               </p>

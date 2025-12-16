@@ -7,7 +7,7 @@ const Reservation: React.FC = () => {
   const isInView = useInView(ref, { once: true, margin: "-10%" });
 
   return (
-    <section id="reservation" className="relative py-20 sm:py-32 md:py-48 bg-background">
+    <section id="reservation" className="relative py-12 sm:py-20 md:py-32 lg:py-48 bg-background">
       <div ref={ref} className="container mx-auto px-4 sm:px-6 md:px-12">
         {/* Section Title */}
         <motion.div
