@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #fdfdfd;
+  }
+}
+
+/* Noise Texture Class */
+.bg-noise {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -50;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.writing-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
+/* NOTE風 ブログ記事用 */
+@layer components {
+  .article-prose {
+    @apply max-w-none text-[17px] sm:text-[18px];
+    line-height: 1.95;
+    color: #374151;
+  }
+  .article-prose p {
+    @apply font-serif text-textLight mb-7;
+    line-height: 1.95;
+  }
+  .article-prose h2 {
+    @apply font-display font-normal text-textMain mt-14 mb-4 pb-2 text-xl sm:text-2xl;
+    border-bottom: 1px solid #e5e7eb;
+    line-height: 1.4;
+  }
+  .article-prose h2:first-child {
+    @apply mt-0;
+  }
+  .article-prose h3 {
+    @apply font-display font-normal text-textMain mt-10 mb-3 text-lg sm:text-xl;
+    line-height: 1.45;
+  }
+  .article-prose a {
+    @apply text-textMain no-underline border-b border-textMain/70 hover:opacity-80 transition-opacity;
+  }
+  .article-prose strong {
+    @apply font-semibold text-textMain;
+  }
+  .article-prose ul {
+    @apply list-disc pl-6 sm:pl-7 my-6 space-y-2 font-serif text-textLight;
+  }
+  .article-prose ol {
+    @apply list-decimal pl-6 sm:pl-7 my-6 space-y-2 font-serif text-textLight;
+  }
+  .article-prose blockquote {
+    @apply border-l-4 border-gray-300 pl-5 py-1 my-8 italic text-gray-600 font-serif text-base;
+  }
+  .article-prose hr {
+    @apply border-gray-200 my-10;
+  }
+  .article-prose figure {
+    @apply my-8;
+  }
+  .article-prose figcaption {
+    @apply mt-3 text-sm text-gray-500 text-center sm:text-left font-serif;
+    line-height: 1.6;
+  }
+  .article-prose img {
+    @apply rounded-xl w-full;
+  }
+  .article-prose pre {
+    @apply bg-gray-50 rounded-xl p-5 overflow-x-auto text-sm my-6;
+  }
+  .article-prose code {
+    @apply font-mono text-sm;
+  }
+}
