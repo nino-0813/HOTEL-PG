@@ -53,7 +53,8 @@ function MarkdownImageWithCaption({ src, alt }: { src?: string | null; alt?: str
 function paragraphOnlyContainsBlockFigure(children: React.ReactNode): boolean {
   const arr = React.Children.toArray(children).filter((child) => {
     if (typeof child === 'string') return child.trim() !== '';
-    return child != null && child !== false;
+    // toArray の型から boolean は除外されるため !== false は不要（Vercel の strict ビルドで型エラーになる）
+    return child != null;
   });
   if (arr.length !== 1) return false;
   const el = arr[0];
