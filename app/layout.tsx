@@ -22,6 +22,7 @@ import './globals.css';
 
 /** GA4 測定ID（環境変数で上書き可能） */
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? 'G-R5DGPBMER4';
+const ICON_VERSION = '2026-04-17-1';
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ['latin'],
@@ -82,10 +83,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: `/favicon-32x32.png?v=${ICON_VERSION}`, sizes: '32x32', type: 'image/png' },
+      { url: `/favicon-16x16.png?v=${ICON_VERSION}`, sizes: '16x16', type: 'image/png' },
     ],
-    apple: '/apple-touch-icon.png',
+    apple: `/apple-touch-icon.png?v=${ICON_VERSION}`,
   },
 };
 
