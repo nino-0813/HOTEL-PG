@@ -22,7 +22,6 @@ const linkify = (text: string) => {
     return <React.Fragment key={`txt-${i}`}>{part}</React.Fragment>;
   });
 };
-
 interface FAQItem {
   question: string;
   answer: string;
