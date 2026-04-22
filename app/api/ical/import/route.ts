@@ -35,12 +35,12 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
     }
 
-    const map = [
+    const RAKUTEN_ROOM_MAP = [
       { roomKey: 'pg1', url: process.env.RAKUTEN_ICAL_URL_1 },
       { roomKey: 'pg2_single', url: process.env.RAKUTEN_ICAL_URL_2 },
       { roomKey: 'pg2_family', url: process.env.RAKUTEN_ICAL_URL_3 },
     ] as const;
-    const missing = map.filter((m) => !m.url).map((m) => m.roomKey);
+    const missing = RAKUTEN_ROOM_MAP.filter((m) => !m.url).map((m) => m.roomKey);
     if (missing.length > 0) {
       return NextResponse.json({ error: 'missing_rakuten_ical_url', missing }, { status: 500 });
     }
@@ -52,8 +52,16 @@ export async function GET(req: Request) {
 
     const results: { roomKey: string; inserted: number }[] = [];
 
-    for (const m of map) {
-      const res = await fetch(m.url!, { cache: 'no-store' });
+    for (const m of RAKUTEN_ROOM_MAP) {
+      const url = m.url!;
+      if (!/^https?:\/\//.test(url)) {
+        return NextResponse.json(
+          { error: 'invalid_rakuten_ical_url', roomKey: m.roomKey, value: url },
+          { status: 500 },
+        );
+      }
+
+      const res = await fetch(url, { cache: 'no-store' });
       if (!res.ok) {
         return NextResponse.json({ error: 'fetch_failed', roomKey: m.roomKey }, { status: 502 });
       }
