@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 type RoomKey = 'pg1' | 'pg2_single' | 'pg2_family';
 
@@ -11,14 +12,12 @@ const ROOMS: { key: RoomKey; label: string; priceHint: string }[] = [
 ];
 
 export default function CheckoutPage({
-  searchParams,
-}: {
-  searchParams?: { room?: string };
-}) {
+}: {}) {
+  const searchParams = useSearchParams();
   const initialRoom = useMemo(() => {
-    const r = searchParams?.room;
+    const r = searchParams.get('room');
     return (r === 'pg1' || r === 'pg2_single' || r === 'pg2_family') ? r : 'pg1';
-  }, [searchParams?.room]);
+  }, [searchParams]);
 
   const [room, setRoom] = useState<RoomKey>(initialRoom);
   const [loading, setLoading] = useState(false);

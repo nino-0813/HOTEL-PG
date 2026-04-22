@@ -6,6 +6,8 @@ const Reservation: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
 
+  const handleClick = (label: string) => () => trackReservationClick(label);
+
   return (
     <section id="reservation" className="relative py-10 sm:py-16 md:py-24 lg:py-32 bg-background">
       <div ref={ref} className="container mx-auto px-4 sm:px-6 md:px-12">
@@ -37,22 +39,13 @@ const Reservation: React.FC = () => {
             <h3 className="font-display text-lg sm:text-xl md:text-2xl font-light text-textMain mb-4 sm:mb-6 tracking-[0.05em] sm:tracking-[0.1em] leading-tight">
               HOTEL PG -I-
             </h3>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <a
-                href="#rooms"
-                onClick={() => trackReservationClick('HOTEL PG -I-')}
-                className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
-              >
-                予約する →
-              </a>
-              <a
-                href="/checkout?room=pg1"
-                onClick={() => trackReservationClick('HOTEL PG -I- 決済へ')}
-                className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-textMain border border-gray-200 px-6 sm:px-8 py-3 sm:py-4 hover:border-gray-400 transition-colors duration-300 rounded"
-              >
-                決済して予約 →
-              </a>
-            </div>
+            <a
+              href="/rooms/pg1"
+              onClick={handleClick('HOTEL PG -I- 詳細')}
+              className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
+            >
+              詳細を見る →
+            </a>
           </motion.div>
 
           {/* HOTEL PG -II- シングルタイプ */}
@@ -66,22 +59,13 @@ const Reservation: React.FC = () => {
               <span className="block sm:inline">HOTEL PG -II-</span>
               <span className="block sm:inline sm:ml-2 text-base sm:text-lg md:text-xl">【シングルタイプ】</span>
             </h3>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <a
-                href="#rooms"
-                onClick={() => trackReservationClick('HOTEL PG -II- シングルタイプ')}
-                className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
-              >
-                予約する →
-              </a>
-              <a
-                href="/checkout?room=pg2_single"
-                onClick={() => trackReservationClick('HOTEL PG -II- シングルタイプ 決済へ')}
-                className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-textMain border border-gray-200 px-6 sm:px-8 py-3 sm:py-4 hover:border-gray-400 transition-colors duration-300 rounded"
-              >
-                決済して予約 →
-              </a>
-            </div>
+            <a
+              href="/rooms/pg2-single"
+              onClick={handleClick('HOTEL PG -II- シングルタイプ 詳細')}
+              className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
+            >
+              詳細を見る →
+            </a>
           </motion.div>
 
           {/* HOTEL PG -II- ファミリータイプ */}
@@ -95,22 +79,13 @@ const Reservation: React.FC = () => {
               <span className="block sm:inline">HOTEL PG -II-</span>
               <span className="block sm:inline sm:ml-2 text-base sm:text-lg md:text-xl">【ファミリータイプ】</span>
             </h3>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <a
-                href="#rooms"
-                onClick={() => trackReservationClick('HOTEL PG -II- ファミリータイプ')}
-                className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
-              >
-                予約する →
-              </a>
-              <a
-                href="/checkout?room=pg2_family"
-                onClick={() => trackReservationClick('HOTEL PG -II- ファミリータイプ 決済へ')}
-                className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-textMain border border-gray-200 px-6 sm:px-8 py-3 sm:py-4 hover:border-gray-400 transition-colors duration-300 rounded"
-              >
-                決済して予約 →
-              </a>
-            </div>
+            <a
+              href="/rooms/pg2-family"
+              onClick={handleClick('HOTEL PG -II- ファミリータイプ 詳細')}
+              className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
+            >
+              詳細を見る →
+            </a>
           </motion.div>
 
           {/* HOTEL PG -III- */}

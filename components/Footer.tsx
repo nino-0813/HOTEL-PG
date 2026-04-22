@@ -26,6 +26,12 @@ const Footer: React.FC = () => {
             <Link href="/recruit" className="hover:text-white transition-colors">
               RECRUIT
             </Link>
+            <Link href="/legal" className="hover:text-white transition-colors">
+              LEGAL
+            </Link>
+            <Link href="/company" className="hover:text-white transition-colors">
+              COMPANY
+            </Link>
             <a
               href={INSTAGRAM_DM_URL}
               target="_blank"

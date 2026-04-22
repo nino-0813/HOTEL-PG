@@ -11,14 +11,6 @@ import { INSTAGRAM_DM_URL } from '@/constants';
 import { getBreadcrumbSchema } from '@/lib/json-ld';
 
 const MICROSOFT_PRIVACY_URL = 'https://privacy.microsoft.com/ja-jp/privacystatement';
-/** 楽天グループ全体の個人情報保護方針（楽天トラベル・楽天おやど共通で参照） */
-const RAKUTEN_GROUP_PRIVACY_URL = 'https://privacy.rakuten.co.jp/';
-/** 楽天トラベル利用規約 */
-const RAKUTEN_TRAVEL_AGREEMENT_URL = 'https://travel.rakuten.co.jp/info/agreement.html';
-/** 楽天おやど（Vacation STAY）利用規約 PDF */
-const RAKUTEN_OYADO_AGREEMENT_URL = 'https://vacation-stay.jp/info/oyado/agreement.pdf';
-/** 楽天ステイ（楽天おやど運営）個人情報保護方針 */
-const RAKUTEN_STAY_PRIVACY_URL = 'https://corp.stay.rakuten.co.jp/privacy.html';
 const CLARITY_OPTOUT_URL = 'https://choice.microsoft.com/ja-jp/opt-out';
 
 export default function PrivacyPage() {
@@ -144,71 +136,7 @@ export default function PrivacyPage() {
                   </a>
                 </div>
 
-                <div className="border border-gray-200 rounded-xl p-6 bg-white">
-                  <h3 className="font-display text-lg font-light text-textMain mb-4 tracking-wider">
-                    楽天おやど（Rakuten Oyado / Vacation STAY）
-                  </h3>
-                  <p className="text-sm leading-relaxed mb-4">
-                    当サイトで紹介している宿泊予約は、楽天おやど（宿泊・民泊予約ならRakuten Oyado）へのリンクとなる場合があります。ご予約時の個人情報の取り扱いは、楽天おやどの利用規約および楽天グループの個人情報保護方針に従います。
-                  </p>
-                  <ul className="space-y-2 text-sm">
-                    <li>
-                      <span className="text-textLight">利用規約（PDF）：</span>
-                      <a
-                        href={RAKUTEN_OYADO_AGREEMENT_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-textMain underline hover:no-underline break-all ml-1"
-                      >
-                        {RAKUTEN_OYADO_AGREEMENT_URL}
-                      </a>
-                    </li>
-                    <li>
-                      <span className="text-textLight">個人情報保護方針：</span>
-                      <a
-                        href={RAKUTEN_STAY_PRIVACY_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-textMain underline hover:no-underline break-all ml-1"
-                      >
-                        {RAKUTEN_STAY_PRIVACY_URL}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="border border-gray-200 rounded-xl p-6 bg-white">
-                  <h3 className="font-display text-lg font-light text-textMain mb-4 tracking-wider">
-                    楽天トラベル
-                  </h3>
-                  <p className="text-sm leading-relaxed mb-4">
-                    予約ページが楽天トラベルへ遷移する場合、予約時の個人情報の取り扱いは楽天グループの個人情報保護方針に従います。ご予約の際は、利用規約・プライバシーポリシーをご確認ください。
-                  </p>
-                  <ul className="space-y-2 text-sm">
-                    <li>
-                      <span className="text-textLight">楽天グループ個人情報保護方針：</span>
-                      <a
-                        href={RAKUTEN_GROUP_PRIVACY_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-textMain underline hover:no-underline break-all ml-1"
-                      >
-                        {RAKUTEN_GROUP_PRIVACY_URL}
-                      </a>
-                    </li>
-                    <li>
-                      <span className="text-textLight">楽天トラベル利用規約：</span>
-                      <a
-                        href={RAKUTEN_TRAVEL_AGREEMENT_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-textMain underline hover:no-underline break-all ml-1"
-                      >
-                        {RAKUTEN_TRAVEL_AGREEMENT_URL}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                {/* 楽天など外部予約サイトへの遷移を行わない方針のため、当該サービス条項は掲載しません */}
               </div>
             </motion.section>
 

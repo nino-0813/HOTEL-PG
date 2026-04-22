@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
+import { useSearchParams } from 'next/navigation';
 
-export default function CheckoutSuccess({
-  searchParams,
-}: {
-  searchParams?: { room?: string; session_id?: string };
-}) {
+export default function CheckoutSuccess() {
+  const searchParams = useSearchParams();
+  const room = searchParams.get('room') ?? '-';
+  const sessionId = searchParams.get('session_id') ?? '-';
   return (
     <main className="min-h-screen bg-background py-16 sm:py-24">
       <div className="container mx-auto px-4 sm:px-6 md:px-12 max-w-2xl">
@@ -19,10 +19,10 @@ export default function CheckoutSuccess({
 
         <div className="mt-8 bg-white border border-gray-200 rounded-xl p-6">
           <div className="font-serif text-sm text-textMain">
-            部屋: {searchParams?.room ?? '-'}
+            部屋: {room}
           </div>
           <div className="font-serif text-xs text-gray-500 mt-2 break-all">
-            session_id: {searchParams?.session_id ?? '-'}
+            session_id: {sessionId}
           </div>
         </div>
 

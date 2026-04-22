@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     }
 
     const stripe = new Stripe(getRequiredEnv('STRIPE_SECRET_KEY'), {
-      apiVersion: '2025-02-24.acacia',
+      apiVersion: '2026-03-25.dahlia',
     });
 
     const origin = req.headers.get('origin') ?? 'http://localhost:3003';

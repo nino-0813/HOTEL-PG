@@ -1,12 +1,11 @@
 'use client';
 
 import React from 'react';
+import { useSearchParams } from 'next/navigation';
 
-export default function CheckoutCancel({
-  searchParams,
-}: {
-  searchParams?: { room?: string };
-}) {
+export default function CheckoutCancel() {
+  const searchParams = useSearchParams();
+  const room = searchParams.get('room') ?? 'pg1';
   return (
     <main className="min-h-screen bg-background py-16 sm:py-24">
       <div className="container mx-auto px-4 sm:px-6 md:px-12 max-w-2xl">
@@ -17,12 +16,12 @@ export default function CheckoutCancel({
           決済をキャンセルしました。もう一度お試しください。
         </p>
         <p className="font-serif text-xs text-gray-500 mt-2">
-          部屋: {searchParams?.room ?? '-'}
+          部屋: {room}
         </p>
 
         <div className="mt-10 flex gap-3">
           <a
-            href={`/checkout?room=${encodeURIComponent(searchParams?.room ?? 'pg1')}`}
+            href={`/checkout?room=${encodeURIComponent(room)}`}
             className="inline-block font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-white bg-textMain px-8 py-4 hover:bg-textLight transition-colors duration-300 rounded"
           >
             決済に戻る
