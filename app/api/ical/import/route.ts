@@ -5,11 +5,20 @@ type ImportEvent = { start: string; end: string; uid?: string };
 
 export const runtime = 'nodejs';
 
-function toDateStr(d: Date): string {
-  const y = d.getUTCFullYear();
-  const m = String(d.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(d.getUTCDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
+function parseIcal(text: string): ImportEvent[] {
+  const events: ImportEvent[] = [];
+  const blocks = text.split('BEGIN:VEVENT');
+  for (const block of blocks.slice(1)) {
+    const dtstart = block.match(/DTSTART;?[^:]*:(\d{8})/)?.[1];
+    const dtend = block.match(/DTEND;?[^:]*:(\d{8})/)?.[1];
+    const uid = block.match(/UID:(.+)/)?.[1]?.trim();
+    if (dtstart && dtend) {
+      const start = `${dtstart.slice(0, 4)}-${dtstart.slice(4, 6)}-${dtstart.slice(6, 8)}`;
+      const end = `${dtend.slice(0, 4)}-${dtend.slice(4, 6)}-${dtend.slice(6, 8)}`;
+      events.push({ start, end, uid: uid || '' });
+    }
+  }
+  return events;
 }
 
 function readCronSecret(req: Request): string | null {
@@ -41,18 +50,6 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'missing_supabase_service_role' }, { status: 500 });
     }
 
-    let ical: any;
-    try {
-      const mod = await import('node-ical');
-      ical = mod?.default ?? mod;
-    } catch (e: any) {
-      console.error(e);
-      return NextResponse.json(
-        { error: 'node-ical import failed', detail: e?.message ?? String(e) },
-        { status: 500 },
-      );
-    }
-
     const results: { roomKey: string; inserted: number }[] = [];
 
     for (const m of map) {
@@ -62,18 +59,7 @@ export async function GET(req: Request) {
       }
       const text = await res.text();
 
-      const parsed = ical.sync.parseICS(text);
-      const events: ImportEvent[] = [];
-      for (const key of Object.keys(parsed)) {
-        const ev: any = (parsed as any)[key];
-        if (!ev || ev.type !== 'VEVENT') continue;
-        if (!ev.start || !ev.end) continue;
-        events.push({
-          start: toDateStr(new Date(ev.start)),
-          end: toDateStr(new Date(ev.end)),
-          uid: ev.uid ? String(ev.uid) : undefined,
-        });
-      }
+      const events = parseIcal(text);
 
       const { error: delErr } = await supabase
         .from('external_blocks')

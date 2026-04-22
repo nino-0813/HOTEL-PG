@@ -8,7 +8,8 @@ export async function GET(req: Request) {
 
   const supabase = getSupabaseServerClient();
   if (!supabase) {
-    return NextResponse.json({ error: 'missing_supabase_service_role' }, { status: 500 });
+    // Local dev / misconfig: don't break the UI; just show no blocks.
+    return NextResponse.json({ room, ranges: [], warning: 'missing_supabase_service_role' }, { status: 200 });
   }
 
   const [bookingsRes, blocksRes] = await Promise.all([
