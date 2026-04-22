@@ -2,8 +2,6 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 
-type Range = { start: string; end: string; source: string };
-
 const JP_WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'] as const;
 
 function toDate(d: string): Date {
@@ -36,15 +34,6 @@ function yen(amount: number): string {
     .replace('￥', '¥');
 }
 
-function overlaps(aStart: string, aEnd: string, bStart: string, bEnd: string) {
-  // All are DATE; end is exclusive for bookings/blocks.
-  const as = toDate(aStart).getTime();
-  const ae = toDate(aEnd).getTime();
-  const bs = toDate(bStart).getTime();
-  const be = toDate(bEnd).getTime();
-  return as < be && bs < ae;
-}
-
 export function RoomBookingCalendar({
   roomKey,
   nextPath,
@@ -52,20 +41,34 @@ export function RoomBookingCalendar({
   roomKey: string;
   nextPath: string; // e.g. /checkout?room=pg1
 }) {
-  const [ranges, setRanges] = useState<Range[]>([]);
+  const [dayCounts, setDayCounts] = useState<Record<string, number>>({});
   const [checkin, setCheckin] = useState('');
   const [checkout, setCheckout] = useState('');
   const [loading, setLoading] = useState(true);
   const [viewMonth, setViewMonth] = useState(() => startOfMonth(new Date()));
 
+  const visibleRange = useMemo(() => {
+    const first = startOfMonth(viewMonth);
+    const dim = daysInMonth(viewMonth);
+    const firstDow = first.getUTCDay();
+    const gridStart = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth(), 1 - firstDow));
+    const cells = firstDow + dim;
+    const weeks = Math.ceil(cells / 7);
+    const gridEndExclusive = new Date(Date.UTC(gridStart.getUTCFullYear(), gridStart.getUTCMonth(), gridStart.getUTCDate() + weeks * 7));
+    return { start: toDateStr(gridStart), end: toDateStr(gridEndExclusive) };
+  }, [viewMonth]);
+
   useEffect(() => {
     let mounted = true;
     (async () => {
       try {
-        const res = await fetch(`/api/availability?room=${encodeURIComponent(roomKey)}`, { cache: 'no-store' });
+        const res = await fetch(
+          `/api/availability?room=${encodeURIComponent(roomKey)}&start=${encodeURIComponent(visibleRange.start)}&end=${encodeURIComponent(visibleRange.end)}`,
+          { cache: 'no-store' },
+        );
         const json = await res.json();
         if (!mounted) return;
-        setRanges((json?.ranges ?? []) as Range[]);
+        setDayCounts((json?.days ?? {}) as Record<string, number>);
       } catch {
         // ignore (calendar still usable without sync)
       } finally {
@@ -75,7 +78,7 @@ export function RoomBookingCalendar({
     return () => {
       mounted = false;
     };
-  }, [roomKey]);
+  }, [roomKey, visibleRange.start, visibleRange.end]);
 
   const capacity = useMemo(() => {
     // 楽天側カレンダーに合わせた「在庫数」表示用（必要に応じて調整）
@@ -97,34 +100,24 @@ export function RoomBookingCalendar({
     };
   }, [roomKey]);
 
-  const dayBookedCount = useMemo(() => {
-    // each range => 1 booking/block; count overlaps per day
-    const map = new Map<string, number>();
-    for (const r of ranges) {
-      if (!r.start || !r.end) continue;
-      const start = toDate(r.start);
-      const end = toDate(r.end);
-      // iterate days [start, end)
-      for (let d = new Date(start); d.getTime() < end.getTime(); d = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + 1))) {
-        const key = toDateStr(d);
-        map.set(key, (map.get(key) ?? 0) + 1);
-      }
-    }
-    return map;
-  }, [ranges]);
-
   const blockedDay = useMemo(() => {
     return (dateStr: string) => {
-      const booked = dayBookedCount.get(dateStr) ?? 0;
+      const booked = dayCounts[dateStr] ?? 0;
       return booked >= capacity;
     };
-  }, [dayBookedCount, capacity]);
+  }, [dayCounts, capacity]);
 
   const blocked = useMemo(() => {
     if (!checkin || !checkout) return false;
     if (checkin >= checkout) return true;
-    return ranges.some((r) => overlaps(checkin, checkout, r.start, r.end));
-  }, [checkin, checkout, ranges]);
+    // if any day in selection is blocked, treat blocked
+    const s = toDate(checkin);
+    const e = toDate(checkout);
+    for (let d = new Date(s); d.getTime() < e.getTime(); d = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + 1))) {
+      if (blockedDay(toDateStr(d))) return true;
+    }
+    return false;
+  }, [checkin, checkout, blockedDay]);
 
   const selectionBlocked = useMemo(() => {
     if (!checkin || !checkout) return false;
@@ -255,7 +248,7 @@ export function RoomBookingCalendar({
             );
           }
           const ds = cell.dateStr;
-          const booked = dayBookedCount.get(ds) ?? 0;
+          const booked = dayCounts[ds] ?? 0;
           const available = Math.max(0, capacity - booked);
           const dow = cell.date.getUTCDay();
           const price = priceForDate(dow);

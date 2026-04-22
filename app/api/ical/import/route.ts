@@ -5,6 +5,19 @@ type ImportEvent = { start: string; end: string; uid?: string };
 
 export const runtime = 'nodejs';
 
+function toUtcDate(dateStr: string): Date | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return null;
+  const [y, m, d] = dateStr.split('-').map((x) => parseInt(x, 10));
+  return new Date(Date.UTC(y, m - 1, d));
+}
+
+function diffDays(start: string, end: string): number | null {
+  const s = toUtcDate(start);
+  const e = toUtcDate(end);
+  if (!s || !e) return null;
+  return Math.round((e.getTime() - s.getTime()) / (24 * 60 * 60 * 1000));
+}
+
 function parseIcal(text: string): ImportEvent[] {
   const events: ImportEvent[] = [];
   const blocks = text.split('BEGIN:VEVENT');
@@ -67,7 +80,10 @@ export async function GET(req: Request) {
       }
       const text = await res.text();
 
-      const events = parseIcal(text);
+      const events = parseIcal(text).filter((e) => {
+        const days = diffDays(e.start, e.end);
+        return days !== null && days < 90;
+      });
 
       const { error: delErr } = await supabase
         .from('external_blocks')
