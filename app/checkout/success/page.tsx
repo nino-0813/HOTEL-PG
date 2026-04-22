@@ -9,6 +9,8 @@ export default function CheckoutSuccess() {
   const searchParams = useSearchParams();
   const room = searchParams.get('room') ?? '-';
   const sessionId = searchParams.get('session_id') ?? '-';
+  const checkin = searchParams.get('checkin') ?? '';
+  const checkout = searchParams.get('checkout') ?? '';
   const [saved, setSaved] = useState(false);
 
   const roomLabel = useMemo(() => {
@@ -30,7 +32,14 @@ export default function CheckoutSuccess() {
       const { error } = await supabase
         .from('bookings')
         .upsert(
-          { user_id: userId, room_key: room, stripe_session_id: sessionId, status: 'paid' },
+          {
+            user_id: userId,
+            room_key: room,
+            checkin_date: checkin || null,
+            checkout_date: checkout || null,
+            stripe_session_id: sessionId,
+            status: 'paid',
+          },
           { onConflict: 'stripe_session_id' },
         );
       if (!mounted) return;
@@ -39,7 +48,7 @@ export default function CheckoutSuccess() {
     return () => {
       mounted = false;
     };
-  }, [room, sessionId]);
+  }, [room, sessionId, checkin, checkout]);
 
   return (
     <main className="min-h-screen bg-background py-16 sm:py-24">

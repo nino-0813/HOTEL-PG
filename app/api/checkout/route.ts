@@ -25,7 +25,11 @@ const ROOMS: Record<
 
 export async function POST(req: Request) {
   try {
-    const { room } = (await req.json().catch(() => ({}))) as { room?: RoomKey };
+    const { room, checkin, checkout } = (await req.json().catch(() => ({}))) as {
+      room?: RoomKey;
+      checkin?: string;
+      checkout?: string;
+    };
     if (!room || !(room in ROOMS)) {
       return Response.json({ error: 'invalid_room' }, { status: 400 });
     }
@@ -41,6 +45,10 @@ export async function POST(req: Request) {
 
     const origin = req.headers.get('origin') ?? 'http://localhost:3003';
     const { name, amountJpy, description } = ROOMS[room];
+
+    const qs = new URLSearchParams({ room });
+    if (checkin) qs.set('checkin', checkin);
+    if (checkout) qs.set('checkout', checkout);
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -58,9 +66,9 @@ export async function POST(req: Request) {
           quantity: 1,
         },
       ],
-      success_url: `${origin}/checkout/success?room=${room}&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${origin}/checkout/success?${qs.toString()}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout/cancel?room=${room}`,
-      metadata: { room },
+      metadata: { room, checkin: checkin ?? '', checkout: checkout ?? '' },
     });
 
     return Response.json({ url: session.url });

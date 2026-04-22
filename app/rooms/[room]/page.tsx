@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ROOMS, type RoomSlug } from '@/lib/room-data';
+import { RoomBookingCalendar } from '@/components/RoomBookingCalendar';
 
 function yen(n: number): string {
   return new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(n);
@@ -82,21 +83,15 @@ export default async function RoomDetailPage({
             </div>
           </div>
 
-          <div className="mt-8 flex flex-col lg:flex-row gap-10 lg:gap-16">
-            <div className="lg:flex-1">
+          <div className="mt-8">
+            <div>
               <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-light text-textMain tracking-[0.08em]">
                 {room.name}
               </h1>
               <p className="font-serif text-sm sm:text-base text-textLight mt-3 leading-relaxed">
                 {room.subtitle}
               </p>
-              {/* Mobile: primary CTA directly under subtitle */}
-              <a
-                href={`/auth?next=${encodeURIComponent(`/checkout?room=${room.checkoutRoom}`)}`}
-                className="mt-5 block w-full text-center font-display text-xs tracking-[0.2em] uppercase text-white bg-textMain px-8 py-4 hover:bg-textLight transition-colors duration-300 rounded lg:hidden"
-              >
-                予約へ進む →
-              </a>
+              <RoomBookingCalendar roomKey={room.checkoutRoom} nextPath={`/checkout?room=${room.checkoutRoom}`} />
 
               <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="bg-white/90 backdrop-blur border border-gray-200 rounded-xl p-5">
@@ -149,17 +144,6 @@ export default async function RoomDetailPage({
                     </li>
                   ))}
                 </ul>
-              </div>
-            </div>
-
-            <div className="lg:w-[420px] lg:flex-shrink-0">
-              <div className="sticky top-24 space-y-4">
-                <a
-                  href={`/auth?next=${encodeURIComponent(`/checkout?room=${room.checkoutRoom}`)}`}
-                  className="hidden lg:block w-full text-center font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-white bg-textMain px-8 py-4 hover:bg-textLight transition-colors duration-300 rounded"
-                >
-                  決済して予約へ進む →
-                </a>
               </div>
             </div>
           </div>

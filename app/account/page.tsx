@@ -7,6 +7,8 @@ import { supabase } from '@/lib/supabase';
 type BookingRow = {
   id: string;
   room_key: string;
+  checkin_date?: string | null;
+  checkout_date?: string | null;
   stripe_session_id: string;
   status: string;
   created_at: string;
@@ -56,7 +58,7 @@ export default function AccountPage() {
 
       const { data: bookingRows } = await supabase
         .from('bookings')
-        .select('id, room_key, stripe_session_id, status, created_at')
+        .select('id, room_key, checkin_date, checkout_date, stripe_session_id, status, created_at')
         .order('created_at', { ascending: false });
       if (!mounted) return;
       setBookings((bookingRows ?? []) as BookingRow[]);
@@ -137,6 +139,11 @@ export default function AccountPage() {
                           <div className="font-serif text-xs text-gray-500 mt-1">
                             {new Date(b.created_at).toLocaleString('ja-JP')}
                           </div>
+                          {b.checkin_date && b.checkout_date ? (
+                            <div className="font-serif text-xs text-gray-500 mt-1">
+                              日程: {b.checkin_date} 〜 {b.checkout_date}
+                            </div>
+                          ) : null}
                         </div>
                         <div className="shrink-0">
                           <span className="inline-flex items-center rounded-full border border-gray-200 bg-white px-2.5 py-1 font-display text-[10px] tracking-[0.18em] uppercase text-gray-600">

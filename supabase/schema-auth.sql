@@ -50,6 +50,8 @@ create table if not exists public.bookings (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
   room_key text not null,
+  checkin_date date,
+  checkout_date date,
   stripe_session_id text not null unique,
   status text not null default 'paid',
   created_at timestamptz not null default now()
@@ -66,5 +68,20 @@ create policy "Bookings are insertable by the user"
   on public.bookings for insert
   to authenticated
   with check (auth.uid() = user_id);
+
+-- External blocks (Rakuten Oyado etc.)
+
+create table if not exists public.external_blocks (
+  id uuid primary key default gen_random_uuid(),
+  room_key text not null,
+  blocked_date_start date not null,
+  blocked_date_end date not null,
+  source text not null default 'rakuten_oyado',
+  external_uid text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.external_blocks enable row level security;
 
 

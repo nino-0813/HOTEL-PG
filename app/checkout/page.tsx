@@ -57,6 +57,8 @@ function yen(amount: number): string {
 export default function CheckoutPage({
 }: {}) {
   const searchParams = useSearchParams();
+  const checkin = searchParams.get('checkin') ?? '';
+  const checkout = searchParams.get('checkout') ?? '';
   const initialRoom = useMemo(() => {
     const r = searchParams.get('room');
     return (r === 'pg1' || r === 'pg2_single' || r === 'pg2_family') ? r : 'pg1';
@@ -87,7 +89,7 @@ export default function CheckoutPage({
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ room }),
+        body: JSON.stringify({ room, checkin, checkout }),
       });
       const json = (await res.json()) as { url?: string; error?: string };
       if (json.url) {
@@ -122,6 +124,15 @@ export default function CheckoutPage({
               <div className="font-serif text-sm text-textLight mt-2">
                 {selected.subtitle}
               </div>
+              {checkin && checkout ? (
+                <div className="font-serif text-sm text-textMain mt-3">
+                  日程: {checkin} 〜 {checkout}
+                </div>
+              ) : (
+                <div className="font-serif text-xs text-gray-500 mt-3">
+                  ※ 日程が未指定です（部屋詳細ページで選択できます）
+                </div>
+              )}
             </div>
             <button
               type="button"
