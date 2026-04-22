@@ -2,6 +2,12 @@ import Stripe from 'stripe';
 
 type RoomKey = 'pg1' | 'pg2_single' | 'pg2_family';
 
+const PRICE_RULES: Record<RoomKey, { weekday: number; weekend: number; weekendDays: Set<number> }> = {
+  pg1: { weekday: 8000, weekend: 8000, weekendDays: new Set([0, 5, 6]) }, // 日・金・土
+  pg2_single: { weekday: 8000, weekend: 12000, weekendDays: new Set([5, 6]) }, // 金・土
+  pg2_family: { weekday: 14000, weekend: 18000, weekendDays: new Set([5, 6]) }, // 金・土
+};
+
 const ROOMS: Record<
   RoomKey,
   { name: string; amountJpy: number; description: string }
@@ -22,6 +28,35 @@ const ROOMS: Record<
     description: '素泊まり / 1泊（平日料金・目安）',
   },
 };
+
+function toUtcDate(dateStr: string): Date | null {
+  // dateStr: YYYY-MM-DD
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return null;
+  const [y, m, d] = dateStr.split('-').map((x) => parseInt(x, 10));
+  return new Date(Date.UTC(y, m - 1, d));
+}
+
+function addDaysUtc(d: Date, days: number): Date {
+  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + days));
+}
+
+function calcAmountJpy(room: RoomKey, checkin?: string, checkout?: string): { amount: number; nights: number } {
+  const ci = checkin ? toUtcDate(checkin) : null;
+  const co = checkout ? toUtcDate(checkout) : null;
+  if (!ci || !co) return { amount: ROOMS[room].amountJpy, nights: 1 };
+  if (ci.getTime() >= co.getTime()) return { amount: ROOMS[room].amountJpy, nights: 1 };
+
+  const rule = PRICE_RULES[room];
+  let nights = 0;
+  let total = 0;
+  for (let d = new Date(ci); d.getTime() < co.getTime(); d = addDaysUtc(d, 1)) {
+    const dow = d.getUTCDay();
+    total += rule.weekendDays.has(dow) ? rule.weekend : rule.weekday;
+    nights += 1;
+    if (nights > 30) break; // safety
+  }
+  return { amount: Math.max(ROOMS[room].amountJpy, total), nights: Math.max(1, nights) };
+}
 
 export async function POST(req: Request) {
   try {
@@ -44,7 +79,8 @@ export async function POST(req: Request) {
     });
 
     const origin = req.headers.get('origin') ?? 'http://localhost:3003';
-    const { name, amountJpy, description } = ROOMS[room];
+    const { name, description } = ROOMS[room];
+    const { amount: amountJpy, nights } = calcAmountJpy(room, checkin, checkout);
 
     const qs = new URLSearchParams({ room });
     if (checkin) qs.set('checkin', checkin);
@@ -68,7 +104,7 @@ export async function POST(req: Request) {
       ],
       success_url: `${origin}/checkout/success?${qs.toString()}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout/cancel?room=${room}`,
-      metadata: { room, checkin: checkin ?? '', checkout: checkout ?? '' },
+      metadata: { room, checkin: checkin ?? '', checkout: checkout ?? '', nights: String(nights) },
     });
 
     return Response.json({ url: session.url });

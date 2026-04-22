@@ -54,6 +54,16 @@ function yen(amount: number): string {
   return new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(amount);
 }
 
+function toUtcDate(dateStr: string): Date | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return null;
+  const [y, m, d] = dateStr.split('-').map((x) => parseInt(x, 10));
+  return new Date(Date.UTC(y, m - 1, d));
+}
+
+function addDaysUtc(d: Date, days: number): Date {
+  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + days));
+}
+
 export default function CheckoutPage({
 }: {}) {
   const searchParams = useSearchParams();
@@ -67,6 +77,23 @@ export default function CheckoutPage({
   const [room] = useState<RoomKey>(initialRoom);
   const [loading, setLoading] = useState(false);
   const selected = ROOM_META[room];
+
+  const priceSummary = useMemo(() => {
+    const ci = checkin ? toUtcDate(checkin) : null;
+    const co = checkout ? toUtcDate(checkout) : null;
+    if (!ci || !co || ci.getTime() >= co.getTime()) return null;
+
+    // weekend rules must match calendar + Stripe amount calc
+    const weekendDays = room === 'pg1' ? new Set([0, 5, 6]) : new Set([5, 6]);
+    let nights = 0;
+    let total = 0;
+    for (let d = new Date(ci); d.getTime() < co.getTime(); d = addDaysUtc(d, 1)) {
+      total += weekendDays.has(d.getUTCDay()) ? selected.weekend : selected.weekday;
+      nights += 1;
+      if (nights > 30) break;
+    }
+    return { nights, total };
+  }, [checkin, checkout, room, selected.weekday, selected.weekend]);
 
   useEffect(() => {
     let mounted = true;
@@ -133,6 +160,11 @@ export default function CheckoutPage({
                   ※ 日程が未指定です（部屋詳細ページで選択できます）
                 </div>
               )}
+              {priceSummary ? (
+                <div className="font-serif text-sm text-textMain mt-2">
+                  合計（{priceSummary.nights}泊）: {yen(priceSummary.total)}
+                </div>
+              ) : null}
             </div>
             <button
               type="button"
