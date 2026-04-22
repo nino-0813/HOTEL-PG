@@ -52,10 +52,13 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
       'トイレ（共用）',
     ],
     images: [
-      '/images/gallery/DSC04510.webp',
-      '/images/gallery/DSC04514.webp',
-      '/images/gallery/DSC04542.webp',
-      '/images/gallery/DSC04613.webp',
+      '/hotel1/スクリーンショット 2025-12-15 0.30.00.webp',
+      '/hotel1/スクリーンショット 2025-12-15 0.30.12.webp',
+      '/hotel1/スクリーンショット 2025-12-15 0.30.20.webp',
+      '/hotel1/スクリーンショット 2025-12-15 0.30.32.webp',
+      '/hotel1/スクリーンショット 2025-12-15 0.30.41.webp',
+      '/hotel1/スクリーンショット 2025-12-15 0.30.53.webp',
+      '/hotel1/スクリーンショット 2025-12-15 0.31.02.webp',
     ],
   },
   'pg2-single': {

@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 type RoomKey = 'pg1' | 'pg2_single' | 'pg2_family';
 
@@ -22,6 +23,21 @@ export default function CheckoutPage({
   const [room, setRoom] = useState<RoomKey>(initialRoom);
   const [loading, setLoading] = useState(false);
   const selected = ROOMS.find((r) => r.key === room)!;
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      if (!supabase) return;
+      const { data } = await supabase.auth.getSession();
+      if (!mounted) return;
+      if (!data.session) {
+        window.location.href = `/auth?next=${encodeURIComponent(`/checkout?room=${room}`)}`;
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [room]);
 
   const startCheckout = async () => {
     setLoading(true);

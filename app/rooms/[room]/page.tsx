@@ -110,11 +110,26 @@ export default async function RoomDetailPage({
             Photos
           </h2>
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {room.images.map((src) => (
-              <div key={src} className="relative aspect-[4/3] bg-gray-100 overflow-hidden rounded-xl border border-gray-100">
-                <Image src={src} alt={room.name} fill sizes="(max-width: 1024px) 50vw, 25vw" className="object-cover" />
-              </div>
-            ))}
+            {room.images.map((src, i) => {
+              const isHero = i === 0;
+              return (
+                <div
+                  key={src}
+                  className={[
+                    'relative bg-gray-100 overflow-hidden rounded-xl border border-gray-100',
+                    isHero ? 'aspect-[16/10] sm:aspect-[16/11] sm:col-span-2 lg:col-span-2 lg:row-span-2' : 'aspect-[4/3]',
+                  ].join(' ')}
+                >
+                  <Image
+                    src={src}
+                    alt={room.name}
+                    fill
+                    sizes={isHero ? '(max-width: 1024px) 100vw, 50vw' : '(max-width: 1024px) 50vw, 25vw'}
+                    className="object-cover hover:scale-[1.02] transition-transform duration-700"
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

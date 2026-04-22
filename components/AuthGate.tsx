@@ -3,6 +3,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 
+const POST_AUTH_NEXT_KEY = 'hotelpg:post_auth_next';
+
 export function AuthGate({
   nextPath,
   title = 'Sign in',
@@ -15,9 +17,7 @@ export function AuthGate({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const nextUrl = useMemo(() => {
-    return new URL(nextPath, window.location.origin).toString();
-  }, [nextPath]);
+  const callbackUrl = useMemo(() => new URL('/auth/callback', window.location.origin).toString(), []);
 
   useEffect(() => {
     let mounted = true;
@@ -39,9 +39,10 @@ export function AuthGate({
 
   const signInWithGoogle = async () => {
     if (!supabase) return;
+    localStorage.setItem(POST_AUTH_NEXT_KEY, nextPath);
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: nextUrl },
+      options: { redirectTo: callbackUrl },
     });
   };
 
@@ -59,9 +60,10 @@ export function AuthGate({
     const signUp = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: nextUrl },
+      options: { emailRedirectTo: callbackUrl },
     });
     if (!signUp.error) {
+      localStorage.setItem(POST_AUTH_NEXT_KEY, nextPath);
       window.location.href = nextPath;
     } else {
       alert('ログイン/登録に失敗しました。入力内容をご確認ください。');
