@@ -252,7 +252,7 @@ export function RoomBookingCalendar({
           const available = Math.max(0, capacity - booked);
           const dow = cell.date.getUTCDay();
           const price = priceForDate(dow);
-          const isBlocked = booked >= capacity;
+          const isBlocked = available <= 0;
           const isSelected = inSelectedRange(ds);
           const isToday = ds === toDateStr(new Date());
           return (
@@ -264,7 +264,7 @@ export function RoomBookingCalendar({
               className={[
                 'h-[56px] sm:h-[72px] rounded-lg border text-left px-1.5 py-1.5 sm:px-2 sm:py-2 transition-colors',
                 isSelected ? 'border-textMain bg-[#f5f2ea]' : 'border-gray-100 bg-white',
-                isBlocked ? 'opacity-55 cursor-not-allowed' : 'hover:border-gray-300',
+                isBlocked ? 'opacity-55 cursor-not-allowed bg-gray-50' : 'hover:border-gray-300',
               ].join(' ')}
             >
               <div className="flex items-start justify-between">
@@ -283,7 +283,6 @@ export function RoomBookingCalendar({
                 ) : null}
               </div>
               <div className="mt-1 text-[10px] sm:text-[11px] leading-tight">
-                <div className="text-green-700 font-serif whitespace-nowrap">予約: {booked}</div>
                 <div className="text-gray-700 font-serif whitespace-nowrap">空き: {available}</div>
                 {price ? (
                   <div className="hidden sm:block text-gray-500 font-serif whitespace-nowrap">{yen(price)}</div>
