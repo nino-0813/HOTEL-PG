@@ -1,69 +1,23 @@
 import Stripe from 'stripe';
+import { ROOM_PRICING, calculatePrice, clampGuests, type RoomKey as PricingRoomKey } from '@/lib/pricing';
 
-type RoomKey = 'pg1' | 'pg2_single' | 'pg2_family';
+type RoomKey = PricingRoomKey;
 
-const PRICE_RULES: Record<RoomKey, { weekday: number; weekend: number; weekendDays: Set<number> }> = {
-  pg1: { weekday: 8000, weekend: 8000, weekendDays: new Set([0, 5, 6]) }, // 日・金・土
-  pg2_single: { weekday: 8000, weekend: 12000, weekendDays: new Set([5, 6]) }, // 金・土
-  pg2_family: { weekday: 14000, weekend: 18000, weekendDays: new Set([5, 6]) }, // 金・土
+const ROOMS: Record<RoomKey, { name: string; description: string }> = {
+  pg1: { name: ROOM_PRICING.pg1.name, description: '素泊まり' },
+  pg2_single: { name: ROOM_PRICING.pg2_single.name, description: '素泊まり' },
+  pg2_family: { name: ROOM_PRICING.pg2_family.name, description: '素泊まり' },
 };
-
-const ROOMS: Record<
-  RoomKey,
-  { name: string; amountJpy: number; description: string }
-> = {
-  pg1: {
-    name: 'HOTEL PG -I-（ロフト付き洋室）',
-    amountJpy: 8000,
-    description: '素泊まり / 1泊（目安）',
-  },
-  pg2_single: {
-    name: 'HOTEL PG -II-（シングルタイプ）',
-    amountJpy: 8000,
-    description: '素泊まり / 1泊（平日料金・目安）',
-  },
-  pg2_family: {
-    name: 'HOTEL PG -II-（ファミリータイプ）',
-    amountJpy: 14000,
-    description: '素泊まり / 1泊（平日料金・目安）',
-  },
-};
-
-function toUtcDate(dateStr: string): Date | null {
-  // dateStr: YYYY-MM-DD
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return null;
-  const [y, m, d] = dateStr.split('-').map((x) => parseInt(x, 10));
-  return new Date(Date.UTC(y, m - 1, d));
-}
-
-function addDaysUtc(d: Date, days: number): Date {
-  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + days));
-}
-
-function calcAmountJpy(room: RoomKey, checkin?: string, checkout?: string): { amount: number; nights: number } {
-  const ci = checkin ? toUtcDate(checkin) : null;
-  const co = checkout ? toUtcDate(checkout) : null;
-  if (!ci || !co) return { amount: ROOMS[room].amountJpy, nights: 1 };
-  if (ci.getTime() >= co.getTime()) return { amount: ROOMS[room].amountJpy, nights: 1 };
-
-  const rule = PRICE_RULES[room];
-  let nights = 0;
-  let total = 0;
-  for (let d = new Date(ci); d.getTime() < co.getTime(); d = addDaysUtc(d, 1)) {
-    const dow = d.getUTCDay();
-    total += rule.weekendDays.has(dow) ? rule.weekend : rule.weekday;
-    nights += 1;
-    if (nights > 30) break; // safety
-  }
-  return { amount: Math.max(ROOMS[room].amountJpy, total), nights: Math.max(1, nights) };
-}
 
 export async function POST(req: Request) {
   try {
-    const { room, checkin, checkout } = (await req.json().catch(() => ({}))) as {
+    const { room, checkin, checkout, adults, children, infants } = (await req.json().catch(() => ({}))) as {
       room?: RoomKey;
       checkin?: string;
       checkout?: string;
+      adults?: number;
+      children?: number;
+      infants?: number;
     };
     if (!room || !(room in ROOMS)) {
       return Response.json({ error: 'invalid_room' }, { status: 400 });
@@ -80,11 +34,30 @@ export async function POST(req: Request) {
 
     const origin = req.headers.get('origin') ?? 'http://localhost:3003';
     const { name, description } = ROOMS[room];
-    const { amount: amountJpy, nights } = calcAmountJpy(room, checkin, checkout);
+    const clamped = clampGuests(room, adults ?? 1, children ?? 0, infants ?? 0);
+    const price = checkin && checkout
+      ? calculatePrice({
+          roomKey: room,
+          checkin,
+          checkout,
+          adults: clamped.adults,
+          children: clamped.children,
+          infants: clamped.infants,
+        })
+      : null;
+    if (!price) {
+      return Response.json({ error: 'missing_dates' }, { status: 400 });
+    }
+    const amountJpy = price.total;
+    const nights = price.nights;
 
     const qs = new URLSearchParams({ room });
-    if (checkin) qs.set('checkin', checkin);
-    if (checkout) qs.set('checkout', checkout);
+    qs.set('checkin', checkin ?? '');
+    qs.set('checkout', checkout ?? '');
+    qs.set('adults', String(clamped.adults));
+    qs.set('children', String(clamped.children));
+    qs.set('infants', String(clamped.infants));
+    qs.set('total_price', String(amountJpy));
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -104,7 +77,16 @@ export async function POST(req: Request) {
       ],
       success_url: `${origin}/checkout/success?${qs.toString()}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout/cancel?room=${room}`,
-      metadata: { room, checkin: checkin ?? '', checkout: checkout ?? '', nights: String(nights) },
+      metadata: {
+        room,
+        checkin: checkin ?? '',
+        checkout: checkout ?? '',
+        nights: String(nights),
+        adults: String(clamped.adults),
+        children: String(clamped.children),
+        infants: String(clamped.infants),
+        total_price: String(amountJpy),
+      },
     });
 
     return Response.json({ url: session.url });

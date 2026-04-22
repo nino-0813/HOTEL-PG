@@ -52,10 +52,21 @@ create table if not exists public.bookings (
   room_key text not null,
   checkin_date date,
   checkout_date date,
+  adults integer not null default 1,
+  children integer not null default 0,
+  infants integer not null default 0,
+  total_price integer,
   stripe_session_id text not null unique,
   status text not null default 'paid',
   created_at timestamptz not null default now()
 );
+
+-- 既存テーブルに後から追加する場合（安全に実行可能）
+alter table public.bookings
+  add column if not exists adults integer not null default 1,
+  add column if not exists children integer not null default 0,
+  add column if not exists infants integer not null default 0,
+  add column if not exists total_price integer;
 
 alter table public.bookings enable row level security;
 

@@ -11,6 +11,10 @@ export default function CheckoutSuccess() {
   const sessionId = searchParams.get('session_id') ?? '-';
   const checkin = searchParams.get('checkin') ?? '';
   const checkout = searchParams.get('checkout') ?? '';
+  const adults = Math.max(1, parseInt(searchParams.get('adults') ?? '1', 10) || 1);
+  const children = Math.max(0, parseInt(searchParams.get('children') ?? '0', 10) || 0);
+  const infants = Math.max(0, parseInt(searchParams.get('infants') ?? '0', 10) || 0);
+  const totalPrice = Math.max(0, parseInt(searchParams.get('total_price') ?? '0', 10) || 0);
   const [saved, setSaved] = useState(false);
 
   const roomLabel = useMemo(() => {
@@ -37,6 +41,10 @@ export default function CheckoutSuccess() {
             room_key: room,
             checkin_date: checkin || null,
             checkout_date: checkout || null,
+            adults,
+            children,
+            infants,
+            total_price: totalPrice || null,
             stripe_session_id: sessionId,
             status: 'paid',
           },
@@ -48,7 +56,7 @@ export default function CheckoutSuccess() {
     return () => {
       mounted = false;
     };
-  }, [room, sessionId, checkin, checkout]);
+  }, [room, sessionId, checkin, checkout, adults, children, infants, totalPrice]);
 
   return (
     <main className="min-h-screen bg-background py-16 sm:py-24">

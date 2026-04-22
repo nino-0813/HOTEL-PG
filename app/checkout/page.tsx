@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { calculatePrice, clampGuests, type RoomKey as PricingRoomKey } from '@/lib/pricing';
 
 type RoomKey = 'pg1' | 'pg2_single' | 'pg2_family';
 
@@ -54,21 +55,14 @@ function yen(amount: number): string {
   return new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(amount);
 }
 
-function toUtcDate(dateStr: string): Date | null {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return null;
-  const [y, m, d] = dateStr.split('-').map((x) => parseInt(x, 10));
-  return new Date(Date.UTC(y, m - 1, d));
-}
-
-function addDaysUtc(d: Date, days: number): Date {
-  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + days));
-}
-
 export default function CheckoutPage({
 }: {}) {
   const searchParams = useSearchParams();
   const checkin = searchParams.get('checkin') ?? '';
   const checkout = searchParams.get('checkout') ?? '';
+  const adultsRaw = Math.max(1, parseInt(searchParams.get('adults') ?? '1', 10) || 1);
+  const childrenRaw = Math.max(0, parseInt(searchParams.get('children') ?? '0', 10) || 0);
+  const infants = Math.max(0, parseInt(searchParams.get('infants') ?? '0', 10) || 0);
   const initialRoom = useMemo(() => {
     const r = searchParams.get('room');
     return (r === 'pg1' || r === 'pg2_single' || r === 'pg2_family') ? r : 'pg1';
@@ -79,21 +73,19 @@ export default function CheckoutPage({
   const selected = ROOM_META[room];
 
   const priceSummary = useMemo(() => {
-    const ci = checkin ? toUtcDate(checkin) : null;
-    const co = checkout ? toUtcDate(checkout) : null;
-    if (!ci || !co || ci.getTime() >= co.getTime()) return null;
-
-    // weekend rules must match calendar + Stripe amount calc
-    const weekendDays = room === 'pg1' ? new Set([0, 5, 6]) : new Set([5, 6]);
-    let nights = 0;
-    let total = 0;
-    for (let d = new Date(ci); d.getTime() < co.getTime(); d = addDaysUtc(d, 1)) {
-      total += weekendDays.has(d.getUTCDay()) ? selected.weekend : selected.weekday;
-      nights += 1;
-      if (nights > 30) break;
-    }
-    return { nights, total };
-  }, [checkin, checkout, room, selected.weekday, selected.weekend]);
+    const clamped = clampGuests(room as PricingRoomKey, adultsRaw, childrenRaw, infants);
+    if (!checkin || !checkout) return null;
+    const p = calculatePrice({
+      roomKey: room as PricingRoomKey,
+      checkin,
+      checkout,
+      adults: clamped.adults,
+      children: clamped.children,
+      infants: clamped.infants,
+    });
+    if (!p) return null;
+    return { nights: p.nights, total: p.total, perNight: p.perNight, clamped };
+  }, [checkin, checkout, room, adultsRaw, childrenRaw, infants]);
 
   useEffect(() => {
     let mounted = true;
@@ -116,7 +108,14 @@ export default function CheckoutPage({
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ room, checkin, checkout }),
+        body: JSON.stringify({
+          room,
+          checkin,
+          checkout,
+          adults: priceSummary?.clamped.adults ?? adultsRaw,
+          children: priceSummary?.clamped.children ?? childrenRaw,
+          infants,
+        }),
       });
       const json = (await res.json()) as { url?: string; error?: string };
       if (json.url) {
@@ -165,6 +164,10 @@ export default function CheckoutPage({
                   合計（{priceSummary.nights}泊）: {yen(priceSummary.total)}
                 </div>
               ) : null}
+              <div className="font-serif text-sm text-textMain mt-2">
+                人数: 大人{priceSummary?.clamped.adults ?? adultsRaw}名
+                {` / 子供${priceSummary?.clamped.children ?? childrenRaw}名 / 乳幼児${infants}名`}
+              </div>
             </div>
             <button
               type="button"

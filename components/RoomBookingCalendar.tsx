@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
+import { ROOM_PRICING, calculatePrice, clampGuests, type RoomKey as PricingRoomKey } from '@/lib/pricing';
 
 const JP_WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'] as const;
 
@@ -46,6 +47,9 @@ export function RoomBookingCalendar({
   const [checkout, setCheckout] = useState('');
   const [loading, setLoading] = useState(true);
   const [viewMonth, setViewMonth] = useState(() => startOfMonth(new Date()));
+  const [adults, setAdults] = useState(1);
+  const [children, setChildren] = useState(0);
+  const [infants, setInfants] = useState(0);
 
   const visibleRange = useMemo(() => {
     const first = startOfMonth(viewMonth);
@@ -79,6 +83,17 @@ export function RoomBookingCalendar({
       mounted = false;
     };
   }, [roomKey, visibleRange.start, visibleRange.end]);
+
+  const pricingRoomKey = roomKey as PricingRoomKey;
+  const maxGuests = ROOM_PRICING[pricingRoomKey]?.maxGuests ?? 1;
+  const isSingleFixed = pricingRoomKey === 'pg2_single';
+
+  useEffect(() => {
+    // reset to defaults per room
+    setAdults(1);
+    setChildren(0);
+    setInfants(0);
+  }, [roomKey]);
 
   const capacity = useMemo(() => {
     // 楽天側カレンダーに合わせた「在庫数」表示用（必要に応じて調整）
@@ -130,14 +145,42 @@ export function RoomBookingCalendar({
     return false;
   }, [checkin, checkout, blockedDay]);
 
+  const clamped = useMemo(() => {
+    if (!ROOM_PRICING[pricingRoomKey]) return { adults: 1, children: 0, infants: 0 };
+    return clampGuests(pricingRoomKey, adults, children, infants);
+  }, [pricingRoomKey, adults, children, infants]);
+
+  useEffect(() => {
+    if (clamped.adults !== adults) setAdults(clamped.adults);
+    if (clamped.children !== children) setChildren(clamped.children);
+    if (clamped.infants !== infants) setInfants(clamped.infants);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clamped.adults, clamped.children, clamped.infants]);
+
+  const price = useMemo(() => {
+    if (!ROOM_PRICING[pricingRoomKey]) return null;
+    if (!checkin || !checkout) return null;
+    return calculatePrice({
+      roomKey: pricingRoomKey,
+      checkin,
+      checkout,
+      adults: clamped.adults,
+      children: clamped.children,
+      infants: clamped.infants,
+    });
+  }, [pricingRoomKey, checkin, checkout, clamped.adults, clamped.children, clamped.infants]);
+
   const ctaHref = useMemo(() => {
     const url = new URL(`/auth`, typeof window === 'undefined' ? 'http://localhost' : window.location.origin);
     const next = new URL(nextPath, url.origin);
     if (checkin) next.searchParams.set('checkin', checkin);
     if (checkout) next.searchParams.set('checkout', checkout);
+    next.searchParams.set('adults', String(clamped.adults));
+    next.searchParams.set('children', String(clamped.children));
+    next.searchParams.set('infants', String(clamped.infants));
     url.searchParams.set('next', next.pathname + next.search);
     return url.pathname + url.search;
-  }, [nextPath, checkin, checkout]);
+  }, [nextPath, checkin, checkout, clamped.adults, clamped.children, clamped.infants]);
 
   const monthTitle = useMemo(() => {
     const y = viewMonth.getUTCFullYear();
@@ -228,6 +271,95 @@ export function RoomBookingCalendar({
           在庫: {capacity}
         </div>
       </div>
+
+      {!isSingleFixed ? (
+        <div className="mt-3 rounded-xl border border-gray-200 bg-white p-4">
+          <div className="font-display text-[10px] tracking-[0.18em] uppercase text-gray-500">宿泊者人数</div>
+          <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-4 py-3">
+              <div className="font-serif text-sm text-gray-600">大人</div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setAdults((v) => Math.max(1, v - 1))}
+                  className="h-8 w-8 rounded-md border border-gray-200 bg-white font-display text-sm text-gray-700 hover:border-gray-400"
+                >
+                  −
+                </button>
+                <div className="w-10 text-center font-serif text-sm text-textMain">{adults}</div>
+                <button
+                  type="button"
+                  onClick={() => setAdults((v) => Math.min(maxGuests, v + 1))}
+                  className="h-8 w-8 rounded-md border border-gray-200 bg-white font-display text-sm text-gray-700 hover:border-gray-400"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-4 py-3">
+              <div className="font-serif text-sm text-gray-600">子供（2-12歳）</div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setChildren((v) => Math.max(0, v - 1))}
+                  className="h-8 w-8 rounded-md border border-gray-200 bg-white font-display text-sm text-gray-700 hover:border-gray-400"
+                >
+                  −
+                </button>
+                <div className="w-10 text-center font-serif text-sm text-textMain">{children}</div>
+                <button
+                  type="button"
+                  onClick={() => setChildren((v) => Math.min(maxGuests - adults, v + 1))}
+                  className="h-8 w-8 rounded-md border border-gray-200 bg-white font-display text-sm text-gray-700 hover:border-gray-400"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-4 py-3">
+              <div className="font-serif text-sm text-gray-600">乳幼児（2歳未満）</div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setInfants((v) => Math.max(0, v - 1))}
+                  className="h-8 w-8 rounded-md border border-gray-200 bg-white font-display text-sm text-gray-700 hover:border-gray-400"
+                >
+                  −
+                </button>
+                <div className="w-10 text-center font-serif text-sm text-textMain">{infants}</div>
+                <button
+                  type="button"
+                  onClick={() => setInfants((v) => v + 1)}
+                  className="h-8 w-8 rounded-md border border-gray-200 bg-white font-display text-sm text-gray-700 hover:border-gray-400"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-2 font-serif text-xs text-gray-500">
+            ※ 乳幼児（2歳未満）は無料です。ご予約人数は「大人＋子供」で最大{maxGuests}名までとなります（人数は自動で調整されます）。
+          </div>
+        </div>
+      ) : null}
+
+      {price && checkin && checkout ? (
+        <div className="mt-3 rounded-xl border border-gray-200 bg-white p-4">
+          <div className="font-display text-[10px] tracking-[0.18em] uppercase text-gray-500">料金</div>
+          <div className="mt-3 font-serif text-sm text-textMain">
+            宿泊料金（税・手数料込）　{yen(price.perNight)} × {price.nights}泊
+          </div>
+          <div className="mt-3 border-t border-gray-200 pt-3 font-serif text-sm text-textMain font-semibold">
+            合計　{yen(price.total)}
+          </div>
+          <div className="mt-2 font-serif text-[11px] text-gray-500">
+            ※ 料金には決済手数料・消費税が含まれます。
+          </div>
+        </div>
+      ) : null}
 
       <div className="mt-3 grid grid-cols-7 gap-1 sm:gap-1.5">
         {JP_WEEKDAYS.map((w) => (
