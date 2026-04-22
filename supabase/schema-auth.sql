@@ -41,3 +41,30 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
 
+-- Bookings
+-- Stripe Checkout success 後に、ユーザー自身の予約履歴として保存する
+
+create extension if not exists pgcrypto;
+
+create table if not exists public.bookings (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  room_key text not null,
+  stripe_session_id text not null unique,
+  status text not null default 'paid',
+  created_at timestamptz not null default now()
+);
+
+alter table public.bookings enable row level security;
+
+create policy "Bookings are viewable by the user"
+  on public.bookings for select
+  to authenticated
+  using (auth.uid() = user_id);
+
+create policy "Bookings are insertable by the user"
+  on public.bookings for insert
+  to authenticated
+  with check (auth.uid() = user_id);
+
+

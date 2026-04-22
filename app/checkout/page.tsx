@@ -6,11 +6,53 @@ import { supabase } from '@/lib/supabase';
 
 type RoomKey = 'pg1' | 'pg2_single' | 'pg2_family';
 
-const ROOMS: { key: RoomKey; label: string; priceHint: string }[] = [
-  { key: 'pg1', label: 'HOTEL PG -I-', priceHint: '¥8,000 / 泊〜' },
-  { key: 'pg2_single', label: 'HOTEL PG -II-（シングル）', priceHint: '¥8,000 / 泊〜' },
-  { key: 'pg2_family', label: 'HOTEL PG -II-（ファミリー）', priceHint: '¥14,000 / 泊〜' },
-];
+const ROOM_META: Record<
+  RoomKey,
+  {
+    label: string;
+    subtitle: string;
+    priceFrom: number;
+    weekday: number;
+    weekend: number;
+    weekendRule: string;
+    extra?: string;
+    backTo: string;
+  }
+> = {
+  pg1: {
+    label: 'HOTEL PG -I-',
+    subtitle: '【素泊まり】ロフト付き洋室',
+    priceFrom: 8000,
+    weekday: 8000,
+    weekend: 8000,
+    weekendRule: '金・土・日',
+    extra: '2人目から +¥5,000/人',
+    backTo: '/rooms/pg1',
+  },
+  pg2_single: {
+    label: 'HOTEL PG -II-（シングル）',
+    subtitle: 'シングルタイプ',
+    priceFrom: 8000,
+    weekday: 8000,
+    weekend: 12000,
+    weekendRule: '金・土（※日曜なし）',
+    backTo: '/rooms/pg2-single',
+  },
+  pg2_family: {
+    label: 'HOTEL PG -II-（ファミリー）',
+    subtitle: 'ファミリータイプ',
+    priceFrom: 14000,
+    weekday: 14000,
+    weekend: 18000,
+    weekendRule: '金・土（※日曜なし）',
+    extra: '3人目から +¥5,000/人',
+    backTo: '/rooms/pg2-family',
+  },
+};
+
+function yen(amount: number): string {
+  return new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(amount);
+}
 
 export default function CheckoutPage({
 }: {}) {
@@ -20,9 +62,9 @@ export default function CheckoutPage({
     return (r === 'pg1' || r === 'pg2_single' || r === 'pg2_family') ? r : 'pg1';
   }, [searchParams]);
 
-  const [room, setRoom] = useState<RoomKey>(initialRoom);
+  const [room] = useState<RoomKey>(initialRoom);
   const [loading, setLoading] = useState(false);
-  const selected = ROOMS.find((r) => r.key === room)!;
+  const selected = ROOM_META[room];
 
   useEffect(() => {
     let mounted = true;
@@ -65,35 +107,61 @@ export default function CheckoutPage({
           Checkout
         </h1>
         <p className="font-serif text-sm text-textLight mt-3 leading-relaxed">
-          まずは決済までの導線を最短で用意しています。日付・人数・最終金額の確定は次のステップで対応します。
+          ご予約内容をご確認のうえ、決済へお進みください。
         </p>
 
         <div className="mt-10 bg-white/90 backdrop-blur border border-gray-200 shadow-sm rounded-xl p-6 sm:p-8">
-          <label className="block font-display text-xs tracking-[0.2em] uppercase text-gray-500">
-            部屋タイプ
-          </label>
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {ROOMS.map((r) => {
-              const active = r.key === room;
-              return (
-                <button
-                  key={r.key}
-                  type="button"
-                  onClick={() => setRoom(r.key)}
-                  className={[
-                    'text-left rounded-lg border px-4 py-4 transition-all',
-                    active ? 'border-textMain shadow-sm' : 'border-gray-200 hover:border-gray-400',
-                  ].join(' ')}
-                >
-                  <div className="font-display text-sm tracking-[0.12em] text-textMain">
-                    {r.label}
-                  </div>
-                  <div className="font-serif text-xs text-textLight mt-1">
-                    {r.priceHint}
-                  </div>
-                </button>
-              );
-            })}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <div className="font-display text-xs tracking-[0.2em] uppercase text-gray-500">
+                予約内容
+              </div>
+              <div className="font-display text-xl sm:text-2xl font-light text-textMain tracking-[0.08em] mt-2">
+                {selected.label}
+              </div>
+              <div className="font-serif text-sm text-textLight mt-2">
+                {selected.subtitle}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => window.location.href = selected.backTo}
+              className="flex-shrink-0 font-display text-[11px] tracking-[0.2em] uppercase text-textMain border border-gray-200 px-4 py-2 hover:border-gray-400 transition-colors rounded"
+            >
+              詳細を見る
+            </button>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="rounded-xl border border-gray-200 p-5 bg-white">
+              <div className="font-display text-[11px] tracking-[0.2em] uppercase text-gray-500">
+                料金（目安）
+              </div>
+              <div className="font-serif text-sm text-textMain mt-2">
+                最低料金：{yen(selected.priceFrom)} / 泊〜
+              </div>
+              <div className="font-serif text-xs text-gray-500 mt-2 leading-relaxed">
+                平日：{yen(selected.weekday)} / 週末：{yen(selected.weekend)}<br />
+                週末適用：{selected.weekendRule}
+                {selected.extra ? ` / 追加：${selected.extra}` : ''}
+              </div>
+            </div>
+            <div className="rounded-xl border border-gray-200 p-5 bg-white">
+              <div className="font-display text-[11px] tracking-[0.2em] uppercase text-gray-500">
+                キャンセルポリシー
+              </div>
+              <div className="font-serif text-xs text-gray-500 mt-2 leading-relaxed">
+                5日前まで：無料<br />
+                4日前〜当日：宿泊料金の100%<br />
+                連絡なし不泊：宿泊料金の100%
+              </div>
+              <a
+                href="/legal"
+                className="inline-block mt-3 font-display text-[11px] tracking-[0.2em] uppercase text-textMain underline underline-offset-2 hover:opacity-80"
+              >
+                表記を確認 →
+              </a>
+            </div>
           </div>
 
           <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
@@ -103,10 +171,10 @@ export default function CheckoutPage({
               disabled={loading}
               className="w-full sm:w-auto font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-white bg-textMain px-8 py-4 hover:bg-textLight transition-colors duration-300 rounded disabled:opacity-60"
             >
-              {loading ? '処理中…' : `決済へ進む（${selected.label}）`}
+              {loading ? '処理中…' : 'この内容で決済へ進む'}
             </button>
             <a
-              href="/#reservation"
+              href={selected.backTo}
               className="w-full sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-textMain border border-gray-200 px-8 py-4 hover:border-gray-400 transition-colors duration-300 rounded"
             >
               戻る
@@ -114,7 +182,7 @@ export default function CheckoutPage({
           </div>
 
           <p className="font-serif text-xs text-gray-500 mt-6 leading-relaxed">
-            ※ ここでの金額は目安です。実際の料金（週末・追加人数など）に合わせた自動計算は次のステップで実装します。
+            ※ ここでの金額は目安です。日付・人数などによる最終金額の確定は次のステップで実装します。
           </p>
         </div>
       </div>

@@ -92,10 +92,10 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
       '歯磨きセット',
     ],
     images: [
-      '/images/gallery/DSC04480.webp',
-      '/images/gallery/DSC04487.webp',
-      '/images/gallery/DSC04494.webp',
+      '/hotel2/single/DSC04628.webp',
+      '/hotel2/single/DSC04635.webp',
       '/images/gallery/DSC04605.webp',
+      '/images/gallery/スクリーンショット 2025-12-15 0.28.56.webp',
     ],
   },
   'pg2-family': {
@@ -118,10 +118,13 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
       '（同一建物のため、シングルタイプと共通）',
     ],
     images: [
-      '/images/gallery/DSC04467.webp',
-      '/images/gallery/DSC04555.webp',
-      '/images/gallery/DSC04581.webp',
-      '/images/gallery/DSC04622.webp',
+      '/hotel2/famiri/DSC04581.webp',
+      '/images/gallery/DSC04573.webp',
+      '/hotel2/famiri/DSC04566.webp',
+      '/hotel2/famiri/DSC04591.webp',
+      '/hotel2/famiri/DSC04593.webp',
+      '/hotel2/famiri/DSC04576.webp',
+      '/images/gallery/DSC04605.webp',
     ],
   },
 };

@@ -27,6 +27,61 @@ export default async function RoomDetailPage({
             ← 予約一覧へ戻る
           </a>
 
+          {/* Hero photos */}
+          <div className="mt-8">
+            {/* Mobile: horizontal swipe */}
+            <div className="sm:hidden -mx-4 px-4 overflow-x-auto">
+              <div className="flex gap-3 snap-x snap-mandatory">
+                {room.images.map((src, i) => {
+                  const isHero = i === 0;
+                  return (
+                    <div
+                      key={src}
+                      className={[
+                        'relative snap-start shrink-0 bg-gray-100 overflow-hidden rounded-xl border border-gray-100',
+                        isHero ? 'w-[88%] aspect-[16/10]' : 'w-[78%] aspect-[4/3]',
+                      ].join(' ')}
+                    >
+                      <Image
+                        src={src}
+                        alt={room.name}
+                        fill
+                        sizes="90vw"
+                        className="object-cover"
+                        priority={isHero}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* sm+ : collage grid */}
+            <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {room.images.map((src, i) => {
+                const isHero = i === 0;
+                return (
+                  <div
+                    key={src}
+                    className={[
+                      'relative bg-gray-100 overflow-hidden rounded-xl border border-gray-100',
+                      isHero ? 'aspect-[16/11] col-span-2 lg:col-span-2 lg:row-span-2' : 'aspect-[4/3]',
+                    ].join(' ')}
+                  >
+                    <Image
+                      src={src}
+                      alt={room.name}
+                      fill
+                      sizes={isHero ? '(max-width: 1024px) 100vw, 50vw' : '(max-width: 1024px) 50vw, 25vw'}
+                      className="object-cover"
+                      priority={isHero}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="mt-8 flex flex-col lg:flex-row gap-10 lg:gap-16">
             <div className="lg:flex-1">
               <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-light text-textMain tracking-[0.08em]">
@@ -35,6 +90,13 @@ export default async function RoomDetailPage({
               <p className="font-serif text-sm sm:text-base text-textLight mt-3 leading-relaxed">
                 {room.subtitle}
               </p>
+              {/* Mobile: primary CTA directly under subtitle */}
+              <a
+                href={`/auth?next=${encodeURIComponent(`/checkout?room=${room.checkoutRoom}`)}`}
+                className="mt-5 block w-full text-center font-display text-xs tracking-[0.2em] uppercase text-white bg-textMain px-8 py-4 hover:bg-textLight transition-colors duration-300 rounded lg:hidden"
+              >
+                予約へ進む →
+              </a>
 
               <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="bg-white/90 backdrop-blur border border-gray-200 rounded-xl p-5">
@@ -94,42 +156,12 @@ export default async function RoomDetailPage({
               <div className="sticky top-24 space-y-4">
                 <a
                   href={`/auth?next=${encodeURIComponent(`/checkout?room=${room.checkoutRoom}`)}`}
-                  className="block w-full text-center font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-white bg-textMain px-8 py-4 hover:bg-textLight transition-colors duration-300 rounded"
+                  className="hidden lg:block w-full text-center font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-white bg-textMain px-8 py-4 hover:bg-textLight transition-colors duration-300 rounded"
                 >
                   決済して予約へ進む →
                 </a>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="pb-20 sm:pb-28">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12">
-          <h2 className="font-display text-xl sm:text-2xl font-light text-textMain tracking-[0.08em]">
-            Photos
-          </h2>
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {room.images.map((src, i) => {
-              const isHero = i === 0;
-              return (
-                <div
-                  key={src}
-                  className={[
-                    'relative bg-gray-100 overflow-hidden rounded-xl border border-gray-100',
-                    isHero ? 'aspect-[16/10] sm:aspect-[16/11] sm:col-span-2 lg:col-span-2 lg:row-span-2' : 'aspect-[4/3]',
-                  ].join(' ')}
-                >
-                  <Image
-                    src={src}
-                    alt={room.name}
-                    fill
-                    sizes={isHero ? '(max-width: 1024px) 100vw, 50vw' : '(max-width: 1024px) 50vw, 25vw'}
-                    className="object-cover hover:scale-[1.02] transition-transform duration-700"
-                  />
-                </div>
-              );
-            })}
           </div>
         </div>
       </section>

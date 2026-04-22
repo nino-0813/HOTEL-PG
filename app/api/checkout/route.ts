@@ -36,7 +36,12 @@ export async function POST(req: Request) {
       return Response.json({ error: 'invalid_room' }, { status: 400 });
     }
 
-    const stripe = new Stripe(getRequiredEnv('STRIPE_SECRET_KEY'), {
+    const stripeSecret = process.env.STRIPE_SECRET_KEY;
+    if (!stripeSecret) {
+      return Response.json({ error: 'missing_stripe_secret_key' }, { status: 500 });
+    }
+
+    const stripe = new Stripe(stripeSecret, {
       apiVersion: '2026-03-25.dahlia',
     });
 
@@ -66,6 +71,7 @@ export async function POST(req: Request) {
 
     return Response.json({ url: session.url });
   } catch (e) {
+    console.error(e);
     return Response.json(
       { error: 'checkout_failed' },
       { status: 500 },
