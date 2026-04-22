@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 
 const POST_AUTH_NEXT_KEY = 'hotelpg:post_auth_next';
@@ -16,8 +16,7 @@ export function AuthGate({
   const [hasSession, setHasSession] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const callbackUrl = useMemo(() => new URL('/auth/callback', window.location.origin).toString(), []);
+  const [notice, setNotice] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -39,7 +38,9 @@ export function AuthGate({
 
   const signInWithGoogle = async () => {
     if (!supabase) return;
+    setNotice(null);
     localStorage.setItem(POST_AUTH_NEXT_KEY, nextPath);
+    const callbackUrl = `${window.location.origin}/auth/callback`;
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: callbackUrl },
@@ -49,6 +50,7 @@ export function AuthGate({
   const signUpOrSignIn = async () => {
     if (!supabase) return;
     if (!email || !password) return;
+    setNotice(null);
 
     // 既存ユーザーは signIn、未登録なら signUp の順で試す（最短導線）
     const signIn = await supabase.auth.signInWithPassword({ email, password });
@@ -60,10 +62,15 @@ export function AuthGate({
     const signUp = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: callbackUrl },
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
     });
     if (!signUp.error) {
+      // メール確認が有効な場合、ここで session が無いことがあるため案内を出す
       localStorage.setItem(POST_AUTH_NEXT_KEY, nextPath);
+      if (!signUp.data.session) {
+        setNotice('確認メールを送信しました。メール内のリンクからログインを完了してください。');
+        return;
+      }
       window.location.href = nextPath;
     } else {
       alert('ログイン/登録に失敗しました。入力内容をご確認ください。');
@@ -90,6 +97,13 @@ export function AuthGate({
         ) : null}
 
         <div className="mt-8 bg-white/90 backdrop-blur border border-gray-200 rounded-xl p-6 sm:p-8">
+          {notice ? (
+            <div className="mb-5 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+              <p className="font-serif text-sm text-textMain leading-relaxed">
+                {notice}
+              </p>
+            </div>
+          ) : null}
           <button
             type="button"
             onClick={signInWithGoogle}

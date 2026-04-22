@@ -27,6 +27,7 @@ export default function AuthCallbackPage() {
 
       try {
         // OAuth/PKCE の code をセッションへ交換
+        // （Magic link / recovery は Supabase 側で redirect URL にセッションを付与する設定を前提）
         const { error } = await supabase.auth.exchangeCodeForSession(window.location.href);
         if (error) {
           setMessage('ログインに失敗しました。もう一度お試しください。');

@@ -150,6 +150,15 @@ const Header: React.FC = () => {
                     </li>
                   ))}
                   <li>
+                    <Link
+                      href="/account"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block py-2.5 font-display text-lg sm:text-xl font-light text-[#1a1a1a] tracking-[0.08em] hover:opacity-60 transition-opacity"
+                    >
+                      My page
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/recruit" onClick={() => setIsMenuOpen(false)} className="block py-2.5 font-display text-lg sm:text-xl font-light text-[#1a1a1a] tracking-[0.08em] hover:opacity-60 transition-opacity">
                       RECRUIT
                     </Link>
@@ -165,6 +174,11 @@ const Header: React.FC = () => {
                   <li>
                     <Link href="/blog" onClick={() => setIsMenuOpen(false)} className="block py-2.5 font-display text-lg font-light text-[#1a1a1a] tracking-[0.08em] hover:opacity-60 transition-opacity">
                       Blog
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/account" onClick={() => setIsMenuOpen(false)} className="block py-2.5 font-display text-lg font-light text-[#1a1a1a] tracking-[0.08em] hover:opacity-60 transition-opacity">
+                      My page
                     </Link>
                   </li>
                   <li>
