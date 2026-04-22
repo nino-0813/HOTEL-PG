@@ -70,6 +70,7 @@ export default function CheckoutPage({
 
   const [room] = useState<RoomKey>(initialRoom);
   const [loading, setLoading] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
   const selected = ROOM_META[room];
 
   const priceSummary = useMemo(() => {
@@ -171,12 +172,48 @@ export default function CheckoutPage({
             </div>
             <button
               type="button"
-              onClick={() => window.location.href = selected.backTo}
+              onClick={() => setShowDetails((v) => !v)}
               className="flex-shrink-0 font-display text-[11px] tracking-[0.2em] uppercase text-textMain border border-gray-200 px-4 py-2 hover:border-gray-400 transition-colors rounded"
             >
-              詳細を見る
+              {showDetails ? '詳細を閉じる' : '詳細を見る'}
             </button>
           </div>
+
+          {showDetails ? (
+            <div className="mt-5 rounded-xl border border-gray-200 bg-white p-5">
+              <div className="font-display text-[11px] tracking-[0.2em] uppercase text-gray-500">予約の詳細</div>
+              <div className="mt-3 space-y-2 font-serif text-sm text-textMain">
+                <div>部屋タイプ: {selected.label}</div>
+                <div>日程: {checkin && checkout ? `${checkin} 〜 ${checkout}` : '未指定'}</div>
+                <div>
+                  人数: 大人{priceSummary?.clamped.adults ?? adultsRaw}名 / 子供{priceSummary?.clamped.children ?? childrenRaw}名 / 乳幼児{infants}名
+                </div>
+                {priceSummary ? (
+                  <>
+                    <div>
+                      宿泊料金（税・手数料込）: {yen(priceSummary.perNight)} × {priceSummary.nights}泊
+                    </div>
+                    <div className="font-serif text-sm text-textMain font-semibold">
+                      合計: {yen(priceSummary.total)}
+                    </div>
+                    <div className="font-serif text-[11px] text-gray-500">
+                      ※ 料金には決済手数料・消費税が含まれます。
+                    </div>
+                  </>
+                ) : (
+                  <div className="font-serif text-[11px] text-gray-500">
+                    ※ 日程を選択すると料金が表示されます。
+                  </div>
+                )}
+              </div>
+              <a
+                href={selected.backTo}
+                className="inline-block mt-4 font-display text-[11px] tracking-[0.2em] uppercase text-textMain underline underline-offset-2 hover:opacity-80"
+              >
+                お部屋の詳細を見る →
+              </a>
+            </div>
+          ) : null}
 
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="rounded-xl border border-gray-200 p-5 bg-white">
@@ -228,7 +265,7 @@ export default function CheckoutPage({
           </div>
 
           <p className="font-serif text-xs text-gray-500 mt-6 leading-relaxed">
-            ※ ここでの金額は目安です。日付・人数などによる最終金額の確定は次のステップで実装します。
+            ※ 表示金額は、日程と人数に基づく合計金額です。
           </p>
         </div>
       </div>
