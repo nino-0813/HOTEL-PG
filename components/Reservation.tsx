@@ -37,15 +37,22 @@ const Reservation: React.FC = () => {
             <h3 className="font-display text-lg sm:text-xl md:text-2xl font-light text-textMain mb-4 sm:mb-6 tracking-[0.05em] sm:tracking-[0.1em] leading-tight">
               HOTEL PG -I-
             </h3>
-            <a
-              href="https://vacation-stay.jp/listings/917598?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackReservationClick('HOTEL PG -I-')}
-              className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
-            >
-              予約する →
-            </a>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <a
+                href="#rooms"
+                onClick={() => trackReservationClick('HOTEL PG -I-')}
+                className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
+              >
+                予約する →
+              </a>
+              <a
+                href="/checkout?room=pg1"
+                onClick={() => trackReservationClick('HOTEL PG -I- 決済へ')}
+                className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-textMain border border-gray-200 px-6 sm:px-8 py-3 sm:py-4 hover:border-gray-400 transition-colors duration-300 rounded"
+              >
+                決済して予約 →
+              </a>
+            </div>
           </motion.div>
 
           {/* HOTEL PG -II- シングルタイプ */}
@@ -59,15 +66,22 @@ const Reservation: React.FC = () => {
               <span className="block sm:inline">HOTEL PG -II-</span>
               <span className="block sm:inline sm:ml-2 text-base sm:text-lg md:text-xl">【シングルタイプ】</span>
             </h3>
-            <a
-              href="https://vacation-stay.jp/listings/1138330?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackReservationClick('HOTEL PG -II- シングルタイプ')}
-              className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
-            >
-              予約する →
-            </a>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <a
+                href="#rooms"
+                onClick={() => trackReservationClick('HOTEL PG -II- シングルタイプ')}
+                className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
+              >
+                予約する →
+              </a>
+              <a
+                href="/checkout?room=pg2_single"
+                onClick={() => trackReservationClick('HOTEL PG -II- シングルタイプ 決済へ')}
+                className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-textMain border border-gray-200 px-6 sm:px-8 py-3 sm:py-4 hover:border-gray-400 transition-colors duration-300 rounded"
+              >
+                決済して予約 →
+              </a>
+            </div>
           </motion.div>
 
           {/* HOTEL PG -II- ファミリータイプ */}
@@ -81,15 +95,22 @@ const Reservation: React.FC = () => {
               <span className="block sm:inline">HOTEL PG -II-</span>
               <span className="block sm:inline sm:ml-2 text-base sm:text-lg md:text-xl">【ファミリータイプ】</span>
             </h3>
-            <a
-              href="https://vacation-stay.jp/listings/1138335?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackReservationClick('HOTEL PG -II- ファミリータイプ')}
-              className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
-            >
-              予約する →
-            </a>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <a
+                href="#rooms"
+                onClick={() => trackReservationClick('HOTEL PG -II- ファミリータイプ')}
+                className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
+              >
+                予約する →
+              </a>
+              <a
+                href="/checkout?room=pg2_family"
+                onClick={() => trackReservationClick('HOTEL PG -II- ファミリータイプ 決済へ')}
+                className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-textMain border border-gray-200 px-6 sm:px-8 py-3 sm:py-4 hover:border-gray-400 transition-colors duration-300 rounded"
+              >
+                決済して予約 →
+              </a>
+            </div>
           </motion.div>
 
           {/* HOTEL PG -III- */}
@@ -106,11 +127,11 @@ const Reservation: React.FC = () => {
               電話でご予約可能
             </p>
             <a
-              href="tel:07083289154"
+              href="#hotels"
               onClick={() => trackReservationClick('HOTEL PG -III- 電話予約')}
               className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
             >
-              電話予約はこちら →
+              詳細はこちら →
             </a>
           </motion.div>
 
