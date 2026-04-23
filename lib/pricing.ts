@@ -35,6 +35,12 @@ export type RoomKey = keyof typeof ROOM_PRICING;
 
 const MARKUP_RATE = 0.056;
 
+export const ROOM_INVENTORY: Record<RoomKey, number> = {
+  pg1: 3,
+  pg2_single: 1,
+  pg2_family: 3,
+};
+
 function toUtcDate(dateStr: string): Date | null {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return null;
   const [y, m, d] = dateStr.split('-').map((x) => parseInt(x, 10));

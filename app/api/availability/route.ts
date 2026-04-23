@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServerClient } from '@/lib/supabase-server';
+import { ROOM_INVENTORY, type RoomKey as PricingRoomKey } from '@/lib/pricing';
 
 export async function GET(req: Request) {
   try {
@@ -15,7 +16,8 @@ export async function GET(req: Request) {
     const supabase = getSupabaseServerClient();
     if (!supabase) {
       // Local dev / misconfig: don't break the UI; just show no blocks.
-      return NextResponse.json({ room, days: {}, warning: 'missing_supabase_service_role' }, { status: 200 });
+      const capacity = ROOM_INVENTORY[room as PricingRoomKey] ?? 3;
+      return NextResponse.json({ room, capacity, days: {}, warning: 'missing_supabase_service_role' }, { status: 200 });
     }
 
     const cutoff = new Date();
@@ -90,7 +92,8 @@ export async function GET(req: Request) {
       incRange(s, e);
     }
 
-    return NextResponse.json({ room, start, end, days });
+    const capacity = ROOM_INVENTORY[room as PricingRoomKey] ?? 3;
+    return NextResponse.json({ room, capacity, start, end, days });
   } catch (e: any) {
     console.error(e);
     return NextResponse.json({ error: 'db_error', detail: e?.message ?? String(e) }, { status: 500 });

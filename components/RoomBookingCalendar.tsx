@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { ROOM_PRICING, calculatePrice, clampGuests, type RoomKey as PricingRoomKey } from '@/lib/pricing';
+import { ROOM_INVENTORY, ROOM_PRICING, calculatePrice, clampGuests, type RoomKey as PricingRoomKey } from '@/lib/pricing';
 
 const JP_WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'] as const;
 
@@ -96,11 +96,8 @@ export function RoomBookingCalendar({
   }, [roomKey]);
 
   const capacity = useMemo(() => {
-    // 楽天側カレンダーに合わせた「在庫数」表示用（必要に応じて調整）
-    if (roomKey === 'pg2_single') return 3;
-    if (roomKey === 'pg2_family') return 3;
-    return 3;
-  }, [roomKey]);
+    return ROOM_INVENTORY[pricingRoomKey] ?? 3;
+  }, [pricingRoomKey]);
 
   const priceForDate = useMemo(() => {
     const meta: Record<string, { weekday: number; weekend: number; weekendDays: Set<number> }> = {
@@ -380,8 +377,8 @@ export function RoomBookingCalendar({
             );
           }
           const ds = cell.dateStr;
-          const booked = dayCounts[ds] ?? 0;
-          const available = Math.max(0, capacity - booked);
+          const blocks = dayCounts[ds] ?? 0;
+          const available = Math.max(0, capacity - blocks);
           const dow = cell.date.getUTCDay();
           const price = priceForDate(dow);
           const isBlocked = available <= 0;
