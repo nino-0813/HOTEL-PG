@@ -34,17 +34,16 @@ function parseIcal(text: string): ImportEvent[] {
   return events;
 }
 
-function readCronSecret(req: Request): string | null {
-  const auth = req.headers.get('authorization');
-  if (auth?.startsWith('Bearer ')) return auth.slice('Bearer '.length);
-  const url = new URL(req.url);
-  return url.searchParams.get('secret');
-}
-
 export async function GET(req: Request) {
   try {
-    const secret = readCronSecret(req);
-    if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
+    const authHeader = req.headers.get('authorization');
+    const querySecret = new URL(req.url).searchParams.get('secret');
+    const cronSecret = process.env.CRON_SECRET;
+
+    const isAuthorized =
+      !!cronSecret && (authHeader === `Bearer ${cronSecret}` || querySecret === cronSecret);
+
+    if (!isAuthorized) {
       return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
     }
 
