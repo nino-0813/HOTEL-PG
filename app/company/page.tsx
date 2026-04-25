@@ -3,7 +3,7 @@
 import React, { useRef } from 'react';
 import Link from 'next/link';
 import { motion, useInView } from 'framer-motion';
-import { Building2, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -25,13 +25,13 @@ export default function CompanyPage() {
               className="text-center max-w-3xl mx-auto"
             >
               <span className="inline-block bg-textMain text-white text-xs tracking-widest px-4 py-2 mb-6">
-                COMPANY
+                FACILITIES
               </span>
               <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-textMain mb-6 tracking-[0.08em]">
-                会社情報（運営会社）
+                施設情報
               </h1>
               <p className="font-serif text-base md:text-lg text-textLight leading-relaxed">
-                運営会社および施設情報を掲載します。
+                各施設の基本情報をご案内します。
               </p>
             </motion.div>
           </div>
@@ -49,63 +49,6 @@ export default function CompanyPage() {
             <motion.section
               initial={{ opacity: 0, y: 24 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              <h2 className="font-display text-xl sm:text-2xl font-light text-textMain mb-6 tracking-[0.08em] flex items-center gap-3">
-                <Building2 size={22} className="text-textMain/60 flex-shrink-0" />
-                会社情報
-              </h2>
-              <div className="border border-gray-200 rounded-xl p-6 sm:p-8 bg-white space-y-4 text-sm leading-relaxed">
-                <div>
-                  <div className="text-textMain font-medium">会社名</div>
-                  <div>合同会社ルノア</div>
-                </div>
-                <div>
-                  <div className="text-textMain font-medium">代表者</div>
-                  <div>政木 洋絵（まさき ひろえ）</div>
-                </div>
-                <div>
-                  <div className="text-textMain font-medium">設立</div>
-                  <div>2018年3月1日</div>
-                </div>
-                <div>
-                  <div className="text-textMain font-medium">所在地</div>
-                  <div>〒720-0807 広島県福山市明治町13-5</div>
-                </div>
-                <div>
-                  <div className="text-textMain font-medium">TEL / FAX</div>
-                  <div>TEL 084-928-8855 / FAX 084-928-8856</div>
-                </div>
-                <div>
-                  <div className="text-textMain font-medium">営業時間 / 定休日</div>
-                  <div>9:00〜18:00 / 日曜・祝日</div>
-                </div>
-                <div>
-                  <div className="text-textMain font-medium">事業内容</div>
-                  <div>不動産の売買・仲介 / 賃貸及び管理 / 宿泊施設の運営</div>
-                </div>
-                <div>
-                  <div className="text-textMain font-medium">免許番号</div>
-                  <div>宅地建物取引業 広島県知事(1)第11344号</div>
-                </div>
-                <div>
-                  <div className="text-textMain font-medium">旅館業許可</div>
-                  <div>【要確認】（旅館業法 or 住宅宿泊事業法の届出番号を記載）</div>
-                </div>
-                <div>
-                  <div className="text-textMain font-medium">URL</div>
-                  <div>https://f-lunoa.jp/</div>
-                </div>
-                <div>
-                  <div className="text-textMain font-medium">Instagram</div>
-                  <div>@lunoa_official_</div>
-                </div>
-              </div>
-            </motion.section>
-
-            <motion.section
-              initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.15 }}
             >
               <h2 className="font-display text-xl sm:text-2xl font-light text-textMain mb-6 tracking-[0.08em] flex items-center gap-3">
@@ -116,6 +59,7 @@ export default function CompanyPage() {
                 <div className="space-y-2">
                   <div className="text-textMain font-medium">HOTEL PG -Ⅰ-</div>
                   <div>住所: 尾道市因島土生町1896-17</div>
+                  <div>旅館業法に基づく営業許可番号: 尾市環指令第301号</div>
                   <div>電話: 070-8328-9154</div>
                   <div>チェックイン: 15:00〜20:00 / チェックアウト: 10:00</div>
                 </div>
@@ -123,6 +67,7 @@ export default function CompanyPage() {
                 <div className="space-y-2">
                   <div className="text-textMain font-medium">HOTEL PG -Ⅱ-</div>
                   <div>住所: 尾道市因島土生町1896-8</div>
+                  <div>旅館業法に基づく営業許可番号: 尾市環指令第753号</div>
                   <div>電話: 070-8328-9154</div>
                   <div>チェックイン: 15:00〜17:00 / チェックアウト: 10:00</div>
                 </div>

@@ -117,8 +117,11 @@ export default function LegalPage() {
                 <div>キャンセルポリシーに基づき返金。返金方法は予約経路に準ずる</div>
               </div>
               <div>
-                <div className="text-textMain font-medium">免許番号</div>
-                <div>宅地建物取引業 広島県知事(1)第11344号</div>
+                <div className="text-textMain font-medium">旅館業法に基づく営業許可番号</div>
+                <div>
+                  <div>HOTEL PG - I -：尾市環指令第301号</div>
+                  <div>HOTEL PG - II -：尾市環指令第753号</div>
+                </div>
               </div>
             </div>
           </motion.section>
