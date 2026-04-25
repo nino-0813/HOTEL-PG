@@ -61,7 +61,7 @@ export default function CompanyPage() {
                   <div>住所: 尾道市因島土生町1896-17</div>
                   <div>旅館業法に基づく営業許可番号: 尾市環指令第301号</div>
                   <div>電話: 070-8328-9154</div>
-                  <div>チェックイン: 15:00〜20:00 / チェックアウト: 10:00</div>
+                  <div>チェックイン: 15:00〜18:00 / チェックアウト: 10:00</div>
                 </div>
                 <div className="h-px bg-gray-100" />
                 <div className="space-y-2">
@@ -69,12 +69,12 @@ export default function CompanyPage() {
                   <div>住所: 尾道市因島土生町1896-8</div>
                   <div>旅館業法に基づく営業許可番号: 尾市環指令第753号</div>
                   <div>電話: 070-8328-9154</div>
-                  <div>チェックイン: 15:00〜17:00 / チェックアウト: 10:00</div>
+                  <div>チェックイン: 15:00〜18:00 / チェックアウト: 10:00</div>
                 </div>
                 <div className="h-px bg-gray-100" />
                 <div className="space-y-2">
                   <div className="text-textMain font-medium">HOTEL PG -Ⅲ-（準備中）</div>
-                  <div>住所: 【要確認】</div>
+                  <div>住所: 広島県尾道市因島土生町1747-5</div>
                   <div>電話: 070-8328-9154</div>
                   <div>チェックイン: 【要確認】 / チェックアウト: 10:00</div>
                 </div>
