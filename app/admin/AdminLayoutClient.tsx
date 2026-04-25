@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { FileText, Image, LogOut, Home, Plus } from 'lucide-react';
+import { FileText, Image, LogOut, Home, Plus, CalendarDays } from 'lucide-react';
 import { isAdminLoggedIn, adminLogout } from '@/lib/admin-auth';
 
 export default function AdminLayoutClient({ children }: { children: React.ReactNode }) {
@@ -25,6 +25,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
   };
 
   const nav = [
+    { path: '/admin/bookings', label: '予約一覧', icon: CalendarDays },
     { path: '/admin/blog', label: 'ブログ', icon: FileText },
     { path: '/admin/content', label: 'コンテンツ・写真', icon: Image },
   ];
