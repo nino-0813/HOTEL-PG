@@ -133,7 +133,7 @@ export default async function RoomDetailPage({
                       </span>
                       <a
                         className="ml-2 underline underline-offset-2 hover:opacity-80"
-                        href={mapHref(room.address, room.mapLabel)}
+                        href={mapHref(room.address)}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
