@@ -7,6 +7,14 @@ export type RoomDetail = {
   name: string;
   subtitle: string;
   address: string;
+  mapLabel?: string;
+  facts?: { label: string; value: string }[];
+  plan?: { title: string; description: string[] };
+  about?: string[];
+  notes?: string[];
+  bedTypes?: string[];
+  houseRules?: { label: string; value: string }[];
+  cancellationPolicy?: string[];
   checkin: string;
   checkout: string;
   parking: string;
@@ -23,6 +31,43 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
     name: 'HOTEL PG -Ⅰ-',
     subtitle: '【素泊まり】ロフト付き洋室',
     address: '尾道市因島土生町1896-17',
+    mapLabel: 'HOTEL PG -Ⅰ-',
+    facts: [
+      { label: '個室', value: '個室' },
+      { label: '人数', value: '1〜2名' },
+      { label: '寝室', value: '寝室 1' },
+      { label: '寝具', value: '寝具 2' },
+      { label: '浴室', value: '共用浴室' },
+      { label: '広さ', value: '10.28㎡' },
+    ],
+    plan: {
+      title: '【素泊まりプラン】',
+      description: [
+        'シャワールーム（共用）・トイレ（共用）付き。',
+        '共同キッチン・調理器具を完備しておりますので、自炊も可能です。',
+      ],
+    },
+    about: [
+      '瀬戸内海に浮かぶ因島にあるOPENしたてのホテルです。',
+      '海沿いに位置しており、観光やサイクリングもお楽しみいただけます。因島の魅力を存分に感じていただくことができます。',
+      'HOTEL PG III 2026年5月完成予定！お問い合わせ、お待ちしております。',
+      '※当ホテルはフロントを設けておらず、セルフチェックイン方式を採用しております。スタッフは常駐しておりませんが、お困りの際は電話・メッセージにてサポートいたします。',
+    ],
+    notes: [
+      '当ホテルは分煙を行っております。喫煙は指定の喫煙場所のみ可能です。',
+      '客室内を含む指定場所以外での喫煙が確認された場合は、特別清掃費（消臭作業を含む）として10万円を申し受けます。',
+    ],
+    bedTypes: ['ソファベッド 1', 'ダブル 1'],
+    houseRules: [
+      { label: 'ペット', value: 'いいえ' },
+      { label: '喫煙', value: 'いいえ' },
+      { label: 'イベント&パーティ', value: 'いいえ' },
+    ],
+    cancellationPolicy: [
+      'チェックイン5日前まではキャンセル無料',
+      'チェックイン4日前〜当日：合計料金の100%',
+      '連絡なし不泊：合計料金の100%',
+    ],
     checkin: '15:00〜20:00',
     checkout: '〜10:00',
     parking: '無料あり',
@@ -67,6 +112,41 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
     name: 'HOTEL PG -Ⅱ-',
     subtitle: 'シングルタイプ',
     address: '尾道市因島土生町1896-8',
+    mapLabel: 'HOTEL PG -Ⅱ-',
+    facts: [
+      { label: '個室', value: '個室' },
+      { label: '人数', value: '1名' },
+      { label: '寝室', value: '寝室 1' },
+      { label: '寝具', value: '寝具 1' },
+      { label: '浴室', value: '浴室 1' },
+      { label: '広さ', value: '20㎡' },
+    ],
+    plan: {
+      title: '',
+      description: [
+        'バス・トイレ別、洗面台付き。ワンルームタイプ。',
+        'キッチンに調理器具、食器を完備。',
+        '隣接する「おばんざいアゲハ食堂」で、温かい手作りのご朝食を有料にてお召し上がりいただけます。（※水曜・日曜日定休）',
+      ],
+    },
+    about: [
+      '瀬戸内海に浮かぶ因島にあるOPENしたてのホテルです。',
+      '海沿いに位置しており、観光やサイクリングもお楽しみいただけます。因島の魅力を存分に感じていただくことができます。',
+      'お一人でのご利用やカップル、ファミリーでもご利用いただけるよう、様々なお部屋をご用意しております。',
+      'HOTEL PG III 2026年5月完成予定！お問い合わせ、お待ちしております。',
+      '※当ホテルはフロントを設けておらず、セルフチェックイン方式でご案内しております。ご到着後は、キーボックスからお部屋の鍵をお受け取りいただけます。',
+    ],
+    bedTypes: ['シングル 1'],
+    houseRules: [
+      { label: 'ペット', value: 'いいえ' },
+      { label: '喫煙', value: 'いいえ' },
+      { label: 'イベント&パーティ', value: 'いいえ' },
+    ],
+    cancellationPolicy: [
+      'チェックイン5日前まではキャンセル無料',
+      'チェックイン4日前〜当日：合計料金の100%',
+      '連絡なし不泊：合計料金の100%',
+    ],
     checkin: '15:00〜17:00',
     checkout: '〜10:00',
     parking: '無料あり',
@@ -104,6 +184,42 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
     name: 'HOTEL PG -Ⅱ-',
     subtitle: 'ファミリータイプ',
     address: '尾道市因島土生町1896-8',
+    mapLabel: 'HOTEL PG -Ⅱ-',
+    facts: [
+      { label: '個室', value: '個室' },
+      { label: '人数', value: '1〜4名' },
+      { label: '寝室', value: '寝室 1' },
+      { label: '寝具', value: '寝具 4' },
+      { label: '浴室', value: '浴室 1' },
+      { label: '広さ', value: '32㎡' },
+    ],
+    plan: {
+      title: '',
+      description: [
+        'バス・トイレ別、洗面台付き。',
+        'ベッドルームとリビングスペースが分かれております。',
+        'キッチンに調理器具、食器を完備。',
+        '隣接する「おばんざいアゲハ食堂」で、朝食を有料にてお召し上がりいただけます。（※水曜・日曜日定休）',
+      ],
+    },
+    about: [
+      '瀬戸内海に浮かぶ因島にあるOPENしたてのホテルです。',
+      '海沿いに位置しており、観光やサイクリングもお楽しみいただけます。因島の魅力を存分に感じていただくことができます。',
+      'お一人でのご利用やカップル、ファミリーでもご利用いただけるよう、様々なお部屋をご用意しております。',
+      'HOTEL PG III 2026年5月完成予定！お問い合わせ、お待ちしております。',
+      '※当ホテルはフロントを設けておらず、セルフチェックイン方式でご案内しております。ご到着後は、キーボックスからお部屋の鍵をお受け取りいただけます。',
+    ],
+    bedTypes: ['シングル 2', 'ソファベッド 1', '布団/床用マットレス 1'],
+    houseRules: [
+      { label: 'ペット', value: 'いいえ' },
+      { label: '喫煙', value: 'いいえ' },
+      { label: 'イベント&パーティ', value: 'いいえ' },
+    ],
+    cancellationPolicy: [
+      'チェックイン5日前まではキャンセル無料',
+      'チェックイン4日前〜当日：合計料金の100%',
+      '連絡なし不泊：合計料金の100%',
+    ],
     checkin: '15:00〜17:00',
     checkout: '〜10:00',
     parking: '無料あり',
