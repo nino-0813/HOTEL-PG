@@ -1,5 +1,5 @@
-export type RoomSlug = 'pg1' | 'pg2-single' | 'pg2-family';
-export type CheckoutRoomKey = 'pg1' | 'pg2_single' | 'pg2_family';
+export type RoomSlug = 'pg1' | 'pg2-single' | 'pg2-family' | 'pg3';
+export type CheckoutRoomKey = 'pg1' | 'pg2_single' | 'pg2_family' | 'pg3';
 
 export type RoomDetail = {
   slug: RoomSlug;
@@ -241,6 +241,95 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
       '/hotel2/famiri/DSC04593.webp',
       '/hotel2/famiri/DSC04576.webp',
       '/images/gallery/DSC04605.webp',
+    ],
+  },
+  pg3: {
+    slug: 'pg3',
+    checkoutRoom: 'pg3',
+    name: 'HOTEL PG -Ⅲ-',
+    subtitle: '【OPEN記念価格】2名利用でお得｜和モダン客室｜最大3名｜無料駐車場｜長期滞在歓迎',
+    address: '広島県尾道市因島土生町1747-5',
+    mapLabel: 'HOTEL PGⅢ',
+    facts: [
+      { label: '個室', value: '個室' },
+      { label: '人数', value: '1〜3名' },
+      { label: '寝室', value: '寝室 1' },
+      { label: '寝具', value: '寝具 3' },
+      { label: '浴室', value: '浴室 1' },
+      { label: '広さ', value: '29.81㎡' },
+    ],
+    plan: {
+      title: '詳細',
+      description: [
+        '和モダンデザインの落ち着いた客室で、最大3名様までご利用いただけます。全室バス・トイレ付きで、観光・出張どちらにも快適にお過ごしいただけます。',
+        '無料駐車場を完備しており、普通車はもちろんマイクロバスも駐車可能です。団体様や工事関係・企業様の長期滞在にも最適です。',
+        '館内には共用の洗濯機・ガス乾燥機を完備しており、連泊や長期宿泊にも便利です。尾道観光の拠点としてもご利用ください。',
+      ],
+    },
+    notes: [
+      '当プランは2名様利用時がお得な料金設定となっております。1名様でのご利用も可能です。',
+    ],
+    about: [
+      '全11室の小規模ホテル。全室バス・トイレ付でゆったりご利用いただけます。',
+      '洗濯機、ガス乾燥機、調理器具もあり、長期滞在も可能！',
+      '無料駐車場完備で普通車はもちろん、マイクロバスの駐車も可能です。',
+      '3名利用可能なお部屋を中心に、和モダン空間にベッドのあるお部屋（最大4名）やメゾネットタイプ（最大4名）も1室ご用意。',
+      '出張・観光・サイクリストの拠点としても便利です。',
+      'セルフチェックイン対応のため、到着時間を気にせずご利用いただけます。',
+    ],
+    bedTypes: ['布団/床用マットレス 2', 'ソファベッド 1'],
+    amenities: [
+      '暖房設備',
+      '駐車場込み',
+      'WIFIネット接続',
+      'インターネット',
+      'ネット動画配信サービス',
+      '必需品 タオル、シーツ、石鹸、トイレットペーパー',
+      '洗剤',
+      'ソープ',
+      '歯ブラシ',
+      'シャンプー',
+      '調理器具',
+      '食器',
+      '机・ワークスペース',
+      'ヘアドライヤー',
+      '洗濯機',
+      '乾燥機',
+      '冷蔵庫',
+      '電子レンジ',
+      'TV',
+      '窓あり',
+      '畳',
+      'キッチン',
+      'コンロ',
+      'エアコン',
+    ],
+    houseRules: [
+      { label: 'ペットOK', value: 'いいえ' },
+      { label: '喫煙OK', value: 'いいえ' },
+      { label: 'イベント&パーティOK', value: 'はい' },
+      { label: '団体様での貸切可能', value: 'はい' },
+    ],
+    cancellationPolicy: [
+      'チェックイン5日前まではキャンセル無料',
+      'チェックイン4日前 - 当日合計料金の100%',
+    ],
+    checkin: '15:00〜18:00',
+    checkout: '〜10:00',
+    parking: '無料駐車場完備（マイクロバス可）',
+    phone: '070-8328-9154',
+    priceSummary: {
+      weekday: 24500,
+      weekend: 28500,
+      weekendRule: '金・土（※日曜は平日料金）',
+      extraPerson: '1名追加ごとに +¥5,000/泊',
+    },
+    images: [
+      '/hotel3/スクリーンショット 2026-05-07 1.46.32.png',
+      '/hotel3/スクリーンショット 2026-05-07 1.47.06.png',
+      '/hotel3/スクリーンショット 2026-05-07 1.47.17.png',
+      '/hotel3/スクリーンショット 2026-05-07 1.47.34.png',
+      '/hotel3/スクリーンショット 2026-05-07 1.47.47.png',
     ],
   },
 };

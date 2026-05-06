@@ -73,10 +73,11 @@ export default function CompanyPage() {
                 </div>
                 <div className="h-px bg-gray-100" />
                 <div className="space-y-2">
-                  <div className="text-textMain font-medium">HOTEL PG -Ⅲ-（準備中）</div>
+                  <div className="text-textMain font-medium">HOTEL PG -Ⅲ-</div>
                   <div>住所: 広島県尾道市因島土生町1747-5</div>
+                  <div>旅館業法に基づく営業許可番号: 尾市環指令第083142号</div>
                   <div>電話: 070-8328-9154</div>
-                  <div>チェックイン: 【要確認】 / チェックアウト: 10:00</div>
+                  <div>チェックイン: 15:00〜18:00 / チェックアウト: 10:00</div>
                 </div>
               </div>
             </motion.section>

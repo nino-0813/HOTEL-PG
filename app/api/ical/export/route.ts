@@ -9,6 +9,7 @@ function roomKeyToLabel(roomKey: string) {
   if (roomKey === 'pg1') return 'HOTEL PG -I-';
   if (roomKey === 'pg2_single') return 'HOTEL PG -II-（シングル）';
   if (roomKey === 'pg2_family') return 'HOTEL PG -II-（ファミリー）';
+  if (roomKey === 'pg3') return 'HOTEL PG -III-';
   return roomKey;
 }
 

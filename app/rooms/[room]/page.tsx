@@ -15,6 +15,7 @@ function rakutenHref(checkoutRoom: string) {
   if (checkoutRoom === 'pg1') return 'https://vacation-stay.jp/listings/917598';
   if (checkoutRoom === 'pg2_single') return 'https://vacation-stay.jp/listings/1138330';
   if (checkoutRoom === 'pg2_family') return 'https://vacation-stay.jp/listings/1138335';
+  if (checkoutRoom === 'pg3') return 'https://vacation-stay.jp/listings/1546442';
   return 'https://vacation-stay.jp/';
 }
 

@@ -155,21 +155,17 @@ export default function BlogArticleClient({ slug, initialArticle, staticPost, us
               {staticPost.slug === 'hotel-pg-iii-coming-soon' && (
                 <div className="mt-14 pt-8 border-t border-gray-100 space-y-4">
                   <p className="font-serif text-sm text-textLight">
-                    HOTEL PG -III- は現在、<strong className="text-textMain">電話予約のみ</strong>となっております。ウェブ予約は今後対応予定です。
+                    【OPEN記念価格】2名利用でお得｜和モダン客室｜最大3名｜無料駐車場｜長期滞在歓迎
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                     <a
-                      href="tel:07083289154"
+                      href="https://vacation-stay.jp/listings/1546442"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 rounded"
                     >
-                      電話予約はこちら →
+                      楽天で予約する →
                     </a>
-                    <Link
-                      href="/#reservation"
-                      className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-textMain border border-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textMain hover:text-white transition-colors duration-300 rounded"
-                    >
-                      ご予約はこちら
-                    </Link>
                   </div>
                 </div>
               )}
@@ -238,21 +234,17 @@ export default function BlogArticleClient({ slug, initialArticle, staticPost, us
             {slug === 'hotel-pg-iii-coming-soon' && (
               <div className="mt-14 pt-8 border-t border-gray-100 space-y-4">
                 <p className="font-serif text-sm text-textLight">
-                  HOTEL PG -III- は現在、<strong className="text-textMain">電話予約のみ</strong>となっております。ウェブ予約は今後対応予定です。
+                  【OPEN記念価格】2名利用でお得｜和モダン客室｜最大3名｜無料駐車場｜長期滞在歓迎
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                   <a
-                    href="tel:07083289154"
+                    href="https://vacation-stay.jp/listings/1546442"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 rounded"
                   >
-                    電話予約はこちら →
+                    楽天で予約する →
                   </a>
-                  <Link
-                    href="/#reservation"
-                    className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-textMain border border-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textMain hover:text-white transition-colors duration-300 rounded"
-                  >
-                    ご予約はこちら
-                  </Link>
                 </div>
               </div>
             )}
@@ -340,21 +332,17 @@ export default function BlogArticleClient({ slug, initialArticle, staticPost, us
           {post.slug === 'hotel-pg-iii-coming-soon' && (
             <div className="mt-14 pt-8 border-t border-gray-100 space-y-4">
               <p className="font-serif text-sm text-textLight">
-                HOTEL PG -III- は現在、<strong className="text-textMain">電話予約のみ</strong>となっております。ウェブ予約は今後対応予定です。
+                【OPEN記念価格】2名利用でお得｜和モダン客室｜最大3名｜無料駐車場｜長期滞在歓迎
               </p>
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                 <a
-                  href="tel:07083289154"
+                  href="https://vacation-stay.jp/listings/1546442"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 rounded"
                 >
-                  電話予約はこちら →
+                  楽天で予約する →
                 </a>
-                <Link
-                  href="/#reservation"
-                  className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-textMain border border-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textMain hover:text-white transition-colors duration-300 rounded"
-                >
-                  ご予約はこちら
-                </Link>
               </div>
             </div>
           )}

@@ -99,11 +99,11 @@ const Reservation: React.FC = () => {
               HOTEL PG -III-
             </h3>
             <p className="font-serif text-xs sm:text-sm text-textMain mb-4 sm:mb-6 font-medium">
-              電話でご予約可能
+              【OPEN記念価格】2名利用でお得｜和モダン客室｜最大3名｜無料駐車場｜長期滞在歓迎
             </p>
             <a
-              href="#hotels"
-              onClick={() => trackReservationClick('HOTEL PG -III- 電話予約')}
+              href="/rooms/pg3"
+              onClick={handleClick('HOTEL PG -III- 詳細')}
               className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
             >
               詳細はこちら →
