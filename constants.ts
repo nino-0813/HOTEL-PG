@@ -139,7 +139,7 @@ export const BLOG_POSTS: BlogPost[] = [
 
 自分のレベルや体力に合わせて、最適なルートを選べるのが因島サイクリングの醍醐味です。
 
-![高見山から見るしまなみ海道（因島大橋）](/blog/No7809_高見山から見るしまなみ海道因島大橋.jpg)
+![高見山から見るしまなみ海道（因島大橋）](/blog/blog-bridge-view.webp)
 
 ## 因島で訪れたいサイクリングスポット
 
@@ -159,17 +159,17 @@ export const BLOG_POSTS: BlogPost[] = [
 
 当日の天候・風・体力に合わせて「短く切り上げる」判断がしやすいのも、因島滞在の強みです。
 
-![千光寺境内から見る尾道市街地とロープウェイ](/blog/No8028_千光寺境内から見る尾道市街地とロープウェイ.jpg)
+![千光寺境内から見る尾道市街地とロープウェイ](/blog/blog-senkouji-ropeway.webp)
 
-![耕三寺 未来心の丘](/blog/No2142_耕三寺未来心の丘.jpg)
+![耕三寺 未来心の丘](/blog/blog-kousanji-hill.webp)
 
 ## 因島グルメも満喫！
 
 サイクリングの楽しみの一つは、その土地ならではの美味しいものを味わうこと。因島には、はっさく大福の他にも、新鮮な海の幸を使った料理や、地元で愛されるB級グルメなど、魅力的な食がたくさんあります。サイクリングの休憩中に、ぜひ地元の味を堪能してください。
 
-![尾道焼き](/blog/No1901_尾道焼き.jpg)
+![尾道焼き](/blog/blog-onomichi-yaki.webp)
 
-![因島発祥の八朔（はっさく）](/blog/No243_因島発祥の八朔（はっさく）.jpg)
+![因島発祥の八朔（はっさく）](/blog/blog-hassaku.webp)
 
 ## サイクリスト必見！しまなみ海道のおすすめYouTube動画
 
@@ -209,7 +209,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: '2026.05.07',
     author: 'HOTEL PG',
     category: '旅行ガイド',
-    image: '/blog/No7919_しまなみ海道サイクリング（因島）.jpg',
+    image: '/blog/blog-cycling-hero.webp',
     slug: 'shimanami-innoshima-cycling-guide',
     tags: [
       'しまなみ海道 サイクリング',

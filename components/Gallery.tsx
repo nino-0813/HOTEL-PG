@@ -38,6 +38,12 @@ const GALLERY_IMAGES: GalleryImage[] = [
   { src: '/images/gallery/DSC04593.webp', alt: '客室', category: 'room', hotel: 'II', roomType: 'family' },
   { src: '/images/gallery/DSC04605.webp', alt: '客室', category: 'room', hotel: 'II', roomType: 'family' },
   { src: '/images/gallery/DSC04576.webp', alt: '客室', category: 'room', hotel: 'II', roomType: 'family' },
+  // ROOM category images - HOTEL PG -III- (5 images)
+  { src: '/hotel3/pg3-room-01.webp', alt: '客室', category: 'room', hotel: 'III' },
+  { src: '/hotel3/pg3-room-02.webp', alt: '客室', category: 'room', hotel: 'III' },
+  { src: '/hotel3/pg3-room-03.webp', alt: '客室', category: 'room', hotel: 'III' },
+  { src: '/hotel3/pg3-room-04.webp', alt: '客室', category: 'room', hotel: 'III' },
+  { src: '/hotel3/pg3-room-05.webp', alt: '客室', category: 'room', hotel: 'III' },
   // FOOD category images
   { src: '/images/gallery/82dfe2c3189024a50b197d92a5436f68492ab111.47.9.26.3.webp', alt: '料理', category: 'food' },
   { src: '/images/gallery/DSC04467 (1).webp', alt: '料理', category: 'food' },
@@ -48,17 +54,16 @@ const GALLERY_IMAGES: GalleryImage[] = [
 ];
 
 const Gallery: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'room' | 'food'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<'room' | 'food'>('room');
   const [lightboxImage, setLightboxImage] = useState<number | null>(null);
 
-  const filteredImages = selectedCategory === 'all' 
-    ? GALLERY_IMAGES.slice(0, 6) // ALL category shows first 6 images (3x3 grid)
-    : GALLERY_IMAGES.filter(img => img.category === selectedCategory);
+  const filteredImages = GALLERY_IMAGES.filter(img => img.category === selectedCategory);
 
   // Separate room images by hotel
   const roomImagesI = GALLERY_IMAGES.filter(img => img.category === 'room' && img.hotel === 'I');
   const roomImagesIISingle = GALLERY_IMAGES.filter(img => img.category === 'room' && img.hotel === 'II' && img.roomType === 'single');
   const roomImagesIIFamily = GALLERY_IMAGES.filter(img => img.category === 'room' && img.hotel === 'II' && img.roomType === 'family');
+  const roomImagesIII = GALLERY_IMAGES.filter(img => img.category === 'room' && img.hotel === 'III');
 
   const openLightbox = (index: number) => {
     setLightboxImage(index);
@@ -86,7 +91,6 @@ const Gallery: React.FC = () => {
   };
 
   const categories = [
-    { value: 'all' as const, label: 'All' },
     { value: 'room' as const, label: 'Room' },
     { value: 'food' as const, label: 'Food' },
   ];
@@ -216,8 +220,28 @@ const Gallery: React.FC = () => {
               {/* HOTEL PG -III- */}
               <div>
                 <h3 className="font-display text-2xl md:text-3xl font-light text-textMain mb-8 text-center">HOTEL PG -III-</h3>
-                <div className="text-center py-12 md:py-16">
-                  <p className="font-serif text-base md:text-lg text-gray-500">オープンまで、もうしばらくお待ちください</p>
+                <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1">
+                  {roomImagesIII.map((image, index) => (
+                    <div
+                      key={`${image.src}-${index}`}
+                      onClick={() => {
+                        const allRoomImages = GALLERY_IMAGES.filter((img) => img.category === 'room');
+                        const roomIndex = allRoomImages.findIndex((img) => img === image);
+                        openLightbox(roomIndex);
+                      }}
+                      className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
+                    >
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        fill
+                        sizes="(max-width: 768px) 33vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
+                        loading={index < 5 ? 'eager' : 'lazy'}
+                        priority={index < 3}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

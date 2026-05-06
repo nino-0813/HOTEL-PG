@@ -99,7 +99,7 @@ const Reservation: React.FC = () => {
               HOTEL PG -III-
             </h3>
             <p className="font-serif text-xs sm:text-sm text-textMain mb-4 sm:mb-6 font-medium">
-              【OPEN記念価格】2名利用でお得｜和モダン客室｜最大3名｜無料駐車場｜長期滞在歓迎
+              【OPEN記念価格】2名利用でお得｜和モダン客室｜最大3名｜無料駐車場｜マイクロバス可｜長期滞在歓迎
             </p>
             <a
               href="/rooms/pg3"

@@ -325,11 +325,11 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
       extraPerson: '1名追加ごとに +¥5,000/泊',
     },
     images: [
-      '/hotel3/スクリーンショット 2026-05-07 1.46.32.png',
-      '/hotel3/スクリーンショット 2026-05-07 1.47.06.png',
-      '/hotel3/スクリーンショット 2026-05-07 1.47.17.png',
-      '/hotel3/スクリーンショット 2026-05-07 1.47.34.png',
-      '/hotel3/スクリーンショット 2026-05-07 1.47.47.png',
+      '/hotel3/pg3-room-01.webp',
+      '/hotel3/pg3-room-02.webp',
+      '/hotel3/pg3-room-03.webp',
+      '/hotel3/pg3-room-04.webp',
+      '/hotel3/pg3-room-05.webp',
     ],
   },
 };
