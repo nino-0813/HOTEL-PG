@@ -11,6 +11,7 @@ import Footer from '@/components/Footer';
 import { useCms } from '@/context/CmsContext';
 import { toPublicStorageUrl } from '@/lib/upload';
 import { BlogBlockRenderer } from '@/components/BlogBlockRenderer';
+import { trackReservationClick } from '@/utils/analytics';
 import type { BlogArticle } from '@/types';
 import type { BlogPost } from '@/types';
 
@@ -79,27 +80,29 @@ function paragraphOnlyContainsBlockFigure(children: React.ReactNode): boolean {
   return false;
 }
 
-const markdownComponents = {
-  p: ({ children, node: _mdNode, ...rest }: React.ComponentProps<'p'> & { node?: unknown }) => {
-    if (paragraphOnlyContainsBlockFigure(children)) {
-      return <Fragment>{children}</Fragment>;
-    }
-    return <p {...rest}>{children}</p>;
-  },
-  a: ({ href, children, node: _mdNode, ...rest }: React.ComponentProps<'a'> & { node?: unknown }) => {
-    const isReservationAnchor = href === '/#reservation' || href === '#reservation';
-    return (
-      <a
-        href={href}
-        onClick={isReservationAnchor ? () => trackReservationClick(`blog_reservation_cta:${slug}`) : undefined}
-        {...rest}
-      >
-        {children}
-      </a>
-    );
-  },
-  img: MarkdownImageWithCaption,
-};
+function createMarkdownComponents(articleSlug: string) {
+  return {
+    p: ({ children, node: _mdNode, ...rest }: React.ComponentProps<'p'> & { node?: unknown }) => {
+      if (paragraphOnlyContainsBlockFigure(children)) {
+        return <Fragment>{children}</Fragment>;
+      }
+      return <p {...rest}>{children}</p>;
+    },
+    a: ({ href, children, node: _mdNode, ...rest }: React.ComponentProps<'a'> & { node?: unknown }) => {
+      const isReservationAnchor = href === '/#reservation' || href === '#reservation';
+      return (
+        <a
+          href={href}
+          onClick={isReservationAnchor ? () => trackReservationClick(`blog_reservation_cta:${articleSlug}`) : undefined}
+          {...rest}
+        >
+          {children}
+        </a>
+      );
+    },
+    img: MarkdownImageWithCaption,
+  };
+}
 
 const NotFound = () => (
   <div className="min-h-screen relative">
@@ -173,7 +176,7 @@ export default function BlogArticleClient({ slug, initialArticle, staticPost, us
               <div className={`article-prose pt-8 border-t border-gray-100 ${staticPost.slug === 'hotel-pg-iii-coming-soon' ? 'blog-article-pg3' : ''}`}>
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
-                  components={markdownComponents}
+                  components={createMarkdownComponents(slug)}
                 >
                   {staticPost.content ?? ''}
                 </ReactMarkdown>
@@ -340,7 +343,7 @@ export default function BlogArticleClient({ slug, initialArticle, staticPost, us
           <div className="article-prose pt-8 border-t border-gray-100">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
-              components={markdownComponents}
+              components={createMarkdownComponents(slug)}
             >
               {post.content.trim() || ''}
             </ReactMarkdown>
