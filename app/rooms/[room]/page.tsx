@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ROOMS, type RoomSlug } from '@/lib/room-data';
-import { trackReservationClick } from '@/utils/analytics';
+import RakutenReserveButton from '@/components/RakutenReserveButton';
 
 function yen(n: number): string {
   return new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(n);
@@ -106,15 +106,11 @@ export default async function RoomDetailPage({
               </p>
 
               <div className="mt-6">
-                <a
+                <RakutenReserveButton
                   href={rakutenHref(room.checkoutRoom)}
-                  onClick={() => trackReservationClick(`rakuten_reserve:${room.slug}`)}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  roomSlug={room.slug}
                   className="inline-flex items-center justify-center rounded-xl bg-textMain px-8 py-4 font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-white hover:bg-textLight transition-colors duration-300"
-                >
-                  楽天で予約をする
-                </a>
+                />
               </div>
 
               <div className="mt-8 bg-white/90 backdrop-blur border border-gray-200 rounded-2xl p-6 sm:p-8">
