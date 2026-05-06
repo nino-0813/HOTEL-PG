@@ -50,6 +50,13 @@ function MarkdownImageWithCaption({ src, alt }: { src?: string | null; alt?: str
  * 単独画像の段落はカスタム img が <figure> を返すため、子の React 要素型は 'figure' ではなくコンポーネント参照になる。
  * そのまま <p> で包むと HTML 不正＆ハイドレーションエラーになるので unwrap する。
  */
+function isBlockFigureElement(el: React.ReactNode): boolean {
+  if (!React.isValidElement(el)) return false;
+  if (el.type === 'figure') return true;
+  if (el.type === MarkdownImageWithCaption) return true;
+  return false;
+}
+
 function paragraphOnlyContainsBlockFigure(children: React.ReactNode): boolean {
   const arr = React.Children.toArray(children).filter((child) => {
     if (typeof child === 'string') return child.trim() !== '';
@@ -58,9 +65,17 @@ function paragraphOnlyContainsBlockFigure(children: React.ReactNode): boolean {
   });
   if (arr.length !== 1) return false;
   const el = arr[0];
-  if (!React.isValidElement(el)) return false;
-  if (el.type === 'figure') return true;
-  if (el.type === MarkdownImageWithCaption) return true;
+  if (isBlockFigureElement(el)) return true;
+
+  // [![...](...)](https://...) のように a が figure を包むパターンも unwrap する
+  if (React.isValidElement(el) && el.type === 'a') {
+    const inner = React.Children.toArray((el.props as any).children).filter((c) => {
+      if (typeof c === 'string') return c.trim() !== '';
+      return c != null;
+    });
+    if (inner.length === 1 && isBlockFigureElement(inner[0])) return true;
+  }
+
   return false;
 }
 
