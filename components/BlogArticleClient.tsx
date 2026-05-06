@@ -86,6 +86,18 @@ const markdownComponents = {
     }
     return <p {...rest}>{children}</p>;
   },
+  a: ({ href, children, node: _mdNode, ...rest }: React.ComponentProps<'a'> & { node?: unknown }) => {
+    const isReservationAnchor = href === '/#reservation' || href === '#reservation';
+    return (
+      <a
+        href={href}
+        onClick={isReservationAnchor ? () => trackReservationClick(`blog_reservation_cta:${slug}`) : undefined}
+        {...rest}
+      >
+        {children}
+      </a>
+    );
+  },
   img: MarkdownImageWithCaption,
 };
 
