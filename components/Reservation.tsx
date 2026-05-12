@@ -1,10 +1,13 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { trackReservationClick } from '../utils/analytics';
+import { useHydrated } from '@/lib/useHydrated';
 
 const Reservation: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const hydrated = useHydrated();
   const isInView = useInView(ref, { once: true, margin: "-10%" });
+  const reveal = hydrated && isInView;
 
   const handleClick = (label: string) => () => trackReservationClick(label);
 
@@ -15,7 +18,7 @@ const Reservation: React.FC = () => {
         <motion.div
           className="mb-8 sm:mb-12 md:mb-16 text-center sm:text-left"
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          animate={reveal ? { opacity: 1, y: 0 } : false}
           transition={{ duration: 0.8 }}
         >
           <h2 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-textMain mb-2 sm:mb-4">
@@ -32,7 +35,7 @@ const Reservation: React.FC = () => {
           {/* HOTEL PG -I- */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            animate={reveal ? { opacity: 1, y: 0 } : false}
             transition={{ duration: 0.8, delay: 0.1 }}
             className="border border-gray-200 p-4 sm:p-6 md:p-8 rounded-lg hover:border-textMain transition-all duration-300 group bg-white shadow-sm hover:shadow-md"
           >
@@ -51,7 +54,7 @@ const Reservation: React.FC = () => {
           {/* HOTEL PG -II- シングルタイプ */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            animate={reveal ? { opacity: 1, y: 0 } : false}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="border border-gray-200 p-4 sm:p-6 md:p-8 rounded-lg hover:border-textMain transition-all duration-300 group bg-white shadow-sm hover:shadow-md"
           >
@@ -71,7 +74,7 @@ const Reservation: React.FC = () => {
           {/* HOTEL PG -II- ファミリータイプ */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            animate={reveal ? { opacity: 1, y: 0 } : false}
             transition={{ duration: 0.8, delay: 0.3 }}
             className="border border-gray-200 p-4 sm:p-6 md:p-8 rounded-lg hover:border-textMain transition-all duration-300 group bg-white shadow-sm hover:shadow-md"
           >
@@ -88,22 +91,66 @@ const Reservation: React.FC = () => {
             </a>
           </motion.div>
 
-          {/* HOTEL PG -III- */}
+          {/* HOTEL PG-III 3名タイプ */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            animate={reveal ? { opacity: 1, y: 0 } : false}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="border border-gray-200 p-4 sm:p-6 md:p-8 rounded-lg hover:border-textMain transition-all duration-300 group bg-white shadow-sm hover:shadow-md"
           >
             <h3 className="font-display text-lg sm:text-xl md:text-2xl font-light text-textMain mb-2 sm:mb-3 tracking-[0.05em] sm:tracking-[0.1em] leading-tight">
-              HOTEL PG -III-
+              HOTEL PG-III 3名タイプ
             </h3>
             <p className="font-serif text-xs sm:text-sm text-textMain mb-4 sm:mb-6 font-medium">
               【OPEN記念価格】2名利用でお得｜和モダン客室｜最大3名｜無料駐車場｜マイクロバス可｜長期滞在歓迎
             </p>
             <a
               href="/rooms/pg3"
-              onClick={handleClick('HOTEL PG -III- 詳細')}
+              onClick={handleClick('HOTEL PG-III 3名タイプ 詳細')}
+              className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
+            >
+              詳細はこちら →
+            </a>
+          </motion.div>
+
+          {/* HOTEL PG-III 4名タイプ */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={reveal ? { opacity: 1, y: 0 } : false}
+            transition={{ duration: 0.8, delay: 0.45 }}
+            className="border border-gray-200 p-4 sm:p-6 md:p-8 rounded-lg hover:border-textMain transition-all duration-300 group bg-white shadow-sm hover:shadow-md"
+          >
+            <h3 className="font-display text-lg sm:text-xl md:text-2xl font-light text-textMain mb-2 sm:mb-3 tracking-[0.05em] sm:tracking-[0.1em] leading-tight">
+              HOTEL PG-III 4名タイプ
+            </h3>
+            <p className="font-serif text-xs sm:text-sm text-textMain mb-4 sm:mb-6 font-medium">
+              【OPEN記念価格】2名利用でお得｜和モダン客室｜最大4名｜無料駐車場｜マイクロバス可｜長期滞在歓迎
+            </p>
+            <a
+              href="/rooms/pg3-four"
+              onClick={handleClick('HOTEL PG-III 4名タイプ 詳細')}
+              className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
+            >
+              詳細はこちら →
+            </a>
+          </motion.div>
+
+          {/* HOTEL PG-III メゾネット洋室 */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={reveal ? { opacity: 1, y: 0 } : false}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="border border-gray-200 p-4 sm:p-6 md:p-8 rounded-lg hover:border-textMain transition-all duration-300 group bg-white shadow-sm hover:shadow-md"
+          >
+            <h3 className="font-display text-lg sm:text-xl md:text-2xl font-light text-textMain mb-2 sm:mb-3 tracking-[0.05em] sm:tracking-[0.1em] leading-tight">
+              HOTEL PG-III メゾネット洋室
+            </h3>
+            <p className="font-serif text-xs sm:text-sm text-textMain mb-4 sm:mb-6 font-medium">
+              メゾネット洋室｜静かな港町ステイ｜最大6名｜無料駐車場｜マイクロバス可｜長期滞在歓迎
+            </p>
+            <a
+              href="/rooms/pg3-maisonette"
+              onClick={handleClick('HOTEL PG-III メゾネット洋室 詳細')}
               className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 group-hover:shadow-lg rounded"
             >
               詳細はこちら →

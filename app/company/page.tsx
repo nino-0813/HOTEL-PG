@@ -6,10 +6,13 @@ import { motion, useInView } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { useHydrated } from '@/lib/useHydrated';
 
 export default function CompanyPage() {
   const ref = useRef<HTMLDivElement>(null);
+  const hydrated = useHydrated();
   const isInView = useInView(ref, { once: true, margin: '-10%' });
+  const reveal = hydrated && isInView;
 
   return (
     <div className="min-h-screen relative">
@@ -48,7 +51,7 @@ export default function CompanyPage() {
           <div className="space-y-12 md:space-y-16 font-serif text-textLight">
             <motion.section
               initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              animate={reveal ? { opacity: 1, y: 0 } : false}
               transition={{ duration: 0.6, delay: 0.15 }}
             >
               <h2 className="font-display text-xl sm:text-2xl font-light text-textMain mb-6 tracking-[0.08em] flex items-center gap-3">

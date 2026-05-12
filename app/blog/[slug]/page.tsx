@@ -9,10 +9,7 @@ import { toPublicStorageUrl } from '@/lib/upload';
 import { absoluteUrl, DEFAULT_OG_IMAGE_PATH, SITE_NAME } from '@/lib/site';
 import BlogArticleClient from '@/components/BlogArticleClient';
 
-const getArticle = cache(async (slug: string) => {
-  if (!blogSupabase.isSupabaseConfigured()) return null;
-  return blogSupabase.getBlogArticleBySlugOrId(slug);
-});
+const getArticle = cache(async (slug: string) => blogSupabase.getBlogArticleBySlugOrId(slug));
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -88,13 +85,8 @@ export default async function BlogArticlePage({ params }: Props) {
     notFound();
   }
 
-  const useBlockBlog = blogSupabase.isSupabaseConfigured();
-  const article = useBlockBlog ? await getArticle(slug) : null;
+  const article = await getArticle(slug);
   const staticPost = BLOG_POSTS.find((p) => p.slug === slug);
-
-  if (useBlockBlog && !article && !staticPost) {
-    notFound();
-  }
 
   const articleUrl = absoluteUrl(`/blog/${slug}`);
   const breadcrumbSchema = getBreadcrumbSchema([
@@ -129,12 +121,7 @@ export default async function BlogArticlePage({ params }: Props) {
     <>
       <JsonLd data={breadcrumbSchema} />
       {blogPostingSchema && <JsonLd data={blogPostingSchema} />}
-      <BlogArticleClient
-      slug={slug}
-      initialArticle={article}
-      staticPost={staticPost}
-      useBlockBlog={useBlockBlog}
-    />
+      <BlogArticleClient slug={slug} initialArticle={article} staticPost={staticPost} />
     </>
   );
 }

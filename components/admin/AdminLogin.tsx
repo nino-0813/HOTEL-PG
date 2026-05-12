@@ -14,14 +14,29 @@ const AdminLogin: React.FC = () => {
     if (isAdminLoggedIn()) router.replace('/admin/blog');
   }, [router]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (password === getAdminPassword()) {
+    if (password !== getAdminPassword()) {
+      setError('パスワードが正しくありません。');
+      return;
+    }
+    try {
+      const res = await fetch('/api/admin/session', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      const data = (await res.json().catch(() => null)) as { message?: string; error?: string } | null;
+      if (!res.ok) {
+        setError(data?.message || data?.error || 'サーバー側セッションの確立に失敗しました。ADMIN_API_SECRET を確認してください。');
+        return;
+      }
       setAdminLoggedIn();
       router.replace('/admin/blog');
-    } else {
-      setError('パスワードが正しくありません。');
+    } catch {
+      setError('サーバーに接続できませんでした。');
     }
   };
 

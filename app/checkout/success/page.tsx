@@ -1,62 +1,24 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
 
 export default function CheckoutSuccess() {
   const searchParams = useSearchParams();
   const room = searchParams.get('room') ?? '-';
   const sessionId = searchParams.get('session_id') ?? '-';
-  const checkin = searchParams.get('checkin') ?? '';
-  const checkout = searchParams.get('checkout') ?? '';
-  const adults = Math.max(1, parseInt(searchParams.get('adults') ?? '1', 10) || 1);
-  const children = Math.max(0, parseInt(searchParams.get('children') ?? '0', 10) || 0);
-  const infants = Math.max(0, parseInt(searchParams.get('infants') ?? '0', 10) || 0);
-  const totalPrice = Math.max(0, parseInt(searchParams.get('total_price') ?? '0', 10) || 0);
-  const [saved, setSaved] = useState(false);
 
   const roomLabel = useMemo(() => {
     if (room === 'pg1') return 'HOTEL PG -I-';
     if (room === 'pg2_single') return 'HOTEL PG -II-（シングル）';
     if (room === 'pg2_family') return 'HOTEL PG -II-（ファミリー）';
+    if (room === 'pg3_three') return 'HOTEL PG-III 3名タイプ';
+    if (room === 'pg3_four') return 'HOTEL PG-III 4名タイプ';
+    if (room === 'pg3_maisonette') return 'HOTEL PG-III メゾネット洋室';
+    if (room === 'pg3') return 'HOTEL PG-III 3名タイプ';
     return room;
   }, [room]);
-
-  useEffect(() => {
-    let mounted = true;
-    (async () => {
-      if (!supabase) return;
-      if (!sessionId || sessionId === '-') return;
-      const { data } = await supabase.auth.getSession();
-      const userId = data.session?.user?.id;
-      if (!userId) return;
-
-      const { error } = await supabase
-        .from('bookings')
-        .upsert(
-          {
-            user_id: userId,
-            room_key: room,
-            checkin_date: checkin || null,
-            checkout_date: checkout || null,
-            adults,
-            children,
-            infants,
-            total_price: totalPrice || null,
-            stripe_session_id: sessionId,
-            status: 'paid',
-          },
-          { onConflict: 'stripe_session_id' },
-        );
-      if (!mounted) return;
-      setSaved(!error);
-    })();
-    return () => {
-      mounted = false;
-    };
-  }, [room, sessionId, checkin, checkout, adults, children, infants, totalPrice]);
 
   return (
     <main className="min-h-screen bg-background py-16 sm:py-24">
@@ -78,13 +40,13 @@ export default function CheckoutSuccess() {
                 HOTEL PG - INNOSHIMA
               </p>
               <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-light text-textMain tracking-[0.08em] mt-1">
-                ご予約ありがとうございます
+                ご予約ありがとうございます。決済が完了しました。
               </h1>
             </div>
           </div>
 
           <p className="font-serif text-sm sm:text-base text-textLight mt-6 leading-relaxed">
-            決済が完了しました。ご登録のメールアドレス宛に、内容確認のご案内をお送りします。
+            ご予約内容はメールをご確認ください。空室・料金の反映には数分かかる場合があります。
           </p>
 
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -95,9 +57,7 @@ export default function CheckoutSuccess() {
               <div className="font-serif text-sm text-textMain mt-2">
                 部屋タイプ: {roomLabel}
               </div>
-              <div className="font-serif text-xs text-gray-500 mt-1">
-                {saved ? 'マイページに保存しました。' : 'マイページに保存中…'}
-              </div>
+              <div className="font-serif text-xs text-gray-500 mt-1">※ 予約の保存はSaaS側で行われます。</div>
             </div>
             <div className="rounded-xl border border-gray-200 p-5 bg-white">
               <div className="font-display text-[11px] tracking-[0.2em] uppercase text-gray-500">
@@ -124,12 +84,6 @@ export default function CheckoutSuccess() {
           </details>
 
           <div className="mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4">
-            <a
-              href="/account"
-              className="w-full sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-white bg-textMain px-8 py-4 hover:bg-textLight transition-colors duration-300 rounded"
-            >
-              マイページへ
-            </a>
             <a
               href="/#reservation"
               className="w-full sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-textMain border border-gray-200 px-8 py-4 hover:border-gray-400 transition-colors duration-300 rounded"

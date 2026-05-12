@@ -40,6 +40,8 @@ export interface StayPlan {
   schedule: { day: number; time: string; activity: string }[];
   includes: string[];
   image?: string;
+  /** マリン機器等、外部公式サイトへの案内（モーダル内にリンクとして表示） */
+  relatedLinks?: { label: string; href: string }[];
 }
 
 // ---- ブロック形式ブログ（blog_articles）----

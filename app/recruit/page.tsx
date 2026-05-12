@@ -9,10 +9,13 @@ import Footer from '@/components/Footer';
 import { JsonLd } from '@/components/JsonLd';
 import { INSTAGRAM_DM_URL } from '@/constants';
 import { getBreadcrumbSchema } from '@/lib/json-ld';
+import { useHydrated } from '@/lib/useHydrated';
 
 export default function RecruitPage() {
   const ref = useRef<HTMLDivElement>(null);
+  const hydrated = useHydrated();
   const isInView = useInView(ref, { once: true, margin: '-10%' });
+  const reveal = hydrated && isInView;
 
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: 'トップ', url: 'https://www.hotelpg-innosima.com/' },
@@ -61,7 +64,7 @@ export default function RecruitPage() {
           {/* 募集職種 */}
           <motion.section
             initial={{ opacity: 0, y: 24 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            animate={reveal ? { opacity: 1, y: 0 } : false}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="mb-16 md:mb-24"
           >
@@ -91,7 +94,7 @@ export default function RecruitPage() {
           {/* こんな方歓迎 */}
           <motion.section
             initial={{ opacity: 0, y: 24 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            animate={reveal ? { opacity: 1, y: 0 } : false}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mb-16 md:mb-24"
           >
@@ -112,7 +115,7 @@ export default function RecruitPage() {
           {/* 勤務条件 */}
           <motion.section
             initial={{ opacity: 0, y: 24 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            animate={reveal ? { opacity: 1, y: 0 } : false}
             transition={{ duration: 0.6, delay: 0.3 }}
             className="mb-16 md:mb-24"
           >
@@ -160,7 +163,7 @@ export default function RecruitPage() {
           {/* 応募方法 */}
           <motion.section
             initial={{ opacity: 0, y: 24 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            animate={reveal ? { opacity: 1, y: 0 } : false}
             transition={{ duration: 0.6, delay: 0.4 }}
             className="border-t border-gray-200 pt-16"
           >

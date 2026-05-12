@@ -58,6 +58,7 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image).*)'],
+  // Dev / prod ともに `/_next/*` は middleware を通さない（JS/CSS の 404 や途中切断を防ぐ）
+  matcher: ['/((?!_next/).*)'],
 };
 

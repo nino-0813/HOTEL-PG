@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { trackReservationClick } from '../utils/analytics';
 
 interface GalleryImage {
   src: string;
   alt: string;
   category: 'room' | 'food';
   hotel?: 'I' | 'II' | 'III';
-  roomType?: 'single' | 'family';
+  roomType?: 'single' | 'family' | 'maisonette';
 }
 
 const GALLERY_IMAGES: GalleryImage[] = [
@@ -38,12 +39,24 @@ const GALLERY_IMAGES: GalleryImage[] = [
   { src: '/images/gallery/DSC04593.webp', alt: '客室', category: 'room', hotel: 'II', roomType: 'family' },
   { src: '/images/gallery/DSC04605.webp', alt: '客室', category: 'room', hotel: 'II', roomType: 'family' },
   { src: '/images/gallery/DSC04576.webp', alt: '客室', category: 'room', hotel: 'II', roomType: 'family' },
-  // ROOM category images - HOTEL PG -III- (5 images)
-  { src: '/hotel3/pg3-room-01.webp', alt: '客室', category: 'room', hotel: 'III' },
-  { src: '/hotel3/pg3-room-02.webp', alt: '客室', category: 'room', hotel: 'III' },
-  { src: '/hotel3/pg3-room-03.webp', alt: '客室', category: 'room', hotel: 'III' },
-  { src: '/hotel3/pg3-room-04.webp', alt: '客室', category: 'room', hotel: 'III' },
-  { src: '/hotel3/pg3-room-05.webp', alt: '客室', category: 'room', hotel: 'III' },
+  // ROOM category images - HOTEL PG -III- 3名タイプ (5 images)
+  { src: '/hotel3/pg3-three-01.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'single' },
+  { src: '/hotel3/pg3-three-02.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'single' },
+  { src: '/hotel3/pg3-three-03.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'single' },
+  { src: '/hotel3/pg3-three-04.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'single' },
+  { src: '/hotel3/pg3-three-05.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'single' },
+  // ROOM category images - HOTEL PG -III- 4名タイプ (5 images)
+  { src: '/hotel3/pg3-room-01.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'family' },
+  { src: '/hotel3/pg3-room-02.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'family' },
+  { src: '/hotel3/pg3-room-03.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'family' },
+  { src: '/hotel3/pg3-room-04.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'family' },
+  { src: '/hotel3/pg3-room-05.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'family' },
+  // ROOM category images - HOTEL PG -III- メゾネット洋室 (5 images)
+  { src: '/hotel3/pg3-maisonette-01.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'maisonette' },
+  { src: '/hotel3/pg3-maisonette-02.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'maisonette' },
+  { src: '/hotel3/pg3-maisonette-03.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'maisonette' },
+  { src: '/hotel3/pg3-maisonette-04.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'maisonette' },
+  { src: '/hotel3/pg3-maisonette-05.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'maisonette' },
   // FOOD category images
   { src: '/images/gallery/82dfe2c3189024a50b197d92a5436f68492ab111.47.9.26.3.webp', alt: '料理', category: 'food' },
   { src: '/images/gallery/DSC04467 (1).webp', alt: '料理', category: 'food' },
@@ -63,7 +76,9 @@ const Gallery: React.FC = () => {
   const roomImagesI = GALLERY_IMAGES.filter(img => img.category === 'room' && img.hotel === 'I');
   const roomImagesIISingle = GALLERY_IMAGES.filter(img => img.category === 'room' && img.hotel === 'II' && img.roomType === 'single');
   const roomImagesIIFamily = GALLERY_IMAGES.filter(img => img.category === 'room' && img.hotel === 'II' && img.roomType === 'family');
-  const roomImagesIII = GALLERY_IMAGES.filter(img => img.category === 'room' && img.hotel === 'III');
+  const roomImagesIIIThree = GALLERY_IMAGES.filter(img => img.category === 'room' && img.hotel === 'III' && img.roomType === 'single');
+  const roomImagesIIIFour = GALLERY_IMAGES.filter(img => img.category === 'room' && img.hotel === 'III' && img.roomType === 'family');
+  const roomImagesIIIMaisonette = GALLERY_IMAGES.filter(img => img.category === 'room' && img.hotel === 'III' && img.roomType === 'maisonette');
 
   const openLightbox = (index: number) => {
     setLightboxImage(index);
@@ -94,6 +109,24 @@ const Gallery: React.FC = () => {
     { value: 'room' as const, label: 'Room' },
     { value: 'food' as const, label: 'Food' },
   ];
+
+  const galleryReserveBtnClass =
+    'inline-flex items-center justify-center w-full max-w-sm sm:w-auto sm:min-w-[240px] min-h-[48px] text-center font-display text-xs sm:text-sm tracking-[0.12em] sm:tracking-[0.18em] uppercase text-black bg-gray-100 border border-gray-300 px-6 sm:px-8 py-3.5 sm:py-4 hover:bg-white hover:border-gray-400 shadow-sm hover:shadow transition-all duration-300 rounded-lg';
+
+  /** Room タブ：施設・タイプごとのカード枠 */
+  const galleryRoomCardClass =
+    'rounded-2xl border border-gray-200 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-5 sm:p-6 md:p-8';
+  const galleryRoomHeadClass =
+    'text-center pb-6 sm:pb-7 mb-6 sm:mb-7 border-b border-gray-100';
+  const galleryRoomTitleClass =
+    'font-display text-2xl md:text-3xl font-light text-textMain tracking-[0.06em]';
+  const galleryRoomLeadClass =
+    'font-serif text-xs sm:text-sm text-gray-500 mt-3 max-w-lg mx-auto leading-relaxed';
+  const galleryRoomSubTitleClass =
+    'font-display text-lg sm:text-xl md:text-2xl font-light text-textMain tracking-[0.04em]';
+  const galleryGridShellClass = 'overflow-hidden rounded-xl bg-gray-100 ring-1 ring-gray-200/80';
+  const galleryReserveBandClass =
+    'mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-gray-100 flex flex-col items-center';
 
   return (
     <>
@@ -127,11 +160,15 @@ const Gallery: React.FC = () => {
           {/* Image Grid */}
           {selectedCategory === 'room' ? (
             // ROOM category: Show by hotel sections
-            <div className="space-y-16 md:space-y-24">
+            <div className="space-y-12 md:space-y-16 lg:space-y-20">
               {/* HOTEL PG -I- */}
-              <div>
-                <h3 className="font-display text-2xl md:text-3xl font-light text-textMain mb-8 text-center">HOTEL PG -I-</h3>
-                <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1">
+              <div className={galleryRoomCardClass}>
+                <div className={galleryRoomHeadClass}>
+                  <h3 className={galleryRoomTitleClass}>HOTEL PG -I-</h3>
+                  <p className={galleryRoomLeadClass}>写真をタップすると拡大表示されます。</p>
+                </div>
+                <div className={galleryGridShellClass}>
+                  <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1 sm:gap-1.5">
                   {roomImagesI.map((image, index) => (
                     <div
                       key={`${image.src}-${index}`}
@@ -140,7 +177,7 @@ const Gallery: React.FC = () => {
                         const roomIndex = allRoomImages.findIndex(img => img === image);
                         openLightbox(roomIndex);
                       }}
-                      className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
+                      className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-200/60"
                     >
                       <Image
                         src={image.src}
@@ -153,17 +190,34 @@ const Gallery: React.FC = () => {
                       />
                     </div>
                   ))}
+                  </div>
+                </div>
+                <div className={galleryReserveBandClass}>
+                  <a
+                    href="/rooms/pg1"
+                    onClick={() => trackReservationClick('gallery_room:pg1')}
+                    className={galleryReserveBtnClass}
+                  >
+                    HOTEL PG -I- のご予約・詳細
+                  </a>
                 </div>
               </div>
 
               {/* HOTEL PG -II- */}
-              <div className="space-y-12 md:space-y-16">
-                <h3 className="font-display text-2xl md:text-3xl font-light text-textMain mb-8 text-center">HOTEL PG -II-</h3>
-                
+              <div className="space-y-8 md:space-y-10">
+                <div className="text-center px-2">
+                  <h3 className={galleryRoomTitleClass}>HOTEL PG -II-</h3>
+                  <p className={galleryRoomLeadClass}>シングル／ファミリータイプの客室です。</p>
+                </div>
+
                 {/* シングルタイプ */}
-                <div>
-                  <h4 className="font-display text-xl md:text-2xl font-light text-textMain mb-6 text-center">シングルタイプ</h4>
-                  <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1">
+                <div className={galleryRoomCardClass}>
+                  <div className={galleryRoomHeadClass}>
+                    <h4 className={galleryRoomSubTitleClass}>シングルタイプ</h4>
+                    <p className={galleryRoomLeadClass}>写真をタップすると拡大表示されます。</p>
+                  </div>
+                  <div className={galleryGridShellClass}>
+                    <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1 sm:gap-1.5">
                     {roomImagesIISingle.map((image, index) => (
                       <div
                         key={`${image.src}-${index}`}
@@ -172,7 +226,7 @@ const Gallery: React.FC = () => {
                           const roomIndex = allRoomImages.findIndex(img => img === image);
                           openLightbox(roomIndex);
                         }}
-                        className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
+                        className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-200/60"
                       >
                         <Image
                           src={image.src}
@@ -185,13 +239,27 @@ const Gallery: React.FC = () => {
                         />
                       </div>
                     ))}
+                    </div>
+                  </div>
+                  <div className={galleryReserveBandClass}>
+                    <a
+                      href="/rooms/pg2-single"
+                      onClick={() => trackReservationClick('gallery_room:pg2_single')}
+                      className={galleryReserveBtnClass}
+                    >
+                      シングルタイプのご予約・詳細
+                    </a>
                   </div>
                 </div>
 
                 {/* ファミリータイプ */}
-                <div>
-                  <h4 className="font-display text-xl md:text-2xl font-light text-textMain mb-6 text-center">ファミリータイプ</h4>
-                  <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1">
+                <div className={galleryRoomCardClass}>
+                  <div className={galleryRoomHeadClass}>
+                    <h4 className={galleryRoomSubTitleClass}>ファミリータイプ</h4>
+                    <p className={galleryRoomLeadClass}>写真をタップすると拡大表示されます。</p>
+                  </div>
+                  <div className={galleryGridShellClass}>
+                    <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1 sm:gap-1.5">
                     {roomImagesIIFamily.map((image, index) => (
                       <div
                         key={`${image.src}-${index}`}
@@ -200,7 +268,7 @@ const Gallery: React.FC = () => {
                           const roomIndex = allRoomImages.findIndex(img => img === image);
                           openLightbox(roomIndex);
                         }}
-                        className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
+                        className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-200/60"
                       >
                         <Image
                           src={image.src}
@@ -213,35 +281,146 @@ const Gallery: React.FC = () => {
                         />
                       </div>
                     ))}
+                    </div>
+                  </div>
+                  <div className={galleryReserveBandClass}>
+                    <a
+                      href="/rooms/pg2-family"
+                      onClick={() => trackReservationClick('gallery_room:pg2_family')}
+                      className={galleryReserveBtnClass}
+                    >
+                      ファミリータイプのご予約・詳細
+                    </a>
                   </div>
                 </div>
               </div>
 
               {/* HOTEL PG -III- */}
-              <div>
-                <h3 className="font-display text-2xl md:text-3xl font-light text-textMain mb-8 text-center">HOTEL PG -III-</h3>
-                <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1">
-                  {roomImagesIII.map((image, index) => (
-                    <div
-                      key={`${image.src}-${index}`}
-                      onClick={() => {
-                        const allRoomImages = GALLERY_IMAGES.filter((img) => img.category === 'room');
-                        const roomIndex = allRoomImages.findIndex((img) => img === image);
-                        openLightbox(roomIndex);
-                      }}
-                      className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-100"
-                    >
-                      <Image
-                        src={image.src}
-                        alt={image.alt}
-                        fill
-                        sizes="(max-width: 768px) 33vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
-                        loading={index < 5 ? 'eager' : 'lazy'}
-                        priority={index < 3}
-                      />
+              <div className={galleryRoomCardClass}>
+                <div className={galleryRoomHeadClass}>
+                  <h3 className={galleryRoomTitleClass}>HOTEL PG -III-</h3>
+                  <p className={galleryRoomLeadClass}>3名タイプ・4名タイプの写真です。写真はタップで拡大します。</p>
+                </div>
+                <div className="space-y-8">
+                  <div>
+                    <div className="text-center font-display text-sm sm:text-base tracking-[0.14em] uppercase text-gray-500">
+                      3名タイプ
                     </div>
-                  ))}
+                    <div className={`mt-3 ${galleryGridShellClass}`}>
+                      <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1 sm:gap-1.5">
+                        {roomImagesIIIThree.map((image, index) => (
+                          <div
+                            key={`${image.src}-${index}`}
+                            onClick={() => {
+                              const allRoomImages = GALLERY_IMAGES.filter((img) => img.category === 'room');
+                              const roomIndex = allRoomImages.findIndex((img) => img === image);
+                              openLightbox(roomIndex);
+                            }}
+                            className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-200/60"
+                          >
+                            <Image
+                              src={image.src}
+                              alt={image.alt}
+                              fill
+                              sizes="(max-width: 768px) 33vw, (max-width: 1024px) 50vw, 33vw"
+                              className="object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
+                              loading={index < 5 ? 'eager' : 'lazy'}
+                              priority={index < 3}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className={galleryReserveBandClass}>
+                      <a
+                        href="/rooms/pg3"
+                        onClick={() => trackReservationClick('gallery_room:pg3_three')}
+                        className={galleryReserveBtnClass}
+                      >
+                        PG-III 3名タイプのご予約・詳細
+                      </a>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="text-center font-display text-sm sm:text-base tracking-[0.14em] uppercase text-gray-500">
+                      4名タイプ
+                    </div>
+                    <div className={`mt-3 ${galleryGridShellClass}`}>
+                      <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1 sm:gap-1.5">
+                        {roomImagesIIIFour.map((image, index) => (
+                          <div
+                            key={`${image.src}-${index}`}
+                            onClick={() => {
+                              const allRoomImages = GALLERY_IMAGES.filter((img) => img.category === 'room');
+                              const roomIndex = allRoomImages.findIndex((img) => img === image);
+                              openLightbox(roomIndex);
+                            }}
+                            className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-200/60"
+                          >
+                            <Image
+                              src={image.src}
+                              alt={image.alt}
+                              fill
+                              sizes="(max-width: 768px) 33vw, (max-width: 1024px) 50vw, 33vw"
+                              className="object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
+                              loading={index < 5 ? 'eager' : 'lazy'}
+                              priority={index < 3}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className={galleryReserveBandClass}>
+                      <a
+                        href="/rooms/pg3-four"
+                        onClick={() => trackReservationClick('gallery_room:pg3_four')}
+                        className={galleryReserveBtnClass}
+                      >
+                        PG-III 4名タイプのご予約・詳細
+                      </a>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="text-center font-display text-sm sm:text-base tracking-[0.14em] uppercase text-gray-500">
+                      メゾネット洋室
+                    </div>
+                    <div className={`mt-3 ${galleryGridShellClass}`}>
+                      <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-1 sm:gap-1.5">
+                        {roomImagesIIIMaisonette.map((image, index) => (
+                          <div
+                            key={`${image.src}-${index}`}
+                            onClick={() => {
+                              const allRoomImages = GALLERY_IMAGES.filter((img) => img.category === 'room');
+                              const roomIndex = allRoomImages.findIndex((img) => img === image);
+                              openLightbox(roomIndex);
+                            }}
+                            className="group relative aspect-square overflow-hidden cursor-pointer bg-gray-200/60"
+                          >
+                            <Image
+                              src={image.src}
+                              alt={image.alt}
+                              fill
+                              sizes="(max-width: 768px) 33vw, (max-width: 1024px) 50vw, 33vw"
+                              className="object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-110"
+                              loading={index < 5 ? 'eager' : 'lazy'}
+                              priority={index < 3}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className={galleryReserveBandClass}>
+                      <a
+                        href="/rooms/pg3-maisonette"
+                        onClick={() => trackReservationClick('gallery_room:pg3_maisonette')}
+                        className={galleryReserveBtnClass}
+                      >
+                        PG-III メゾネット洋室のご予約・詳細
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

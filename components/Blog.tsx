@@ -9,6 +9,7 @@ import * as blogSupabase from '../lib/blog-supabase';
 import { toPublicStorageUrl } from '../lib/upload';
 import type { BlogArticle } from '../types';
 import type { BlogPost } from '../types';
+import { useHydrated } from '@/lib/useHydrated';
 
 const HOME_BLOG_LIMIT = 3;
 
@@ -20,7 +21,9 @@ const formatDate = (iso: string | null): string => {
 
 const Blog: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const hydrated = useHydrated();
   const isInView = useInView(ref, { once: true, margin: '-10%' });
+  const reveal = hydrated && isInView;
   const cms = useCms();
   const useBlockBlog = blogSupabase.isSupabaseConfigured();
 
@@ -52,7 +55,7 @@ const Blog: React.FC = () => {
         <motion.div
           className="mb-8 md:mb-12 text-center"
           initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          animate={reveal ? { opacity: 1, y: 0 } : false}
           transition={{ duration: 0.6 }}
         >
           <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-light text-textMain mb-2">
@@ -91,7 +94,7 @@ const Blog: React.FC = () => {
                 <motion.article
                   key={post.id}
                   initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  animate={reveal ? { opacity: 1, y: 0 } : false}
                   transition={{ duration: 0.5, delay: index * 0.08 }}
                   className="group"
                   itemScope
@@ -156,7 +159,7 @@ const Blog: React.FC = () => {
           <motion.div
             className="mt-8 md:mt-10 text-center"
             initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
+            animate={reveal ? { opacity: 1 } : false}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <Link

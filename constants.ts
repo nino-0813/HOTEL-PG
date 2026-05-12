@@ -4,6 +4,9 @@ import { NavItem, NewsItem, BlogPost, StayPlan } from './types';
 export const INSTAGRAM_DM_URL = 'https://ig.me/m/hotel_pg_';
 export const INSTAGRAM_PROFILE_URL = 'https://www.instagram.com/hotel_pg_/';
 
+/** トップの #hotels（Hotels）セクションを表示するか。一時的に非表示にする場合は false */
+export const SHOW_HOTELS_SECTION = false;
+
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', href: '#home' },
   { label: 'Concept', href: '#concept' },
@@ -25,11 +28,111 @@ export const NEWS_ITEMS: NewsItem[] = [
 ];
 
 /**
- * 滞在プラン（1泊2日・2泊3日など）。
- * プランが決まり次第、ここにオブジェクトを push すると一覧カードと詳細モーダルに反映されます。
- * 各プランは id, title, subtitle, duration, description, highlights[], detailedDescription, schedule[], includes[], image? を持ちます。
+ * 団体向け滞在プラン。
+ * ここにオブジェクトを追加すると一覧カードと詳細モーダルに反映されます。
  */
-export const STAY_PLANS: StayPlan[] = [];
+export const STAY_PLANS: StayPlan[] = [
+  {
+    id: 'group-bike-dropoff',
+    title: '自転車乗り捨てプラン',
+    subtitle: 'GROUP · CYCLING',
+    duration: '1泊〜（団体・お問い合わせ）',
+    description:
+      'しまなみ海道サイクリングの団体様向け。終点付近でのお預かりや、翌日の行程に合わせたご案内など、人数・日程に応じてご相談ください。',
+    highlights: [
+      'サイクリング終盤の因島での宿泊に合わせたご提案',
+      '自転車の預かり・翌朝の出発まで現場目線でサポート',
+    ],
+    detailedDescription:
+      '団体でのしまなみ海道サイクリングでは、到着地点や行程によって宿の位置が旅の快適さを左右します。HOTEL PG は因島に立地し、サイクリストの皆様からもご利用いただいております。自転車の預かりやお部屋の割り当て、食事のご希望などは事前にご相談いただけます。人数・日程・プラン内容はお問い合わせのうえ、最適なお見積りをご提示いたします。',
+    schedule: [
+      {
+        day: 1,
+        time: '午後',
+        activity:
+          'チェックイン・団体受付。自転車のお預かり（屋内保管の可否は事前ご確認ください）。',
+      },
+      {
+        day: 1,
+        time: '夕方〜夜',
+        activity: '休憩・夕食（団体様のご希望に応じてアゲハダイニング等との調整が可能です）。',
+      },
+      {
+        day: 2,
+        time: '翌朝',
+        activity:
+          'チェックアウト・出発。行程や輸送会社の手配などはご相談に応じます。',
+      },
+    ],
+    includes: [
+      '団体人数・泊数に応じた宿泊プランのご提案',
+      '自転車預かりに関する事前確認・当日のお預かり',
+      'しまなみ海道・因島エリアの滞在に関するご相談',
+      'お見積り・空室状況のご案内（予約ページ・お問い合わせより）',
+    ],
+    image: '/images/gallery/shimanami-kaidou-route_thumb.webp',
+  },
+  {
+    id: 'group-marine-sea-style',
+    title: 'マリンプラン',
+    subtitle: 'GROUP · MARINE · SEA STYLE',
+    duration: '1泊〜（団体・お問い合わせ）',
+    description:
+      '宿泊とあわせて、ヤマハマリンクラブ・シースタイルのレンタルボート（クラブ艇）やウェーブランナー（ジェット）で瀬戸内の海を楽しむ団体向けプラン。ご利用条件・お申込みは公式サイトをご確認ください。',
+    highlights: [
+      'レンタルボート（クラブ艇）・ウェーブランナー利用の組み合わせをご検討いただけます',
+      'Sea Style のお申込み・各種条件はヤマハ公式ページでご確認ください',
+    ],
+    detailedDescription:
+      '団体旅行や合宿に、因島の滞在とマリンレジャーを組み合わせたい方向けのプランです。ヤマハマリンクラブ・シースタイルでは、メンテナンス済みのクラブ艇（レンタルボート）や全国の一部ホームマリーナで利用できるウェーブランナー（ジェット）など、遊び方に合わせて艇種をお選びいただけます（利用できる艇種・マリーナ・時間帯は店舗・予約状況により異なります）。入会条件・利用料金・保険・予約方法については、必ず公式サイトの最新情報をご確認ください。宿泊の人数・食事・スケジュールは HOTEL PG にお問い合わせください。',
+    schedule: [
+      {
+        day: 1,
+        time: '午後',
+        activity:
+          'チェックイン。Sea Style のご利用を予定されている場合は、事前のお申込み・会員手続きやホームマリーナの予約状況を公式サイトでご確認ください。',
+      },
+      {
+        day: 2,
+        time: '日中',
+        activity:
+          'レンタルボートまたはウェーブランナーでのクルージング・マリンプレイ（操船資格・現地の運航条件は各自ご確認ください）。',
+      },
+      {
+        day: 2,
+        time: '夕方〜夜',
+        activity: '因島にて休憩・夕食。団体様のご希望に応じてアゲハダイニング等との調整が可能です。',
+      },
+      {
+        day: 3,
+        time: '翌朝',
+        activity: 'チェックアウト。行程は団体のご希望に応じてご相談ください。',
+      },
+    ],
+    includes: [
+      '団体向け宿泊・お食事のご相談（HOTEL PG）',
+      'ヤマハマリンクラブ・シースタイルのレンタルボート・ウェーブランナーは公式手続きにてご利用（別途契約・条件あり）',
+      'マリンと宿泊のスケジュール調整に関するご相談',
+      'お見積り・空室状況のご案内（予約ページ・お問い合わせより）',
+    ],
+    image: '/blog/スクリーンショット 2026-05-10 13.48.46.png',
+    relatedLinks: [
+      {
+        label: 'ヤマハマリンクラブ・シースタイル（入会・レンタルボート／ウェーブランナーお申込み）',
+        href: 'https://sea-style-m.yamaha-motor.co.jp/jp/rental/apply/agent/shopcode/J34-0010',
+      },
+    ],
+  },
+];
+
+/** トップの #stay-plans 一覧から出さないプラン id（詳細は GROUP_PLANS_PAGE_PATH へ誘導） */
+export const STAY_PLAN_IDS_HIDDEN_ON_HOME: readonly string[] = ['group-bike-dropoff', 'group-marine-sea-style'];
+
+/**
+ * 団体プランの案内ページ（内部パスまたは https://… の外部URL）。
+ * 確定したら `constants.ts` のこの値だけ差し替えてください。
+ */
+export const GROUP_PLANS_PAGE_PATH = '/group-plans';
 
 export const CONTENT = {
   concept: {

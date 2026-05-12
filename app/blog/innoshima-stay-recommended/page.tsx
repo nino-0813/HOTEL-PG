@@ -11,10 +11,7 @@ import BlogArticleClient from '@/components/BlogArticleClient';
 
 const SLUG = 'innoshima-stay-recommended';
 
-const getArticle = cache(async (slug: string) => {
-  if (!blogSupabase.isSupabaseConfigured()) return null;
-  return blogSupabase.getBlogArticleBySlugOrId(slug);
-});
+const getArticle = cache(async (slug: string) => blogSupabase.getBlogArticleBySlugOrId(slug));
 
 export async function generateMetadata(): Promise<Metadata> {
   const canonicalPath = `/blog/${SLUG}`;
@@ -79,11 +76,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function InnoshimaStayRecommendedPage() {
-  const useBlockBlog = blogSupabase.isSupabaseConfigured();
-  const article = useBlockBlog ? await getArticle(SLUG) : null;
+  const article = await getArticle(SLUG);
   const staticPost = BLOG_POSTS.find((p) => p.slug === SLUG);
 
-  if (useBlockBlog && !article && !staticPost) {
+  if (!article && !staticPost) {
     notFound();
   }
 
@@ -120,12 +116,7 @@ export default async function InnoshimaStayRecommendedPage() {
     <>
       <JsonLd data={breadcrumbSchema} />
       {blogPostingSchema && <JsonLd data={blogPostingSchema} />}
-      <BlogArticleClient
-        slug={SLUG}
-        initialArticle={article}
-        staticPost={staticPost}
-        useBlockBlog={useBlockBlog}
-      />
+      <BlogArticleClient slug={SLUG} initialArticle={article} staticPost={staticPost} />
     </>
   );
 }

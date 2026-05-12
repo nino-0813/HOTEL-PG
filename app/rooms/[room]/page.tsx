@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ROOMS, type RoomSlug } from '@/lib/room-data';
 import RakutenReserveButton from '@/components/RakutenReserveButton';
+import { RoomBookingCalendar } from '@/components/RoomBookingCalendar';
 
 function yen(n: number): string {
   return new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(n);
@@ -16,7 +17,9 @@ function rakutenHref(checkoutRoom: string) {
   if (checkoutRoom === 'pg1') return 'https://vacation-stay.jp/listings/917598';
   if (checkoutRoom === 'pg2_single') return 'https://vacation-stay.jp/listings/1138330';
   if (checkoutRoom === 'pg2_family') return 'https://vacation-stay.jp/listings/1138335';
-  if (checkoutRoom === 'pg3') return 'https://vacation-stay.jp/listings/1546442';
+  if (checkoutRoom === 'pg3_three') return 'https://vacation-stay.jp/listings/1546442?adults=2';
+  if (checkoutRoom === 'pg3_four') return 'https://vacation-stay.jp/listings/1546492?adults=2';
+  if (checkoutRoom === 'pg3_maisonette') return 'https://vacation-stay.jp/listings/1559380?adults=2';
   return 'https://vacation-stay.jp/';
 }
 
@@ -79,7 +82,9 @@ export default async function RoomDetailPage({
                     key={src}
                     className={[
                       'relative bg-gray-100 overflow-hidden rounded-xl border border-gray-100',
-                      isHero ? 'aspect-[16/11] col-span-2 lg:col-span-2 lg:row-span-2' : 'aspect-[4/3]',
+                      isHero
+                        ? 'aspect-[16/11] col-span-2 lg:col-span-2 lg:row-span-2'
+                        : 'aspect-[4/3]',
                     ].join(' ')}
                   >
                     <Image
@@ -105,12 +110,25 @@ export default async function RoomDetailPage({
                 {room.subtitle}
               </p>
 
-              <div className="mt-6">
-                <RakutenReserveButton
-                  href={rakutenHref(room.checkoutRoom)}
-                  roomSlug={room.slug}
-                  className="inline-flex items-center justify-center rounded-xl bg-textMain px-8 py-4 font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-white hover:bg-textLight transition-colors duration-300"
-                />
+              <div className="mt-6 space-y-6">
+                <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 md:p-8 shadow-sm">
+                  <h2 className="font-serif text-lg sm:text-xl text-textMain font-medium tracking-wide">
+                    空室を確認してご予約
+                  </h2>
+                  <RoomBookingCalendar
+                    roomKey={room.checkoutRoom}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <RakutenReserveButton
+                    href={rakutenHref(room.checkoutRoom)}
+                    roomSlug={room.slug}
+                    className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border border-gray-300 bg-white px-8 py-4 font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-textMain hover:border-textMain hover:bg-gray-50 transition-colors duration-300"
+                  />
+                  <p className="font-serif text-xs text-gray-500">
+                    楽天トラベルでもご予約いただけます。
+                  </p>
+                </div>
               </div>
 
               <div className="mt-8 bg-white/90 backdrop-blur border border-gray-200 rounded-2xl p-6 sm:p-8">

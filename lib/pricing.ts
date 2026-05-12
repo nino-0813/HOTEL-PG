@@ -29,6 +29,39 @@ export const ROOM_PRICING = {
     extraPerPerson: 5000,
     cleaningFee: 0,
   },
+  /** PG3 和モダン 3名タイプ（サイト表示・人数上限用。実請求は SaaS / Stripe） */
+  pg3_three: {
+    name: 'HOTEL PG-III 3名タイプ',
+    maxGuests: 3,
+    baseGuests: 2,
+    basePrice: 20400,
+    weekendPrice: 24400,
+    weekendDays: [5, 6] as const,
+    extraPerPerson: 5000,
+    cleaningFee: 0,
+  },
+  /** PG3 和モダン 4名タイプ */
+  pg3_four: {
+    name: 'HOTEL PG-III 4名タイプ',
+    maxGuests: 4,
+    baseGuests: 2,
+    basePrice: 24400,
+    weekendPrice: 28500,
+    weekendDays: [5, 6] as const,
+    extraPerPerson: 5000,
+    cleaningFee: 0,
+  },
+  /** PG3 メゾネット洋室（サイト表示・人数上限用。実請求は SaaS / Stripe） */
+  pg3_maisonette: {
+    name: 'HOTEL PG-III メゾネット洋室',
+    maxGuests: 6,
+    baseGuests: 2,
+    basePrice: 30400,
+    weekendPrice: 34400,
+    weekendDays: [5, 6] as const,
+    extraPerPerson: 5200,
+    cleaningFee: 0,
+  },
 } as const;
 
 export type RoomKey = keyof typeof ROOM_PRICING;
@@ -38,7 +71,10 @@ const MARKUP_RATE = 0.056;
 export const ROOM_INVENTORY: Record<RoomKey, number> = {
   pg1: 3,
   pg2_single: 1,
-  pg2_family: 3,
+  pg2_family: 2,
+  pg3_three: 10,
+  pg3_four: 10,
+  pg3_maisonette: 1,
 };
 
 function toUtcDate(dateStr: string): Date | null {
@@ -53,6 +89,13 @@ function addDaysUtc(d: Date, days: number): Date {
 
 export function clampGuests(roomKey: RoomKey, adults: number, children: number, infants: number) {
   const room = ROOM_PRICING[roomKey];
+  if (!room) {
+    return {
+      adults: Math.max(1, adults),
+      children: Math.max(0, children),
+      infants: Math.max(0, infants),
+    };
+  }
   const a = Math.max(1, Math.min(room.maxGuests, adults));
   const c = Math.max(0, Math.min(room.maxGuests - a, children));
   const i = Math.max(0, infants);
@@ -68,6 +111,7 @@ export function calculatePrice(args: {
   infants?: number;
 }): { perNight: number; nights: number; subtotal: number; total: number } | null {
   const room = ROOM_PRICING[args.roomKey];
+  if (!room) return null;
   const children = args.children ?? 0;
   const infants = args.infants ?? 0;
   const { adults, children: clampedChildren } = clampGuests(args.roomKey, args.adults, children, infants);

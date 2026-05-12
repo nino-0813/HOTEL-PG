@@ -1,21 +1,29 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { useHydrated } from '@/lib/useHydrated';
 import { ChevronRight } from 'lucide-react';
+import { SHOW_HOTELS_SECTION } from '../constants';
 import HotelIIIStory from './HotelIIIStory';
 
 const Hotels: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const hydrated = useHydrated();
   const isInView = useInView(ref, { once: true, margin: "-10%" });
+  const reveal = hydrated && isInView;
   const [showStory, setShowStory] = useState(false);
 
   return (
-    <section id="hotels" className="relative py-12 sm:py-20 md:py-32 lg:py-48 bg-background">
+    <section
+      id="hotels"
+      className={`relative py-12 sm:py-20 md:py-32 lg:py-48 bg-background ${SHOW_HOTELS_SECTION ? '' : 'hidden'}`}
+      aria-hidden={!SHOW_HOTELS_SECTION}
+    >
       <div ref={ref} className="container mx-auto px-4 sm:px-6 md:px-12">
         {/* Section Title */}
         <motion.div
           className="mb-16 md:mb-24"
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          animate={reveal ? { opacity: 1, y: 0 } : false}
           transition={{ duration: 0.8 }}
         >
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-textMain mb-4">
@@ -31,7 +39,7 @@ const Hotels: React.FC = () => {
         <motion.div
           className="max-w-4xl mx-auto"
           initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          animate={reveal ? { opacity: 1, y: 0 } : false}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <button

@@ -2,10 +2,21 @@
  * サイトの正規URL・デフォルトの title / description / OGP 用の単一ソース
  * ステージング等では NEXT_PUBLIC_SITE_URL を上書き
  */
-const raw = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.hotelpg-innosima.com').trim();
+const FALLBACK_ORIGIN = 'https://www.hotelpg-innosima.com';
 
-/** 末尾スラッシュなしのオリジン（metadataBase・canonical 生成用） */
-export const SITE_ORIGIN = raw.replace(/\/+$/, '');
+function parsePublicSiteOrigin(envValue: string | undefined): string {
+  const raw = (envValue ?? FALLBACK_ORIGIN).trim();
+  if (!raw) return FALLBACK_ORIGIN;
+  try {
+    const withProtocol = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+    return new URL(withProtocol).origin;
+  } catch {
+    return FALLBACK_ORIGIN;
+  }
+}
+
+/** 末尾スラッシュなしのオリジン（metadataBase・canonical 生成用）。無効な値でも落ちないよう正規化する */
+export const SITE_ORIGIN = parsePublicSiteOrigin(process.env.NEXT_PUBLIC_SITE_URL);
 
 /** Schema.org 等で従来どおりトレイリングスラッシュ付きで使うベースURL */
 export const SITE_URL = `${SITE_ORIGIN}/`;

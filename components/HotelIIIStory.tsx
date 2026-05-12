@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { useRef } from 'react';
 import { ArrowLeft, Calendar, MapPin, Building2, X, ChevronRight } from 'lucide-react';
+import { useHydrated } from '@/lib/useHydrated';
 
 interface StoryStep {
   id: string;
@@ -18,7 +19,9 @@ interface StoryStep {
 
 const HotelIIIStory: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const hydrated = useHydrated();
   const isInView = useInView(ref, { once: true, margin: "-10%" });
+  const reveal = hydrated && isInView;
 
   const [selectedStep, setSelectedStep] = useState<StoryStep | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -167,7 +170,7 @@ const HotelIIIStory: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
                 }`}
                 initial={{ opacity: 0, y: 50 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                animate={reveal ? { opacity: 1, y: 0 } : false}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
               >
                 {/* Timeline Dot */}

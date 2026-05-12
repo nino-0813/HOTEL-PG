@@ -6,10 +6,13 @@ import { motion, useInView } from 'framer-motion';
 import { FileText } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { useHydrated } from '@/lib/useHydrated';
 
 export default function LegalPage() {
   const ref = useRef<HTMLDivElement>(null);
+  const hydrated = useHydrated();
   const isInView = useInView(ref, { once: true, margin: '-10%' });
+  const reveal = hydrated && isInView;
 
   return (
     <div className="min-h-screen relative">
@@ -47,7 +50,7 @@ export default function LegalPage() {
 
           <motion.section
             initial={{ opacity: 0, y: 24 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            animate={reveal ? { opacity: 1, y: 0 } : false}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="font-serif text-textLight"
           >

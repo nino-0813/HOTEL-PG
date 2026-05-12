@@ -105,7 +105,7 @@ const AdminContent: React.FC = () => {
       <p className="mt-6 text-sm text-gray-500">
         {isSupabaseConfigured
           ? '変更は Supabase に保存され、フロントの表示に反映されます。'
-          : 'Supabase 未設定の場合はこのブラウザのローカルに保存されます。.env に NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY を設定するとフロントに反映されます。'}
+          : '変更はこのブラウザのローカルに保存され、公開サイトの表示に反映されます。'}
       </p>
     </div>
   );

@@ -13,6 +13,7 @@ import { BLOG_POSTS } from '@/constants';
 import * as blogSupabase from '@/lib/blog-supabase';
 import { toPublicStorageUrl } from '@/lib/upload';
 import type { BlogArticle, BlogPost } from '@/types';
+import { useHydrated } from '@/lib/useHydrated';
 
 const formatDate = (iso: string | null): string => {
   if (!iso) return '';
@@ -22,7 +23,9 @@ const formatDate = (iso: string | null): string => {
 
 export default function BlogListPage() {
   const ref = useRef<HTMLDivElement>(null);
+  const hydrated = useHydrated();
   const isInView = useInView(ref, { once: true, margin: '-5%' });
+  const reveal = hydrated && isInView;
   const cms = useCms();
   const useBlockBlog = blogSupabase.isSupabaseConfigured();
 
@@ -59,7 +62,7 @@ export default function BlogListPage() {
           <motion.div
             className="mb-10 md:mb-14"
             initial={{ opacity: 0, y: 16 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            animate={reveal ? { opacity: 1, y: 0 } : false}
             transition={{ duration: 0.5 }}
           >
             <Link
@@ -86,7 +89,7 @@ export default function BlogListPage() {
                 <motion.article
                   key={article.id}
                   initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  animate={reveal ? { opacity: 1, y: 0 } : false}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                   className="group"
                 >
@@ -129,7 +132,7 @@ export default function BlogListPage() {
                 <motion.article
                   key={post.id}
                   initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  animate={reveal ? { opacity: 1, y: 0 } : false}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                   className="group"
                 >

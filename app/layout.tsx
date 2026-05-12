@@ -109,8 +109,8 @@ export default function RootLayout({
   ];
 
   return (
-    <html lang="ja" className={`${notoSansJP.variable} ${shipporiMincho.variable} ${cormorant.variable} ${figtree.variable}`}>
-      <body className="text-textMain font-sans selection:bg-gray-200 selection:text-textMain antialiased">
+    <html lang="ja" suppressHydrationWarning className={`${notoSansJP.variable} ${shipporiMincho.variable} ${cormorant.variable} ${figtree.variable}`}>
+      <body suppressHydrationWarning className="relative min-h-screen text-textMain font-sans selection:bg-gray-200 selection:text-textMain antialiased">
         {/* Google tag (gtag.js) - 全ページで計測。window.gtag は utils/analytics.ts の reservation_click で使用 */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}

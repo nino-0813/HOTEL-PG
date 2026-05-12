@@ -124,17 +124,93 @@ type Props = {
   slug: string;
   initialArticle: BlogArticle | null;
   staticPost: BlogPost | undefined;
-  useBlockBlog: boolean;
 };
 
-export default function BlogArticleClient({ slug, initialArticle, staticPost, useBlockBlog }: Props) {
+export default function BlogArticleClient({ slug, initialArticle, staticPost }: Props) {
   const cms = useCms();
 
-  if (useBlockBlog) {
-    if (!initialArticle && !staticPost) {
-      return <NotFound />;
-    }
-    if (staticPost && !initialArticle) {
+  if (initialArticle) {
+    const article = initialArticle;
+    return (
+      <div className="min-h-screen relative">
+        <div className="bg-noise" />
+        <Header />
+        <main className="relative w-full pt-20 sm:pt-24 pb-16 sm:pb-24 bg-white">
+          <article className="mx-auto max-w-[720px] px-4 sm:px-6 md:px-8">
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-textMain transition-colors mb-8"
+            >
+              <ArrowLeft size={16} />
+              ブログ一覧に戻る
+            </Link>
+
+            {article.image_url && (
+              <div className="relative w-full aspect-[2/1] overflow-hidden rounded-2xl mb-10 shadow-sm">
+                <Image
+                  src={toPublicStorageUrl(article.image_url) ?? article.image_url}
+                  alt={article.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 720px"
+                  className="object-cover"
+                />
+              </div>
+            )}
+
+            <header className="mb-10">
+              <h1 className="font-display text-2xl sm:text-3xl md:text-[2rem] font-normal text-textMain leading-snug tracking-tight">
+                {article.title}
+              </h1>
+              <div className="flex items-center gap-4 mt-4 text-sm text-gray-500">
+                <time
+                  dateTime={article.published_at ?? article.updated_at ?? ''}
+                  className="flex items-center gap-1.5"
+                >
+                  <Calendar size={14} />
+                  {formatDate(article.published_at ?? article.updated_at)}
+                </time>
+              </div>
+            </header>
+
+            <div className="article-prose pt-8 border-t border-gray-100">
+              <BlogBlockRenderer content={article.content} />
+            </div>
+
+            {slug === 'hotel-pg-iii-coming-soon' && (
+              <div className="mt-14 pt-8 border-t border-gray-100 space-y-4">
+                <p className="font-serif text-sm text-textLight">
+                  【OPEN記念価格】2名利用でお得｜和モダン客室｜最大3名｜無料駐車場｜長期滞在歓迎
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                  <a
+                    href="https://vacation-stay.jp/listings/1546442"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 rounded"
+                  >
+                    楽天で予約する →
+                  </a>
+                </div>
+              </div>
+            )}
+
+            <div className="mt-14 pt-8 border-t border-gray-100">
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-textMain transition-colors"
+              >
+                <ArrowLeft size={16} />
+                ブログ一覧に戻る
+              </Link>
+            </div>
+          </article>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (staticPost) {
       const dateStr = staticPost.date ?? '';
       const dateTime = dateStr.replace(/\./g, '-');
       return (
@@ -214,85 +290,6 @@ export default function BlogArticleClient({ slug, initialArticle, staticPost, us
           <Footer />
         </div>
       );
-    }
-    const article = initialArticle!;
-    return (
-      <div className="min-h-screen relative">
-        <div className="bg-noise" />
-        <Header />
-        <main className="relative w-full pt-20 sm:pt-24 pb-16 sm:pb-24 bg-white">
-          <article className="mx-auto max-w-[720px] px-4 sm:px-6 md:px-8">
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-textMain transition-colors mb-8"
-            >
-              <ArrowLeft size={16} />
-              ブログ一覧に戻る
-            </Link>
-
-            {article.image_url && (
-              <div className="relative w-full aspect-[2/1] overflow-hidden rounded-2xl mb-10 shadow-sm">
-                <Image
-                  src={toPublicStorageUrl(article.image_url) ?? article.image_url}
-                  alt={article.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 720px"
-                  className="object-cover"
-                />
-              </div>
-            )}
-
-            <header className="mb-10">
-              <h1 className="font-display text-2xl sm:text-3xl md:text-[2rem] font-normal text-textMain leading-snug tracking-tight">
-                {article.title}
-              </h1>
-              <div className="flex items-center gap-4 mt-4 text-sm text-gray-500">
-                <time
-                  dateTime={article.published_at ?? article.updated_at ?? ''}
-                  className="flex items-center gap-1.5"
-                >
-                  <Calendar size={14} />
-                  {formatDate(article.published_at ?? article.updated_at)}
-                </time>
-              </div>
-            </header>
-
-            <div className="article-prose pt-8 border-t border-gray-100">
-              <BlogBlockRenderer content={article.content} />
-            </div>
-
-            {slug === 'hotel-pg-iii-coming-soon' && (
-              <div className="mt-14 pt-8 border-t border-gray-100 space-y-4">
-                <p className="font-serif text-sm text-textLight">
-                  【OPEN記念価格】2名利用でお得｜和モダン客室｜最大3名｜無料駐車場｜長期滞在歓迎
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                  <a
-                    href="https://vacation-stay.jp/listings/1546442"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block w-full sm:inline-block sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-textMain px-6 sm:px-8 py-3 sm:py-4 hover:bg-textLight transition-colors duration-300 rounded"
-                  >
-                    楽天で予約する →
-                  </a>
-                </div>
-              </div>
-            )}
-
-            <div className="mt-14 pt-8 border-t border-gray-100">
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-textMain transition-colors"
-              >
-                <ArrowLeft size={16} />
-                ブログ一覧に戻る
-              </Link>
-            </div>
-          </article>
-        </main>
-        <Footer />
-      </div>
-    );
   }
 
   const post = cms.blogPosts.find((p) => p.slug === slug);

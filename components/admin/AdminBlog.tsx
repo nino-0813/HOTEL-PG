@@ -142,7 +142,9 @@ const AdminBlog: React.FC = () => {
             )}
           </div>
         )}
-        <p className="mt-3 text-[11px] text-gray-400">blog_articles（Supabase）に保存されています</p>
+        {useBlockBlog ? (
+          <p className="mt-3 text-[11px] text-gray-400">blog_articles（Supabase）に保存されています</p>
+        ) : null}
       </div>
     );
   }
@@ -207,7 +209,7 @@ const AdminBlog: React.FC = () => {
           </ul>
         )}
       </div>
-      <p className="mt-3 text-[11px] text-gray-400">cms_content（ローカル／Supabase）に保存されています</p>
+      <p className="mt-3 text-[11px] text-gray-400">このブラウザのローカルに保存されています（管理画面のプレビュー用）</p>
     </div>
   );
 };

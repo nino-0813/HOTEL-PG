@@ -9,13 +9,16 @@ import Footer from '@/components/Footer';
 import { JsonLd } from '@/components/JsonLd';
 import { INSTAGRAM_DM_URL } from '@/constants';
 import { getBreadcrumbSchema } from '@/lib/json-ld';
+import { useHydrated } from '@/lib/useHydrated';
 
 const MICROSOFT_PRIVACY_URL = 'https://privacy.microsoft.com/ja-jp/privacystatement';
 const CLARITY_OPTOUT_URL = 'https://choice.microsoft.com/ja-jp/opt-out';
 
 export default function PrivacyPage() {
   const ref = useRef<HTMLDivElement>(null);
+  const hydrated = useHydrated();
   const isInView = useInView(ref, { once: true, margin: '-10%' });
+  const reveal = hydrated && isInView;
 
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: 'トップ', url: 'https://www.hotelpg-innosima.com/' },
@@ -61,7 +64,7 @@ export default function PrivacyPage() {
             {/* 1. 個人情報の取得について */}
             <motion.section
               initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              animate={reveal ? { opacity: 1, y: 0 } : false}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
               <h2 className="font-display text-xl sm:text-2xl font-light text-textMain mb-6 tracking-[0.08em] flex items-center gap-3">
@@ -76,7 +79,7 @@ export default function PrivacyPage() {
             {/* 2. 利用目的 */}
             <motion.section
               initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              animate={reveal ? { opacity: 1, y: 0 } : false}
               transition={{ duration: 0.6, delay: 0.15 }}
             >
               <h2 className="font-display text-xl sm:text-2xl font-light text-textMain mb-6 tracking-[0.08em] flex items-center gap-3">
@@ -97,7 +100,7 @@ export default function PrivacyPage() {
             {/* 3. 第三者サービスの利用について */}
             <motion.section
               initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              animate={reveal ? { opacity: 1, y: 0 } : false}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <h2 className="font-display text-xl sm:text-2xl font-light text-textMain mb-6 tracking-[0.08em]">
@@ -143,7 +146,7 @@ export default function PrivacyPage() {
             {/* 4. Cookieの使用について */}
             <motion.section
               initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              animate={reveal ? { opacity: 1, y: 0 } : false}
               transition={{ duration: 0.6, delay: 0.25 }}
             >
               <h2 className="font-display text-xl sm:text-2xl font-light text-textMain mb-6 tracking-[0.08em] flex items-center gap-3">
@@ -158,7 +161,7 @@ export default function PrivacyPage() {
             {/* 5. 免責事項 */}
             <motion.section
               initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              animate={reveal ? { opacity: 1, y: 0 } : false}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
               <h2 className="font-display text-xl sm:text-2xl font-light text-textMain mb-6 tracking-[0.08em] flex items-center gap-3">
@@ -173,7 +176,7 @@ export default function PrivacyPage() {
             {/* 6. お問い合わせ */}
             <motion.section
               initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              animate={reveal ? { opacity: 1, y: 0 } : false}
               transition={{ duration: 0.6, delay: 0.35 }}
               className="border-t border-gray-200 pt-8"
             >
