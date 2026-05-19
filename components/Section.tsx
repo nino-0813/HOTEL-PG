@@ -28,7 +28,7 @@ const Section: React.FC<SectionProps> = ({ id, data, reverse, index }) => {
   const ySecondary = useTransform(scrollYProgress, [0, 1], [50, -50]);
 
   return (
-    <section id={id} ref={ref} className={`relative bg-background ${id === 'concept' ? 'pt-0 sm:pt-20' : 'pt-8 sm:pt-20'} pb-12 sm:pb-20 md:py-32 lg:py-48 overflow-hidden z-20`}>
+    <section id={id} ref={ref} className="relative bg-background pt-8 sm:pt-20 pb-12 sm:pb-20 md:py-32 lg:py-48 overflow-hidden z-20">
       <div className="container mx-auto px-4 sm:px-6 md:px-12">
         <div className="flex flex-col lg:block relative">
 

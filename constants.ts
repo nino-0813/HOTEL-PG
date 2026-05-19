@@ -149,8 +149,8 @@ export const CONTENT = {
       '何もしない贅沢を、ここ因島で。'
     ],
     images: [
-      // 穏やかな瀬戸内海、抽象的な水面
-      '/images/gallery/DSC04519.webp',
+      // HOTEL PG II 外観
+      '/images/gallery/hotel-pg-ii-exterior.webp',
       // 光の差し込む静かな空間
       '/images/gallery/DSC04542.webp'
     ]
