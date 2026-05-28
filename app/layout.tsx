@@ -18,6 +18,7 @@ import {
   SITE_ORIGIN,
 } from '@/lib/site';
 import { Providers } from './providers';
+import FloatingReservationButton from '@/components/FloatingReservationButton';
 import './globals.css';
 
 /** GA4 測定ID（環境変数で上書き可能） */
@@ -145,6 +146,7 @@ export default function RootLayout({
           </ul>
         </section>
         <Providers>{children}</Providers>
+        <FloatingReservationButton />
         {/* Microsoft Clarity: afterInteractive で読み込み、GA4 等と競合しないよう body 末尾で実行 */}
         <Script
           id="microsoft-clarity"

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { Clock, ArrowRight, X, Check } from 'lucide-react';
-import { GROUP_PLANS_PAGE_PATH, STAY_PLANS, STAY_PLAN_IDS_HIDDEN_ON_HOME } from '../constants';
+import { EXPERIENCE_PLANS_PAGE_PATH, STAY_PLANS, STAY_PLAN_IDS_HIDDEN_ON_HOME } from '../constants';
 import type { StayPlan } from '../types';
 import { useHydrated } from '@/lib/useHydrated';
 
@@ -18,8 +18,8 @@ const StayPlans: React.FC = () => {
     () => STAY_PLANS.filter((p) => !STAY_PLAN_IDS_HIDDEN_ON_HOME.includes(p.id)),
     [],
   );
-  const groupPlansHref = GROUP_PLANS_PAGE_PATH;
-  const isExternalGroupLink = /^https?:\/\//i.test(groupPlansHref);
+  const experiencePlansHref = EXPERIENCE_PLANS_PAGE_PATH;
+  const isExternalExperienceLink = /^https?:\/\//i.test(experiencePlansHref);
 
   return (
     <section id="stay-plans" className="relative py-12 sm:py-20 md:py-32 lg:py-48 bg-background">
@@ -32,13 +32,13 @@ const StayPlans: React.FC = () => {
           transition={{ duration: 0.8 }}
         >
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-textMain mb-2 sm:mb-3">
-            団体プラン
+            体験プラン
           </h2>
           <p className="font-serif text-sm sm:text-base text-gray-500 tracking-widest mb-3">
-            サークル・イベント・企業研修など、人数・日程に合わせてご相談ください
+            因島と瀬戸内の自然を、宿泊とセットで遊びつくす1日プラン
           </p>
           <p className="font-body text-xs sm:text-sm text-gray-400 tracking-widest uppercase">
-            団体 × 宿泊 × サポート
+            体験 × 宿泊 × 因島
           </p>
           <div className="w-12 h-[1px] bg-gray-300 mt-4 mx-auto"></div>
         </motion.div>
@@ -50,22 +50,22 @@ const StayPlans: React.FC = () => {
             animate={reveal ? { opacity: 1, y: 0 } : false}
             transition={{ duration: 0.6, delay: 0.15 }}
           >
-            {isExternalGroupLink ? (
+            {isExternalExperienceLink ? (
               <a
-                href={groupPlansHref}
+                href={experiencePlansHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-textMain text-white hover:bg-textLight transition-colors duration-300 font-body text-xs sm:text-sm tracking-widest uppercase"
               >
-                団体プランのご案内
+                体験プランを見る
                 <ArrowRight size={16} />
               </a>
             ) : (
               <Link
-                href={groupPlansHref}
+                href={experiencePlansHref}
                 className="inline-flex items-center gap-2 px-8 py-4 bg-textMain text-white hover:bg-textLight transition-colors duration-300 font-body text-xs sm:text-sm tracking-widest uppercase"
               >
-                団体プランのご案内
+                体験プランを見る
                 <ArrowRight size={16} />
               </Link>
             )}
@@ -314,10 +314,10 @@ const StayPlans: React.FC = () => {
                     <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
                       <div>
                         <p className="font-body text-xs text-gray-500 tracking-widest uppercase mb-2">
-                          団体でのご予約・お問い合わせ
+                          ご予約・お問い合わせ
                         </p>
                         <p className="font-serif text-sm text-gray-600">
-                          人数・日程・お見積りは予約ページまたはお問い合わせよりご確認ください
+                          ご希望日・人数・オプションは予約ページまたはお問い合わせよりご確認ください
                         </p>
                       </div>
                       <a
