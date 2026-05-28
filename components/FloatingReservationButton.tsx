@@ -37,7 +37,7 @@ export default function FloatingReservationButton() {
             className="group block relative w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] md:w-[176px] md:h-[176px] drop-shadow-lg hover:drop-shadow-xl transition-all duration-300"
           >
             <Image
-              src="/ご予約は こちら (1).png"
+              src="/reservation-button.png"
               alt="ご予約はこちら"
               fill
               priority
