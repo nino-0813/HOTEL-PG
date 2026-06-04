@@ -19,6 +19,7 @@ import {
   adminRoomTypeOptionsForProperty,
 } from '@/lib/admin-room-form-options';
 import AdminSeasonalRoomRatesSection from '@/components/admin/AdminSeasonalRoomRatesSection';
+import AdminBookingWindowSection from '@/components/admin/AdminBookingWindowSection';
 
 function emptyCapRow(): PublicInventoryCapRow {
   return { property_code: 'PG3', room_type: 'washitsu_modern_4', min_guests: 1, max_guests: 4, inventory_cap: 0 };
@@ -600,6 +601,8 @@ export default function AdminRoomSettings() {
           再読み込み
         </button>
       </div>
+
+      <AdminBookingWindowSection />
 
       <AdminSeasonalRoomRatesSection />
     </div>

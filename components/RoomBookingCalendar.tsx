@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { ROOM_PRICING, clampGuests, type RoomKey as PricingRoomKey } from '@/lib/pricing';
+import { fetchBookingWindows, advanceMonthsForRoom } from '@/lib/booking-window';
 
 const JP_WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'] as const;
 
@@ -107,6 +108,7 @@ export function RoomBookingCalendar({
   const [checkout, setCheckout] = useState('');
   const [loading, setLoading] = useState(true);
   const [viewMonth, setViewMonth] = useState(() => startOfMonth(new Date()));
+  const [advanceMonths, setAdvanceMonths] = useState(0);
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [infants, setInfants] = useState(0);
@@ -124,6 +126,36 @@ export function RoomBookingCalendar({
     const gridEndExclusive = new Date(Date.UTC(gridStart.getUTCFullYear(), gridStart.getUTCMonth(), gridStart.getUTCDate() + weeks * 7));
     return { start: toDateStr(gridStart), end: toDateStr(gridEndExclusive) };
   }, [viewMonth]);
+
+  // 部屋ごとの予約受付期間（今日から N ヶ月先まで）。0 は無制限。
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const map = await fetchBookingWindows();
+        if (mounted) setAdvanceMonths(advanceMonthsForRoom(map, roomKey));
+      } catch {
+        if (mounted) setAdvanceMonths(0);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [roomKey]);
+
+  /** 受付上限日（この日まで予約可。null は無制限） */
+  const maxBookableDateStr = useMemo(() => {
+    if (!advanceMonths || advanceMonths <= 0) return null;
+    const base = new Date();
+    const d = new Date(Date.UTC(base.getUTCFullYear(), base.getUTCMonth() + advanceMonths, base.getUTCDate()));
+    return toDateStr(d);
+  }, [advanceMonths]);
+
+  /** 受付上限日を含む月（これより先の月へはカレンダーを進められない） */
+  const maxViewMonthStr = useMemo(
+    () => (maxBookableDateStr ? toDateStr(startOfMonth(toDate(maxBookableDateStr))) : null),
+    [maxBookableDateStr],
+  );
 
   const apiBase = process.env.NEXT_PUBLIC_AVAILABILITY_API_URL?.trim() ?? '';
   const saasBase = process.env.NEXT_PUBLIC_SAAS_API_BASE_URL?.trim() ?? '';
@@ -283,13 +315,14 @@ export function RoomBookingCalendar({
     return (dateStr: string) => {
       if (guestCountError) return true;
       if (availabilityError) return true;
+      if (maxBookableDateStr && dateStr > maxBookableDateStr) return true;
       const row = availabilityByDate[dateStr];
       if (!row) return true;
       if (!row.bookable) return true;
       if (row.availableRooms <= 0) return true;
       return false;
     };
-  }, [availabilityByDate, availabilityError, guestCountError]);
+  }, [availabilityByDate, availabilityError, guestCountError, maxBookableDateStr]);
 
   const blocked = useMemo(() => {
     if (!checkin || !checkout) return false;
@@ -626,8 +659,15 @@ export function RoomBookingCalendar({
           </button>
           <button
             type="button"
-            onClick={() => setViewMonth((m) => addMonths(m, 1))}
-            className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 font-display text-[10px] tracking-[0.18em] uppercase text-gray-600 hover:border-gray-400 transition-colors"
+            onClick={() =>
+              setViewMonth((m) => {
+                const next = addMonths(m, 1);
+                if (maxViewMonthStr && toDateStr(next) > maxViewMonthStr) return m;
+                return next;
+              })
+            }
+            disabled={!!maxViewMonthStr && toDateStr(viewMonth) >= maxViewMonthStr}
+            className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 font-display text-[10px] tracking-[0.18em] uppercase text-gray-600 hover:border-gray-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-gray-200"
             aria-label="Next month"
           >
             ›
@@ -638,6 +678,12 @@ export function RoomBookingCalendar({
       <div className="mt-4">
         <div className="font-display text-lg sm:text-xl font-light tracking-[0.08em] text-textMain">{monthTitle}</div>
       </div>
+
+      {advanceMonths > 0 ? (
+        <div className="mt-2 font-serif text-xs text-gray-500">
+          現在、{advanceMonths}ヶ月先までご予約いただけます。
+        </div>
+      ) : null}
 
       {guestCountError ? (
         <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 font-serif text-xs text-red-900">
@@ -843,21 +889,24 @@ export function RoomBookingCalendar({
           }
           const ds = cell.dateStr;
           const row = availabilityByDate[ds];
+          const beyondWindow = !!maxBookableDateStr && ds > maxBookableDateStr;
           const isBlocked = blockedDay(ds);
           const isSelected = inSelectedRange(ds);
           const isToday = ds === toDateStr(new Date());
           const isFull =
             !row || row.availableRooms <= 0 || !row.bookable;
-          const showAvail = row && row.bookable && row.availableRooms > 0;
-          const line1 = !row
-            ? availabilityError || guestCountError
-              ? '—'
-              : loading
-                ? '…'
-                : '—'
-            : isFull
-              ? '満室'
-              : `空き: ${row.availableRooms}`;
+          const showAvail = !beyondWindow && row && row.bookable && row.availableRooms > 0;
+          const line1 = beyondWindow
+            ? '受付期間外'
+            : !row
+              ? availabilityError || guestCountError
+                ? '—'
+                : loading
+                  ? '…'
+                  : '—'
+              : isFull
+                ? '満室'
+                : `空き: ${row.availableRooms}`;
           const line2 =
             showAvail && row ? (
               <div className="text-gray-500 font-serif whitespace-nowrap text-[9px] sm:text-[11px]">
