@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 
 /** スクロール量がこの px を超えたら表示 */
@@ -10,6 +11,7 @@ const SHOW_AFTER_PX = 200;
 
 export default function FloatingReservationButton() {
   const [isVisible, setIsVisible] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => {
@@ -19,6 +21,9 @@ export default function FloatingReservationButton() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // 管理画面（/admin 配下）では予約ボタンを出さない
+  if (pathname?.startsWith('/admin')) return null;
 
   return (
     <AnimatePresence>
