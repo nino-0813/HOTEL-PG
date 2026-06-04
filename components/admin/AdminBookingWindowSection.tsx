@@ -5,15 +5,22 @@ import { Loader2, Save } from 'lucide-react';
 import {
   BOOKING_WINDOW_ROOMS,
   BOOKING_WINDOW_MONTH_OPTIONS,
-  fetchBookingWindows,
-  saveBookingWindows,
-  isSupabaseConfigured,
+  normalizeBookingWindows,
   type BookingWindowMap,
 } from '@/lib/booking-window';
 import { ADMIN_SELECT_CLASS } from '@/lib/admin-room-form-options';
 
+function errMsgFromJson(json: unknown, status: number): string {
+  if (json && typeof json === 'object') {
+    const o = json as Record<string, unknown>;
+    if (typeof o.message === 'string' && o.message.trim()) return o.message;
+    if (typeof o.error === 'string' && o.error.trim()) return o.error;
+  }
+  return `エラー（${status}）`;
+}
+
 export default function AdminBookingWindowSection() {
-  const [configured] = useState<boolean>(() => isSupabaseConfigured());
+  const [configured, setConfigured] = useState(true);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -26,16 +33,30 @@ export default function AdminBookingWindowSection() {
     setLoadError(null);
     setSaveOk(false);
     try {
-      if (!isSupabaseConfigured()) {
-        setLoadError('Supabase が未設定のため、この設定は保存できません（NEXT_PUBLIC_SUPABASE_URL / ANON_KEY を確認してください）。');
-        setWindows({});
+      const res = await fetch('/api/admin/booking-windows', { credentials: 'include', cache: 'no-store' });
+      const json = await res.json().catch(() => null);
+      if (res.status === 401) {
+        setLoadError('管理画面のセッションが無効です。一度ログアウトしてから再度ログインしてください。');
+        setWindows(normalizeBookingWindows(null));
         return;
       }
-      const map = await fetchBookingWindows();
-      setWindows(map);
+      if (res.status === 503) {
+        setConfigured(false);
+        setLoadError(errMsgFromJson(json, res.status));
+        setWindows(normalizeBookingWindows(null));
+        return;
+      }
+      if (!res.ok) {
+        setLoadError(errMsgFromJson(json, res.status));
+        setWindows(normalizeBookingWindows(null));
+        return;
+      }
+      setConfigured(true);
+      const raw = json && typeof json === 'object' ? (json as Record<string, unknown>).booking_windows : null;
+      setWindows(normalizeBookingWindows(raw));
     } catch {
-      setLoadError('予約受付期間の読み込みに失敗しました。');
-      setWindows({});
+      setLoadError('ネットワークエラーで読み込めませんでした。');
+      setWindows(normalizeBookingWindows(null));
     } finally {
       setLoading(false);
     }
@@ -60,13 +81,25 @@ export default function AdminBookingWindowSection() {
     setSaveError(null);
     setSaveOk(false);
     try {
-      const ok = await saveBookingWindows(windows);
-      if (!ok) {
-        setSaveError('保存に失敗しました。時間をおいて再度お試しください。');
+      const res = await fetch('/api/admin/booking-windows', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ booking_windows: normalizeBookingWindows(windows) }),
+      });
+      const json = await res.json().catch(() => null);
+      if (res.status === 401) {
+        setSaveError('セッションが無効です。再ログインしてください。');
+        return;
+      }
+      if (!res.ok) {
+        if (res.status === 503) setConfigured(false);
+        setSaveError(errMsgFromJson(json, res.status));
         return;
       }
       setSaveOk(true);
-      await load();
+      const raw = json && typeof json === 'object' ? (json as Record<string, unknown>).booking_windows : null;
+      setWindows(normalizeBookingWindows(raw));
     } catch {
       setSaveError('保存中にエラーが発生しました。');
     } finally {

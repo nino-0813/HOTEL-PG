@@ -1,14 +1,15 @@
-import { supabase, isSupabaseConfigured } from './supabase';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 /**
  * 部屋ごとの「何ヶ月先まで予約を受け付けるか」設定。
- * 保存先は CMS と同じ cms_content テーブル（key='booking_windows', value=jsonb）。
- * 値は「今日から N ヶ月先まで予約可」。0 は無制限（=従来どおりずっと先まで予約可）。
- * この設定はこのサイトの予約カレンダー上での制御に使う（SaaS 側の在庫計算は変更しない）。
+ * 保存先は SaaS と同じ Supabase の site_booking_windows テーブル。
+ * ただしブラウザからは直接触らず、必ずサイトのサーバー API 経由で読み書きする
+ * （service_role キーはサーバーだけが持つ）。値は「今日から N ヶ月先まで予約可」。
+ * 0 は無制限（=従来どおりずっと先まで予約可）。SaaS 側の在庫計算は変更しない。
  */
 
-const TABLE = 'cms_content';
-export const BOOKING_WINDOW_CMS_KEY = 'booking_windows';
+/** SaaS の Supabase 内テーブル名（このサイト専用・reservations 等には触れない） */
+export const BOOKING_WINDOW_TABLE = 'site_booking_windows';
 
 /** 予約カレンダー（RoomBookingCalendar）と揃えた部屋キー */
 export type BookingWindowRoomKey =
@@ -54,7 +55,7 @@ export const BOOKING_WINDOW_MONTH_OPTIONS: { value: number; label: string }[] = 
 
 const VALID_KEYS = new Set<string>(BOOKING_WINDOW_ROOMS.map((r) => r.roomKey));
 
-/** jsonb から安全に BookingWindowMap を取り出す。不正値は 0（無制限）に丸める */
+/** 任意の値から安全に BookingWindowMap を作る。全部屋を埋め、不正値は 0（無制限） */
 export function normalizeBookingWindows(raw: unknown): BookingWindowMap {
   const out: BookingWindowMap = {};
   for (const { roomKey } of BOOKING_WINDOW_ROOMS) out[roomKey] = 0;
@@ -74,20 +75,46 @@ export function advanceMonthsForRoom(map: BookingWindowMap, roomKey: string): nu
   return Number.isFinite(n) && n > 0 ? n : 0;
 }
 
-export async function fetchBookingWindows(): Promise<BookingWindowMap> {
-  if (!supabase) return normalizeBookingWindows(null);
-  const { data, error } = await supabase.from(TABLE).select('value').eq('key', BOOKING_WINDOW_CMS_KEY).maybeSingle();
-  if (error || !data) return normalizeBookingWindows(null);
-  return normalizeBookingWindows((data as { value: unknown }).value);
+/* ------------------------------------------------------------------ *
+ * サーバー専用（API ルートから呼ぶ）。service_role クライアントを受け取る
+ * ------------------------------------------------------------------ */
+
+/** DB から受付期間を読み出す（行が無い部屋は 0） */
+export async function readBookingWindows(client: SupabaseClient): Promise<BookingWindowMap> {
+  const { data, error } = await client.from(BOOKING_WINDOW_TABLE).select('room_key, advance_months');
+  if (error) throw error;
+  const obj: Record<string, unknown> = {};
+  for (const row of (data ?? []) as { room_key: string; advance_months: number }[]) {
+    obj[row.room_key] = row.advance_months;
+  }
+  return normalizeBookingWindows(obj);
 }
 
-export async function saveBookingWindows(map: BookingWindowMap): Promise<boolean> {
-  if (!supabase) return false;
-  const value = normalizeBookingWindows(map);
-  const { error } = await supabase
-    .from(TABLE)
-    .upsert({ key: BOOKING_WINDOW_CMS_KEY, value, updated_at: new Date().toISOString() }, { onConflict: 'key' });
-  return !error;
+/** 受付期間を DB に保存（全部屋を upsert） */
+export async function writeBookingWindows(client: SupabaseClient, map: BookingWindowMap): Promise<void> {
+  const normalized = normalizeBookingWindows(map);
+  const rows = BOOKING_WINDOW_ROOMS.map(({ roomKey }) => ({
+    room_key: roomKey,
+    advance_months: normalized[roomKey] ?? 0,
+    updated_at: new Date().toISOString(),
+  }));
+  const { error } = await client.from(BOOKING_WINDOW_TABLE).upsert(rows, { onConflict: 'room_key' });
+  if (error) throw error;
 }
 
-export { isSupabaseConfigured };
+/* ------------------------------------------------------------------ *
+ * クライアント用（公開カレンダーが読む）。サーバー API 経由
+ * ------------------------------------------------------------------ */
+
+/** 公開 API から受付期間を取得（失敗時は全部屋 0=無制限にフォールバック） */
+export async function fetchPublicBookingWindows(): Promise<BookingWindowMap> {
+  try {
+    const res = await fetch('/api/public/booking-windows', { cache: 'no-store' });
+    if (!res.ok) return normalizeBookingWindows(null);
+    const json = await res.json().catch(() => null);
+    const raw = json && typeof json === 'object' ? (json as Record<string, unknown>).booking_windows : null;
+    return normalizeBookingWindows(raw);
+  } catch {
+    return normalizeBookingWindows(null);
+  }
+}
