@@ -208,8 +208,8 @@ export default function AdminRoomSettings() {
         setSaveError(hint ? `${baseMsg}\n\n${hint}` : baseMsg);
         return;
       }
-      setSaveOk(true);
       await load();
+      setSaveOk(true);
     } catch {
       setSaveError('保存中にエラーが発生しました。');
     } finally {

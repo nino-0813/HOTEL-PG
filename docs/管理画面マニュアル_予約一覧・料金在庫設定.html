@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>HOTEL PG 管理画面マニュアル</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 16mm 20mm 16mm;
+    @bottom-center { content: counter(page); }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", sans-serif;
+    color: #1f2329;
+    line-height: 1.75;
+    font-size: 10.5pt;
+    margin: 0;
+  }
+  .cover {
+    border: 1px solid #d8d2c4;
+    border-left: 6px solid #b08642;
+    background: linear-gradient(180deg, #fbf9f4, #ffffff);
+    padding: 28px 30px;
+    border-radius: 10px;
+    margin-bottom: 28px;
+  }
+  .cover .kicker { font-size: 9pt; letter-spacing: .28em; color: #9a8a66; text-transform: uppercase; margin: 0 0 8px; }
+  .cover h1 { font-size: 22pt; margin: 0 0 6px; letter-spacing: .04em; color: #2a2a2a; }
+  .cover h2 { font-size: 12pt; font-weight: 600; color: #6b6256; margin: 0 0 14px; letter-spacing: .04em; }
+  .cover p { margin: 4px 0; font-size: 10pt; color: #4a4f57; }
+
+  h2.sec {
+    font-size: 15pt;
+    margin: 30px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #e7e2d6;
+    letter-spacing: .04em;
+    page-break-after: avoid;
+  }
+  h3.sub {
+    font-size: 12pt;
+    margin: 20px 0 8px;
+    color: #3a3f47;
+    letter-spacing: .03em;
+    page-break-after: avoid;
+  }
+  p { margin: 8px 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 14px;
+    font-size: 9.8pt;
+    page-break-inside: avoid;
+  }
+  th, td {
+    border: 1px solid #ddd8cc;
+    padding: 7px 9px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: #f4f0e6; font-weight: 600; color: #4a4334; }
+  td:first-child, th:first-child { white-space: nowrap; }
+
+  .callout {
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 14px 0;
+    font-size: 9.8pt;
+    page-break-inside: avoid;
+  }
+  .callout p { margin: 4px 0; }
+  .callout .head { font-weight: 700; margin: 0 0 6px; }
+  .warn { background: #fdf6ec; border: 1px solid #f0d9a8; }
+  .warn .head { color: #9a6b14; }
+  .info { background: #eef4fb; border: 1px solid #c4d8f0; }
+  .info .head { color: #2c5b9a; }
+  .tip  { background: #f1f7f0; border: 1px solid #cfe6cc; }
+  .tip  .head { color: #3a7a34; }
+
+  ol, ul { margin: 8px 0 12px; padding-left: 22px; }
+  li { margin: 4px 0; }
+  .quote {
+    border-left: 3px solid #c9c1ad;
+    background: #faf8f3;
+    padding: 8px 12px;
+    color: #5a5446;
+    font-size: 9.8pt;
+    border-radius: 0 6px 6px 0;
+    margin: 8px 0;
+  }
+  code { background: #f1efe9; padding: 1px 5px; border-radius: 4px; font-size: 9.2pt; }
+  .footer { margin-top: 28px; padding-top: 10px; border-top: 1px solid #e7e2d6; color: #9a948a; font-size: 8.5pt; }
+  strong { color: #11141a; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">HOTEL PG 管理画面マニュアル</p>
+  <h1>料金・在庫設定の操作ガイド</h1>
+  <h2>〜「予約一覧」「料金・在庫設定」編〜</h2>
+  <p>このマニュアルは、ホテルスタッフが管理画面で <strong>料金・在庫・予約受付期間</strong> を設定するための手順書です。</p>
+  <p>対象は左メニューの <strong>「予約一覧」</strong> と <strong>「料金・在庫設定」</strong> の2つです。</p>
+</div>
+
+<h2 class="sec">0. ログイン方法</h2>
+<ol>
+  <li>ブラウザで管理画面を開きます：<code>https://hotelpg-innosima.com/admin</code></li>
+  <li>パスワードを入力してログインします。</li>
+  <li>ログインすると、左側にメニューが表示されます。</li>
+</ol>
+
+<table>
+  <tr><th>左メニュー</th><th>内容</th></tr>
+  <tr><td>予約一覧</td><td>※現在は使用しません（下の「1章」参照）</td></tr>
+  <tr><td><strong>料金・在庫設定</strong></td><td><strong>料金・在庫・予約受付期間など。このマニュアルのメイン</strong></td></tr>
+  <tr><td>ブログ</td><td>ブログ記事の編集（本マニュアル対象外）</td></tr>
+  <tr><td>コンテンツ・写真</td><td>トップページ等の文章・写真（本マニュアル対象外）</td></tr>
+</table>
+<ul>
+  <li>画面下の <strong>「サイトを開く」</strong> で公開サイトを別タブで確認できます。</li>
+  <li>作業が終わったら <strong>「ログアウト」</strong> してください。</li>
+</ul>
+
+<h2 class="sec">1. 予約一覧について</h2>
+<p>左メニューの「予約一覧」を開くと、次のように表示されます。</p>
+<div class="quote">公開サイトからの予約・空室は SaaS 側で管理しています。この管理画面の一覧は利用していません。</div>
+<p><strong>つまり、予約の確認はこの画面ではできません。</strong><br>
+予約内容の確認は、これまでどおり <strong>SaaSの管理ツール（HotelPG オペレーション）や楽天などの管理画面</strong> で行ってください。</p>
+
+<h2 class="sec">2. 料金・在庫設定</h2>
+<p>左メニューの <strong>「料金・在庫設定」</strong> を開きます。このページには、上から順に <strong>4つのブロック</strong> があります。</p>
+<ol>
+  <li>部屋タイプ（料金・在庫）</li>
+  <li>予約受付期間（何ヶ月先まで）</li>
+  <li>人数別在庫上限</li>
+  <li>期間別料金</li>
+</ol>
+
+<div class="callout warn">
+  <p class="head">⚠️ 最重要：保存ボタンはブロックごとに分かれています</p>
+  <p>このページには <strong>保存ボタンが3か所</strong> あります。<strong>変更したブロックの保存ボタンを押さないと反映されません。</strong></p>
+  <table>
+    <tr><th>変更した場所</th><th>押す保存ボタン</th></tr>
+    <tr><td>部屋タイプ ／ 人数別在庫上限</td><td><strong>「SaaS に保存」</strong></td></tr>
+    <tr><td>予約受付期間</td><td><strong>「受付期間を保存」</strong></td></tr>
+    <tr><td>期間別料金</td><td><strong>「変更を保存」</strong>（新規追加は「この内容を追加して保存」）</td></tr>
+  </table>
+  <p>1つのブロックを直したら、そのブロックの保存ボタンを押す——と覚えてください。</p>
+</div>
+
+<h3 class="sub">2-1. 部屋タイプ（料金・在庫）</h3>
+<p>ホテル（施設コード PG1 / PG2 / PG3）ごとに、部屋タイプのカードが並んでいます。各カードで、その部屋の <strong>料金・人数・在庫</strong> を設定します。</p>
+<table>
+  <tr><th>項目</th><th>意味・使い方</th></tr>
+  <tr><td><strong>有効</strong>（チェック）</td><td>チェックを外すと、その部屋を<strong>販売停止</strong>（サイトに出さない）にできます。</td></tr>
+  <tr><td><strong>表示名</strong></td><td>お客様に表示される部屋名です。</td></tr>
+  <tr><td>property_code / room_type</td><td>システム上の識別番号です。<strong>基本さわらないでください</strong>（変えると正しく動かなくなります）。</td></tr>
+  <tr><td><strong>平日（円）</strong></td><td>平日1泊あたりの料金。</td></tr>
+  <tr><td><strong>金（円）</strong></td><td>金曜泊の料金。</td></tr>
+  <tr><td><strong>土（円）</strong></td><td>土曜泊の料金。</td></tr>
+  <tr><td><strong>基本人数（料金に含む）</strong></td><td>この人数までは基本料金で泊まれます。</td></tr>
+  <tr><td><strong>追加1人（円）</strong></td><td>基本人数を超えた場合の、1人あたり追加料金。</td></tr>
+  <tr><td><strong>最大人数</strong></td><td>その部屋に予約できる上限人数。</td></tr>
+  <tr><td><strong>販売在庫上限</strong></td><td>同じ日に販売する部屋数（室数）の上限。</td></tr>
+</table>
+<p><strong>操作手順</strong></p>
+<ol>
+  <li>変えたい部屋カードの数字を直接書き換えます。</li>
+  <li>ページ下の <strong>「SaaS に保存」</strong> ボタンを押します。</li>
+  <li>「保存しました」と緑色で出れば完了です。</li>
+</ol>
+<div class="callout tip"><p>💡 値段を変えても、保存ボタンを押すまでは反映されません。</p></div>
+
+<h3 class="sub">2-2. 予約受付期間（何ヶ月先まで）</h3>
+<p><strong>「今日から何ヶ月先まで予約を受け付けるか」</strong> を部屋ごとに設定できます。「3ヶ月より先はまだ予約させたくない」といったときに使います。</p>
+<p><strong>操作手順</strong></p>
+<ol>
+  <li>部屋ごとのカードにある <strong>「受付期間」</strong> のプルダウンを選びます。
+    <ul>
+      <li><strong>無制限（ずっと先まで）</strong> … 制限なし（これまでどおり）。</li>
+      <li><strong>1ヶ月先まで 〜 12ヶ月先まで</strong> … その期間より先は予約不可になります。</li>
+    </ul>
+  </li>
+  <li><strong>「受付期間を保存」</strong> ボタンを押します。</li>
+</ol>
+<p><strong>設定すると、どうなる？</strong></p>
+<ul>
+  <li>例：「3ヶ月先まで」にすると、3ヶ月より先の日付は、公式サイトの予約カレンダー上で <strong>「受付期間外」</strong> と表示され、予約できなくなります。</li>
+</ul>
+<div class="callout info">
+  <p class="head">ℹ️ 注意：これは「この公式サイトの予約カレンダー」だけに効きます。</p>
+  <p>楽天トラベルなど他の予約サイトには影響しません（そちらは別途、各サイトで設定してください）。</p>
+</div>
+
+<h3 class="sub">2-3. 人数別在庫上限</h3>
+<p>人数帯（〇名〜〇名）ごとに、販売できる室数の上限を細かく決める表です。主に PG3 など、人数によって出せる部屋数を変えたい場合に使います。</p>
+<table>
+  <tr><th>列</th><th>意味</th></tr>
+  <tr><td>property</td><td>施設コード（PG1 / PG2 / PG3）</td></tr>
+  <tr><td>room_type</td><td>部屋タイプ</td></tr>
+  <tr><td>min</td><td>人数帯の下限</td></tr>
+  <tr><td>max</td><td>人数帯の上限</td></tr>
+  <tr><td>在庫上限</td><td>その人数帯で販売する室数</td></tr>
+</table>
+<p><strong>操作手順</strong></p>
+<ul>
+  <li>値を選び直す → ページ下の <strong>「SaaS に保存」</strong> で保存（※部屋タイプと同じ保存ボタンです）。</li>
+  <li>行を増やす：<strong>「行を追加」</strong>。</li>
+  <li>行を消す：右端の <strong>ゴミ箱アイコン</strong>。</li>
+</ul>
+<div class="callout tip"><p>💡 通常運用では基本さわりません。必要なとき以外は変更しないでください。</p></div>
+
+<h3 class="sub">2-4. 期間別料金</h3>
+<p><strong>お盆・連休・イベント期間など、特定の期間だけ料金を変えたいとき</strong> に使います。ここで設定した料金は、<strong>通常料金より優先されます</strong>。</p>
+<p>登録済みの料金は、一覧で次のように表示されます（折りたたみ式）。</p>
+<div class="quote">例：花火大会前料金 ｜ 2026/07/17 ｜ HOTEL PG -I- ｜ ¥12,000 / 泊</div>
+<ul>
+  <li><strong>行をクリック</strong>すると開いて編集できます。もう一度クリックで閉じます。</li>
+  <li>右端の <strong>ゴミ箱アイコン</strong> で削除できます。</li>
+</ul>
+<p><strong>入力項目</strong></p>
+<table>
+  <tr><th>項目</th><th>意味</th></tr>
+  <tr><td><strong>設定名</strong></td><td>管理用の名前（例：お盆料金、年末年始料金）。</td></tr>
+  <tr><td><strong>開始日 / 終了日</strong></td><td>この特別料金を適用する期間。1日だけなら同じ日を入れます。</td></tr>
+  <tr><td><strong>対象の部屋</strong></td><td>どの部屋に適用するか。</td></tr>
+  <tr><td><strong>料金</strong></td><td>この期間の1泊料金。「平日・金曜・土曜で金額を分ける」にチェックすると曜日別に設定できます。</td></tr>
+  <tr><td>販売数をこの期間だけ変更する</td><td>（任意）この期間だけ販売室数を変えたいときにチェック。</td></tr>
+  <tr><td>詳細設定</td><td>（任意）料金に含む人数・追加1人料金を個別に変えたいとき。</td></tr>
+  <tr><td><strong>この料金を有効にする</strong></td><td>チェックを外すと、その期間料金を一時的に無効化できます。</td></tr>
+</table>
+<p><strong>新しく追加する手順</strong></p>
+<ol>
+  <li>ページ下の <strong>「新しい期間別料金を追加」</strong> のフォームに入力します。</li>
+  <li><strong>「この内容を追加して保存」</strong> ボタンを押します。</li>
+</ol>
+<p><strong>既存の内容を直す手順</strong></p>
+<ol>
+  <li>一覧の行をクリックして開き、内容を直します。</li>
+  <li><strong>「変更を保存」</strong> ボタンを押します。</li>
+</ol>
+
+<h2 class="sec">3. よくある質問・困ったとき</h2>
+<p><strong>Q. 変更したのにサイトに反映されない。</strong><br>
+→ そのブロックの <strong>保存ボタン</strong> を押しましたか？（2章冒頭の表を確認）。押した後「保存しました」と緑色で出るのが目印です。</p>
+<p><strong>Q.「Supabase が未設定のため、この設定は保存できません」と黄色い表示が出る。</strong><br>
+→ 予約受付期間の保存に必要な設定が反映されていない状態です。サイト担当者（開発者）に連絡してください。</p>
+<p><strong>Q. property_code や room_type を間違えて変えてしまった。</strong><br>
+→ 保存せずにページを再読み込みすれば元に戻ります。保存してしまった場合はサイト担当者に連絡してください。</p>
+<p><strong>Q. 予約の一覧・入金状況を確認したい。</strong><br>
+→ この管理画面ではなく、SaaSの管理ツール（HotelPG オペレーション）や楽天の管理画面で確認してください。</p>
+
+<div class="footer">HOTEL PG 管理画面マニュアル（予約一覧・料金在庫設定編）／ 最終更新：2026-06-04</div>
+
+</body>
+</html>

@@ -409,8 +409,8 @@ export default function AdminSeasonalRoomRatesSection() {
         setSaveError(errMsgFromJson(json, res.status));
         return { ok: false as const, message: '' };
       }
-      setSaveOk(true);
       await load();
+      setSaveOk(true);
       return { ok: true as const, message: '' };
     } catch {
       setSaveError('保存中にエラーが発生しました。');
