@@ -302,7 +302,8 @@ export function RoomBookingCalendar({
   }, [apiBase, saasQuery, visibleRange.start, visibleRange.end, pricingRoomKey, adults, children, infants]);
 
   const maxGuests = ROOM_PRICING[pricingRoomKey]?.maxGuests ?? 1;
-  const isSingleFixed = pricingRoomKey === 'pg2_single';
+  // 人数入力を隠す部屋（現在はなし）。シングルも最大2名のため人数選択を表示する。
+  const isSingleFixed = false;
 
   useEffect(() => {
     // reset to defaults per room

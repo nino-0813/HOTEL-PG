@@ -10,8 +10,10 @@ export type SeasonalRoomRateRow = {
   weekday_price: number;
   friday_price: number;
   saturday_price: number;
-  included_guests: number;
-  extra_guest_fee: number;
+  /** null = 基本設定（public_room_settings）を引き継ぐ */
+  included_guests: number | null;
+  /** null = 基本設定の追加料金を引き継ぐ（例: シングルの 2人目 +5,200） */
+  extra_guest_fee: number | null;
   inventory_cap_override: number | null;
   priority: number;
   is_active: boolean;
@@ -27,8 +29,8 @@ export function emptySeasonalRoomRateDraft(): SeasonalRoomRateRow {
     weekday_price: 0,
     friday_price: 0,
     saturday_price: 0,
-    included_guests: 2,
-    extra_guest_fee: 0,
+    included_guests: null,
+    extra_guest_fee: null,
     inventory_cap_override: null,
     priority: 100,
     is_active: true,
@@ -61,8 +63,8 @@ export function coerceSeasonalRow(x: unknown): SeasonalRoomRateRow | null {
     weekday_price: num(r.weekday_price, 0),
     friday_price: num(r.friday_price, 0),
     saturday_price: num(r.saturday_price, 0),
-    included_guests: num(r.included_guests, 0),
-    extra_guest_fee: num(r.extra_guest_fee, 0),
+    included_guests: numOrNull(r.included_guests),
+    extra_guest_fee: numOrNull(r.extra_guest_fee),
     inventory_cap_override: numOrNull(r.inventory_cap_override),
     priority: num(r.priority, 0),
     is_active: Boolean(r.is_active),
@@ -99,8 +101,10 @@ export function putBodySeasonalRoomRates(rows: SeasonalRoomRateRow[]): { seasona
         weekday_price: Number(r.weekday_price),
         friday_price: Number(r.friday_price),
         saturday_price: Number(r.saturday_price),
-        included_guests: Number(r.included_guests),
-        extra_guest_fee: Number(r.extra_guest_fee),
+        included_guests:
+          r.included_guests === null || r.included_guests === undefined ? null : Number(r.included_guests),
+        extra_guest_fee:
+          r.extra_guest_fee === null || r.extra_guest_fee === undefined ? null : Number(r.extra_guest_fee),
         inventory_cap_override:
           r.inventory_cap_override === null || r.inventory_cap_override === undefined
             ? null

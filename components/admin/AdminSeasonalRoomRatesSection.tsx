@@ -263,18 +263,23 @@ function StaffSeasonalFields({ value, onChange }: StaffSeasonalFieldsProps) {
           <ChevronDown className="w-4 h-4 text-gray-400 transition-transform group-open:rotate-180" />
         </summary>
         <div className="border-t border-gray-100 px-4 py-4 space-y-4 bg-gray-50/50">
+          <p className="text-xs text-gray-500 font-serif leading-relaxed">
+            人数の設定は、通常は<strong>「基本設定に従う」</strong>のままでOKです（部屋ごとの基本料金に登録した
+            「料金に含む人数」「追加1人あたり」をそのまま使います。例: シングルは2人目 +¥5,200）。この期間だけ
+            人数の扱いを変えたいときだけ、下で値を指定してください。
+          </p>
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1.5 font-serif">料金に含む人数</label>
             <select
-              value={value.included_guests}
-              onChange={(e) => onChange({ included_guests: Number(e.target.value) || 1 })}
+              value={value.included_guests == null ? '' : String(value.included_guests)}
+              onChange={(e) =>
+                onChange({ included_guests: e.target.value === '' ? null : Number(e.target.value) })
+              }
               className={STAFF_SELECT_CLASS}
             >
-              {!ADMIN_ROOM_INCLUDED_GUESTS_OPTIONS.some((o) => o.value === value.included_guests) ? (
-                <option value={value.included_guests}>{value.included_guests}名（現在の値）</option>
-              ) : null}
+              <option value="">基本設定に従う</option>
               {ADMIN_ROOM_INCLUDED_GUESTS_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
+                <option key={o.value} value={String(o.value)}>
                   {o.label}
                 </option>
               ))}
@@ -286,8 +291,11 @@ function StaffSeasonalFields({ value, onChange }: StaffSeasonalFieldsProps) {
               type="number"
               min={0}
               step={1}
-              value={value.extra_guest_fee}
-              onChange={(e) => onChange({ extra_guest_fee: Number(e.target.value) || 0 })}
+              value={value.extra_guest_fee == null ? '' : value.extra_guest_fee}
+              placeholder="基本設定に従う"
+              onChange={(e) =>
+                onChange({ extra_guest_fee: e.target.value.trim() === '' ? null : Number(e.target.value) || 0 })
+              }
               className={STAFF_INPUT_CLASS}
             />
           </div>

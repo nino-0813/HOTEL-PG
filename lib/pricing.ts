@@ -11,12 +11,12 @@ export const ROOM_PRICING = {
   },
   pg2_single: {
     name: 'HOTEL PG -II- シングルタイプ',
-    maxGuests: 1,
+    maxGuests: 2,
     baseGuests: 1,
     basePrice: 8000,
     weekendPrice: 12000,
     weekendDays: [5, 6] as const, // Fri, Sat
-    extraPerPerson: 0,
+    extraPerPerson: 5200,
     cleaningFee: 0,
   },
   pg2_family: {
