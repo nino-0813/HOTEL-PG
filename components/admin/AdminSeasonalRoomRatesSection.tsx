@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ChevronDown, Loader2, Plus, Save, Trash2 } from 'lucide-react';
 import {
   emptySeasonalRoomRateDraft,
@@ -337,6 +337,34 @@ export default function AdminSeasonalRoomRatesSection() {
     });
   };
 
+  /** 部屋ごとにまとめ、各グループ内は開始日順。元の index は編集/削除用に保持 */
+  const groupedRows = useMemo(() => {
+    const order = STAFF_ROOM_TARGETS.map((t) => `${t.property_code}/${t.room_type}`);
+    const groups = new Map<string, { label: string; items: { row: SeasonalRoomRateRow; idx: number }[] }>();
+    rows.forEach((row, idx) => {
+      const key = `${row.property_code}/${row.room_type}`;
+      if (!groups.has(key)) groups.set(key, { label: roomLabelFor(row), items: [] });
+      groups.get(key)!.items.push({ row, idx });
+    });
+    const keys = [...groups.keys()].sort((a, b) => {
+      const ia = order.indexOf(a);
+      const ib = order.indexOf(b);
+      if (ia !== -1 || ib !== -1) {
+        if (ia === -1) return 1;
+        if (ib === -1) return -1;
+        return ia - ib;
+      }
+      return a.localeCompare(b);
+    });
+    return keys.map((k) => {
+      const g = groups.get(k)!;
+      const items = [...g.items].sort((x, y) =>
+        (x.row.start_date || '').localeCompare(y.row.start_date || ''),
+      );
+      return { key: k, label: g.label, items };
+    });
+  }, [rows]);
+
   const load = useCallback(async () => {
     setLoading(true);
     setLoadError(null);
@@ -520,70 +548,80 @@ export default function AdminSeasonalRoomRatesSection() {
               登録済みの期間別料金{rows.length > 0 ? `（${rows.length}件）` : ''}
             </h3>
           </div>
-          <div className="space-y-3">
-            {rows.map((row, idx) => {
-              const key = row.id ?? `new-${idx}`;
-              const open = openKeys.has(key);
-              return (
-                <div
-                  key={key}
-                  className="bg-white border border-gray-200 rounded-xl shadow-sm ring-1 ring-black/[0.02] overflow-hidden"
-                >
-                  <div className="flex items-center gap-2 px-3 sm:px-4 py-3">
-                    <button
-                      type="button"
-                      onClick={() => toggleOpen(key)}
-                      aria-expanded={open}
-                      className="flex-1 flex items-center gap-3 text-left min-w-0"
-                    >
-                      <ChevronDown
-                        className={`w-4 h-4 text-gray-400 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`}
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-serif text-sm sm:text-base text-textMain font-medium truncate">
-                            {row.name.trim() || '（名称未設定）'}
-                          </span>
-                          {!row.is_active ? (
-                            <span className="inline-flex items-center rounded-md bg-gray-100 text-gray-500 text-[10px] font-medium px-1.5 py-0.5">
-                              無効
-                            </span>
-                          ) : null}
-                        </div>
-                        <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
-                          <span className="inline-flex items-center rounded-md bg-gray-100 text-gray-600 text-[11px] font-serif px-2 py-0.5">
-                            {formatDateRange(row.start_date, row.end_date)}
-                          </span>
-                          <span className="inline-flex items-center rounded-md bg-gray-100 text-gray-600 text-[11px] font-serif px-2 py-0.5">
-                            {roomLabelFor(row)}
-                          </span>
-                          <span className="inline-flex items-center rounded-md bg-amber-50 text-amber-800 border border-amber-100 text-[11px] font-serif font-medium px-2 py-0.5">
-                            {priceSummary(row)}
-                          </span>
-                        </div>
-                      </div>
-                    </button>
-                    <span className="shrink-0 hidden sm:inline text-[11px] text-gray-400 font-serif">
-                      {open ? '閉じる' : '編集'}
-                    </span>
-                    <button
-                      type="button"
-                      disabled={deletingId === row.id || saving}
-                      onClick={() => void handleDelete(row, idx)}
-                      className="shrink-0 p-2 text-gray-400 hover:text-red-600 rounded disabled:opacity-40"
-                      title="削除"
-                    >
-                      {deletingId === row.id ? <Loader2 className="animate-spin" size={16} /> : <Trash2 size={16} />}
-                    </button>
-                  </div>
-                  {open ? (
-                    <div className="border-t border-gray-100 px-4 sm:px-5 py-4 bg-gray-50/40">
-                      <StaffSeasonalFields value={row} onChange={(patch) => updateRow(idx, patch)} />
-                    </div>
-                  ) : null}
+          <div className="space-y-6">
+            {groupedRows.map((group) => (
+              <div key={group.key}>
+                <div className="flex items-center gap-2 mb-2 px-1">
+                  <span className="font-display text-sm text-textMain tracking-wide">{group.label}</span>
+                  <span className="inline-flex items-center rounded-full bg-gray-100 text-gray-500 text-[11px] font-serif px-2 py-0.5">
+                    {group.items.length}件
+                  </span>
+                  <span className="flex-1 border-t border-gray-100 ml-1" />
                 </div>
-              );
-            })}
+                <div className="space-y-2">
+                  {group.items.map(({ row, idx }) => {
+                    const key = row.id ?? `new-${idx}`;
+                    const open = openKeys.has(key);
+                    return (
+                      <div
+                        key={key}
+                        className="bg-white border border-gray-200 rounded-xl shadow-sm ring-1 ring-black/[0.02] overflow-hidden"
+                      >
+                        <div className="flex items-center gap-2 px-3 sm:px-4 py-3">
+                          <button
+                            type="button"
+                            onClick={() => toggleOpen(key)}
+                            aria-expanded={open}
+                            className="flex-1 flex items-center gap-3 text-left min-w-0"
+                          >
+                            <ChevronDown
+                              className={`w-4 h-4 text-gray-400 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`}
+                            />
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="font-serif text-sm sm:text-base text-textMain font-medium truncate">
+                                  {row.name.trim() || '（名称未設定）'}
+                                </span>
+                                {!row.is_active ? (
+                                  <span className="inline-flex items-center rounded-md bg-gray-100 text-gray-500 text-[10px] font-medium px-1.5 py-0.5">
+                                    無効
+                                  </span>
+                                ) : null}
+                              </div>
+                              <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
+                                <span className="inline-flex items-center rounded-md bg-gray-100 text-gray-600 text-[11px] font-serif px-2 py-0.5">
+                                  {formatDateRange(row.start_date, row.end_date)}
+                                </span>
+                                <span className="inline-flex items-center rounded-md bg-amber-50 text-amber-800 border border-amber-100 text-[11px] font-serif font-medium px-2 py-0.5">
+                                  {priceSummary(row)}
+                                </span>
+                              </div>
+                            </div>
+                          </button>
+                          <span className="shrink-0 hidden sm:inline text-[11px] text-gray-400 font-serif">
+                            {open ? '閉じる' : '編集'}
+                          </span>
+                          <button
+                            type="button"
+                            disabled={deletingId === row.id || saving}
+                            onClick={() => void handleDelete(row, idx)}
+                            className="shrink-0 p-2 text-gray-400 hover:text-red-600 rounded disabled:opacity-40"
+                            title="削除"
+                          >
+                            {deletingId === row.id ? <Loader2 className="animate-spin" size={16} /> : <Trash2 size={16} />}
+                          </button>
+                        </div>
+                        {open ? (
+                          <div className="border-t border-gray-100 px-4 sm:px-5 py-4 bg-gray-50/40">
+                            <StaffSeasonalFields value={row} onChange={(patch) => updateRow(idx, patch)} />
+                          </div>
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
           {rows.length === 0 ? (
             <div className="mt-4 mb-8 flex flex-wrap items-center gap-4">
