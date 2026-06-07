@@ -18,6 +18,7 @@ const STAFF_ROOM_TARGETS = [
   { value: 'pg2_family', label: 'HOTEL PG -II- ファミリー', property_code: 'PG2', room_type: 'family' },
   { value: 'pg3_washitsu_3', label: 'HOTEL PG-III 3名タイプ', property_code: 'PG3', room_type: 'washitsu_modern_3' },
   { value: 'pg3_washitsu_4', label: 'HOTEL PG-III 4名タイプ', property_code: 'PG3', room_type: 'washitsu_modern_4' },
+  { value: 'pg3_maisonette', label: 'HOTEL PG-III メゾネット洋室', property_code: 'PG3', room_type: 'maisonette_6' },
 ] as const;
 
 const STAFF_INPUT_CLASS =
