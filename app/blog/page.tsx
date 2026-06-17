@@ -53,9 +53,8 @@ export default function BlogListPage() {
   ]);
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative bg-white">
       <JsonLd data={breadcrumbSchema} />
-      <div className="bg-noise" />
       <Header />
       <main className="relative w-full pt-24 sm:pt-28 pb-20 sm:pb-32">
         <div ref={ref} className="container mx-auto px-4 sm:px-6 md:px-12 max-w-5xl">

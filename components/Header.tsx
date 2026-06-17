@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
@@ -23,23 +23,16 @@ const Header: React.FC = () => {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  /** リロード直後にブラウザがスクロール位置を復元しているとき、描画前に同期するため */
-  const lastScrollYRef = useRef(0);
 
   const showTransparent = isTop && !isScrolled;
 
   useLayoutEffect(() => {
     if (!isTop) {
       setIsScrolled(false);
-      setIsVisible(true);
       return;
     }
     const applyScrollState = () => {
-      const y = window.scrollY;
-      lastScrollYRef.current = y;
-      setIsScrolled(y > 32);
-      setIsVisible(true);
+      setIsScrolled(window.scrollY > 32);
     };
     applyScrollState();
     const t = window.setTimeout(applyScrollState, 0);
@@ -49,18 +42,10 @@ const Header: React.FC = () => {
   useEffect(() => {
     if (!isTop) return;
     const handleScroll = () => {
-      const y = window.scrollY;
-      setIsScrolled(y > 32);
-      if (y < 60) setIsVisible(true);
-      else if (y > lastScrollYRef.current) setIsVisible(false);
-      else setIsVisible(true);
-      lastScrollYRef.current = y;
+      setIsScrolled(window.scrollY > 32);
     };
     const syncAfterRestore = () => {
-      const y = window.scrollY;
-      lastScrollYRef.current = y;
-      setIsScrolled(y > 32);
-      setIsVisible(true);
+      setIsScrolled(window.scrollY > 32);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('pageshow', syncAfterRestore);
@@ -92,10 +77,7 @@ const Header: React.FC = () => {
           showTransparent ? '' : 'bg-white/98 backdrop-blur-md border-b border-black/5'
         }`}
         initial={false}
-        animate={{
-          y: isTop && !isMenuOpen && !isVisible ? -64 : 0,
-          opacity: isTop && !isMenuOpen && !isVisible ? 0 : 1,
-        }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.2, ease: 'easeOut' }}
       >
         <div className="h-12 sm:h-14 lg:h-16 max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-6">
