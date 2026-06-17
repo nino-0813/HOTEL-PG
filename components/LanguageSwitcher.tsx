@@ -27,12 +27,24 @@ function readLang(): 'ja' | 'en' {
   return 'ja';
 }
 
-/** クッキーを現在ホストと、ドット付きドメイン両方にセット/削除（翻訳ウィジェットが拾えるように） */
-function setGoogtrans(value: string | null) {
+/** 対象ホストから、考えられる cookie ドメイン候補をすべて列挙（親ドメイン含む） */
+function domainVariants(): string[] {
   const host = window.location.hostname;
-  const domains = ['', host, `.${host}`];
-  for (const d of domains) {
-    const base = `${COOKIE}=`;
+  const variants = new Set<string>(['']); // ドメイン指定なし（ホスト限定）
+  variants.add(host);
+  variants.add(`.${host}`);
+  const parts = host.split('.');
+  // a.b.example.com -> .b.example.com, .example.com など親ドメインも対象
+  for (let i = 1; i < parts.length - 1; i++) {
+    variants.add(`.${parts.slice(i).join('.')}`);
+  }
+  return Array.from(variants);
+}
+
+/** googtrans クッキーをセット/削除（翻訳ウィジェットが確実に拾える/消えるように全ドメイン階層へ） */
+function setGoogtrans(value: string | null) {
+  const base = `${COOKIE}=`;
+  for (const d of domainVariants()) {
     const domainPart = d ? `;domain=${d}` : '';
     if (value === null) {
       document.cookie = `${base};expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/${domainPart}`;
@@ -87,43 +99,23 @@ const LanguageSwitcher: React.FC<Props> = ({ className = '' }) => {
   }, []);
 
   const toggle = useCallback(() => {
-    if (lang === 'en') {
-      // 英語 → 日本語: 翻訳を完全に解除して“元のサイト（英語見出し混在のオリジナル）”に戻す。
-      //  combo を 'ja' にすると元々英語だった見出しまで翻訳されてしまうため、必ずリセット(再描画)する。
-      setGoogtrans(null);
-      setLang('ja');
-      const clean = window.location.pathname + window.location.search;
-      if (window.location.hash) {
-        window.location.href = clean; // #googtrans 等を除去してクリーンに再読込
-      } else {
-        window.location.reload();
-      }
-      return;
+    // 既存クッキーを全ドメイン階層で確実に削除してから、必要なら再セット
+    setGoogtrans(null);
+
+    if (lang === 'ja') {
+      // 日本語 → 英語
+      setGoogtrans('/ja/en');
     }
+    // 英語 → 日本語はクッキー削除のみ（翻訳を完全解除し、元のサイトに戻す）
 
-    // 日本語 → 英語: クッキー同期 ＋ ウィジェットの combo をその場で切替（即時反映）
-    setGoogtrans('/ja/en');
-    setLang('en');
+    setLang(lang === 'ja' ? 'en' : 'ja');
 
-    const applyEnViaCombo = (): boolean => {
-      const combo = document.querySelector<HTMLSelectElement>('.goog-te-combo');
-      if (!combo) return false;
-      combo.value = 'en';
-      combo.dispatchEvent(new Event('change'));
-      return true;
-    };
-
-    if (applyEnViaCombo()) return;
-
-    // ウィジェット初期化前なら少し待ってリトライ。それでも無理ならリロードでクッキー反映
-    let tries = 0;
-    const iv = window.setInterval(() => {
-      tries += 1;
-      if (applyEnViaCombo() || tries > 25) {
-        window.clearInterval(iv);
-        if (tries > 25) window.location.reload();
-      }
-    }, 120);
+    // 翻訳状態を保持する #googtrans ハッシュも除去してクリーンに再読込
+    if (/googtrans/i.test(window.location.hash)) {
+      window.location.href = window.location.pathname + window.location.search;
+    } else {
+      window.location.reload();
+    }
   }, [lang]);
 
   return (
