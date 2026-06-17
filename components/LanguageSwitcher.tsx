@@ -87,23 +87,41 @@ const LanguageSwitcher: React.FC<Props> = ({ className = '' }) => {
   }, []);
 
   const toggle = useCallback(() => {
-    // まず全ドメイン階層の既存クッキーを消す（En→Jaで戻らない問題の対策）
-    setGoogtrans(null);
+    const target: 'ja' | 'en' = lang === 'ja' ? 'en' : 'ja';
 
-    if (lang === 'ja') {
-      // 日本語 → 英語
-      setGoogtrans('/ja/en');
-      window.location.reload();
-    } else {
-      // 英語 → 日本語（原文）: クッキー削除に加え、翻訳状態を保持する #googtrans ハッシュも除去
-      const hasGoogtransHash = /googtrans/i.test(window.location.hash);
-      if (hasGoogtransHash) {
-        // ハッシュごと消したクリーンなURLへ遷移（翻訳が再適用されないように）
-        window.location.href = window.location.pathname + window.location.search;
-      } else {
-        window.location.reload();
+    // ナビゲーション後も状態が残るようクッキーも同期しておく
+    setGoogtrans(null);
+    if (target === 'en') setGoogtrans('/ja/en');
+
+    // ウィジェットのプルダウン(.goog-te-combo)を直接操作して、その場で切り替える（最も確実）
+    const applyViaCombo = (): boolean => {
+      const combo = document.querySelector<HTMLSelectElement>('.goog-te-combo');
+      if (!combo) return false;
+      // target='ja' は pageLanguage と同じ＝原文表示に戻る
+      combo.value = target;
+      combo.dispatchEvent(new Event('change'));
+      return true;
+    };
+
+    setLang(target);
+
+    if (applyViaCombo()) return;
+
+    // ウィジェット初期化前なら少し待ってリトライ。それでも無理なら最終手段でリロード
+    let tries = 0;
+    const iv = window.setInterval(() => {
+      tries += 1;
+      if (applyViaCombo() || tries > 25) {
+        window.clearInterval(iv);
+        if (tries > 25) {
+          if (target === 'ja') {
+            window.location.href = window.location.pathname + window.location.search;
+          } else {
+            window.location.reload();
+          }
+        }
       }
-    }
+    }, 120);
   }, [lang]);
 
   return (
