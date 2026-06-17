@@ -86,10 +86,12 @@ const LanguageSwitcher: React.FC<Props> = ({ className = '' }) => {
   }, []);
 
   const toggle = useCallback(() => {
+    // まず全ドメイン階層の既存クッキーを消してから上書き（En→Jaで戻らない問題の対策）
+    setGoogtrans(null);
     if (lang === 'ja') {
       setGoogtrans('/ja/en');
     } else {
-      setGoogtrans(null); // 日本語（原文）に戻す
+      setGoogtrans('/ja/ja'); // 翻訳しない＝日本語（原文）に戻す
     }
     window.location.reload();
   }, [lang]);
