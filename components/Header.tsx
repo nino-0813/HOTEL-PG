@@ -7,6 +7,16 @@ import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NAV_ITEMS } from '../constants';
 
+/** デスクトップの横並びナビに出す主要項目（厳選）。残りはメニューに収納。
+ *  page: true は別ページへのリンク（/blog など）、それ以外はトップ内のセクション(#xxx)。 */
+const PRIMARY_NAV: { label: string; href: string; page?: boolean }[] = [
+  { label: 'Concept', href: '#concept' },
+  { label: 'Gallery', href: '#gallery' },
+  { label: 'Blog', href: '/blog', page: true },
+  { label: 'FAQ', href: '#faq' },
+  { label: 'Contact', href: '#contact' },
+];
+
 const Header: React.FC = () => {
   const pathname = usePathname();
   const isTop = pathname === '/';
@@ -88,7 +98,7 @@ const Header: React.FC = () => {
         }}
         transition={{ duration: 0.2, ease: 'easeOut' }}
       >
-        <div className="h-12 sm:h-14 max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+        <div className="h-12 sm:h-14 lg:h-16 max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-6">
           <Link
             href="/"
             onClick={(e) => {
@@ -97,23 +107,85 @@ const Header: React.FC = () => {
                 handleNavClick('#home');
               }
             }}
-            className={`font-display text-[13px] sm:text-sm tracking-[0.25em] transition-colors ${
+            className={`font-display text-[13px] sm:text-sm tracking-[0.25em] transition-colors shrink-0 ${
               showTransparent ? 'text-white/95' : 'text-[#1a1a1a]'
             }`}
           >
             HOTEL PG
           </Link>
 
-          <button
-            type="button"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`p-1 -mr-1 transition-colors duration-200 ${
-              showTransparent ? 'text-white/90' : 'text-[#1a1a1a]'
-            }`}
-            aria-label="メニュー"
-          >
-            {isMenuOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1.5} />}
-          </button>
+          {/* デスクトップ: 横並びナビ */}
+          <nav className="hidden lg:flex items-center gap-7 xl:gap-9">
+            {PRIMARY_NAV.map((item) => {
+              const linkClass = `font-display text-[12px] xl:text-[13px] tracking-[0.16em] transition-colors whitespace-nowrap ${
+                showTransparent ? 'text-white/90 hover:text-white' : 'text-[#1a1a1a]/80 hover:text-[#1a1a1a]'
+              }`;
+              // 別ページ（Blog など）は常に通常リンク
+              if (item.page) {
+                return (
+                  <Link key={item.label} href={item.href} className={linkClass}>
+                    {item.label}
+                  </Link>
+                );
+              }
+              // セクションリンク（#xxx）：トップ内ではスムーススクロール、他ページからはトップへ遷移
+              return isTop ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick(item.href);
+                  }}
+                  className={linkClass}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link key={item.label} href={`/${item.href}`} className={linkClass}>
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            {/* デスクトップ: 予約CTA */}
+            {isTop ? (
+              <a
+                href="#reservation"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavClick('#reservation');
+                }}
+                className={`hidden lg:inline-flex items-center px-5 py-2 rounded-full font-display text-[12px] tracking-[0.16em] transition-colors ${
+                  showTransparent
+                    ? 'border border-white/70 text-white hover:bg-white hover:text-[#1a1a1a]'
+                    : 'bg-[#1a1a1a] text-white hover:opacity-85'
+                }`}
+              >
+                ご予約
+              </a>
+            ) : (
+              <Link
+                href="/#reservation"
+                className="hidden lg:inline-flex items-center px-5 py-2 rounded-full bg-[#1a1a1a] text-white font-display text-[12px] tracking-[0.16em] hover:opacity-85 transition-colors"
+              >
+                ご予約
+              </Link>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className={`p-1 -mr-1 transition-colors duration-200 ${
+                showTransparent ? 'text-white/90' : 'text-[#1a1a1a]'
+              }`}
+              aria-label="メニュー"
+            >
+              {isMenuOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1.5} />}
+            </button>
+          </div>
         </div>
       </motion.header>
 
