@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import LanguageSwitcher from './LanguageSwitcher';
 
 /** デスクトップの横並びナビに出す主要項目（厳選）。残りはメニューに収納。
  *  page: true は別ページへのリンク（/blog など）、それ以外はトップ内のセクション(#xxx)。 */
@@ -131,6 +132,15 @@ const Header: React.FC = () => {
           </nav>
 
           <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            {/* 言語切替（日英） */}
+            <LanguageSwitcher
+              className={`px-3 py-1.5 rounded-full border transition-colors ${
+                showTransparent
+                  ? 'border-white/50 text-white/90 hover:bg-white/10'
+                  : 'border-black/15 text-[#1a1a1a]/75 hover:border-black/30 hover:text-[#1a1a1a]'
+              }`}
+            />
+
             {/* デスクトップ: 予約CTA */}
             {isTop ? (
               <a
