@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NAV_ITEMS } from '../constants';
 
 /** デスクトップの横並びナビに出す主要項目（厳選）。残りはメニューに収納。
  *  page: true は別ページへのリンク（/blog など）、それ以外はトップ内のセクション(#xxx)。 */
@@ -187,61 +186,78 @@ const Header: React.FC = () => {
               </button>
             </div>
             <nav className="pt-8 pb-12 px-4 sm:px-6 max-w-6xl mx-auto">
-              {isTop ? (
-                <ul className="space-y-0">
-                  {NAV_ITEMS.map((item) => (
+              {/* 主要項目（デスクトップヘッダーと統一） */}
+              <ul className="space-y-0">
+                {PRIMARY_NAV.map((item) => {
+                  const cls =
+                    'block py-2.5 font-display text-lg sm:text-xl font-light text-[#1a1a1a] tracking-[0.08em] hover:opacity-60 transition-opacity';
+                  if (item.page) {
+                    return (
+                      <li key={item.label}>
+                        <Link href={item.href} onClick={() => setIsMenuOpen(false)} className={cls}>
+                          {item.label}
+                        </Link>
+                      </li>
+                    );
+                  }
+                  return (
                     <li key={item.label}>
-                      <a
-                        href={item.href}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleNavClick(item.href);
-                        }}
-                        className="block py-2.5 font-display text-lg sm:text-xl font-light text-[#1a1a1a] tracking-[0.08em] hover:opacity-60 transition-opacity"
-                      >
-                        {item.label}
-                      </a>
+                      {isTop ? (
+                        <a
+                          href={item.href}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleNavClick(item.href);
+                          }}
+                          className={cls}
+                        >
+                          {item.label}
+                        </a>
+                      ) : (
+                        <Link href={`/${item.href}`} onClick={() => setIsMenuOpen(false)} className={cls}>
+                          {item.label}
+                        </Link>
+                      )}
                     </li>
-                  ))}
-                  <li>
-                    <Link
-                      href="/account"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block py-2.5 font-display text-lg sm:text-xl font-light text-[#1a1a1a] tracking-[0.08em] hover:opacity-60 transition-opacity"
-                    >
-                      My page
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/recruit" onClick={() => setIsMenuOpen(false)} className="block py-2.5 font-display text-lg sm:text-xl font-light text-[#1a1a1a] tracking-[0.08em] hover:opacity-60 transition-opacity">
-                      RECRUIT
-                    </Link>
-                  </li>
-                </ul>
+                  );
+                })}
+              </ul>
+
+              {/* 予約CTA */}
+              {isTop ? (
+                <a
+                  href="#reservation"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick('#reservation');
+                  }}
+                  className="mt-7 inline-flex items-center justify-center w-full px-6 py-3.5 rounded-full bg-[#1a1a1a] text-white font-display text-sm tracking-[0.16em]"
+                >
+                  ご予約
+                </a>
               ) : (
-                <ul className="space-y-0">
-                  <li>
-                    <Link href="/" onClick={() => setIsMenuOpen(false)} className="block py-2.5 font-display text-lg font-light text-[#1a1a1a] tracking-[0.08em] hover:opacity-60 transition-opacity">
-                      トップ
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/blog" onClick={() => setIsMenuOpen(false)} className="block py-2.5 font-display text-lg font-light text-[#1a1a1a] tracking-[0.08em] hover:opacity-60 transition-opacity">
-                      Blog
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/account" onClick={() => setIsMenuOpen(false)} className="block py-2.5 font-display text-lg font-light text-[#1a1a1a] tracking-[0.08em] hover:opacity-60 transition-opacity">
-                      My page
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/recruit" onClick={() => setIsMenuOpen(false)} className="block py-2.5 font-display text-lg font-light text-[#1a1a1a] tracking-[0.08em] hover:opacity-60 transition-opacity">
-                      RECRUIT
-                    </Link>
-                  </li>
-                </ul>
+                <Link
+                  href="/#reservation"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="mt-7 inline-flex items-center justify-center w-full px-6 py-3.5 rounded-full bg-[#1a1a1a] text-white font-display text-sm tracking-[0.16em]"
+                >
+                  ご予約
+                </Link>
               )}
+
+              {/* 補助リンク */}
+              <ul className="mt-8 pt-6 border-t border-black/10 space-y-0">
+                <li>
+                  <Link href="/account" onClick={() => setIsMenuOpen(false)} className="block py-2 font-display text-sm text-[#1a1a1a]/70 tracking-[0.12em] hover:text-[#1a1a1a] transition-colors">
+                    My page
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/recruit" onClick={() => setIsMenuOpen(false)} className="block py-2 font-display text-sm text-[#1a1a1a]/70 tracking-[0.12em] hover:text-[#1a1a1a] transition-colors">
+                    RECRUIT
+                  </Link>
+                </li>
+              </ul>
             </nav>
           </motion.div>
         )}
