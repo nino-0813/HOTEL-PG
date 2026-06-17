@@ -18,11 +18,12 @@ declare global {
 
 const COOKIE = 'googtrans';
 
-/** googtrans クッキーから現在の言語を判定（/ja/en なら 'en'） */
+/** googtrans クッキー or URLハッシュから現在の言語を判定（en へ翻訳中なら 'en'） */
 function readLang(): 'ja' | 'en' {
   if (typeof document === 'undefined') return 'ja';
   const m = document.cookie.match(/googtrans=([^;]+)/);
   if (m && decodeURIComponent(m[1]).endsWith('/en')) return 'en';
+  if (typeof window !== 'undefined' && /googtrans\(.*\/en\)/i.test(window.location.hash)) return 'en';
   return 'ja';
 }
 
@@ -86,14 +87,23 @@ const LanguageSwitcher: React.FC<Props> = ({ className = '' }) => {
   }, []);
 
   const toggle = useCallback(() => {
-    // まず全ドメイン階層の既存クッキーを消してから上書き（En→Jaで戻らない問題の対策）
+    // まず全ドメイン階層の既存クッキーを消す（En→Jaで戻らない問題の対策）
     setGoogtrans(null);
+
     if (lang === 'ja') {
+      // 日本語 → 英語
       setGoogtrans('/ja/en');
+      window.location.reload();
     } else {
-      setGoogtrans('/ja/ja'); // 翻訳しない＝日本語（原文）に戻す
+      // 英語 → 日本語（原文）: クッキー削除に加え、翻訳状態を保持する #googtrans ハッシュも除去
+      const hasGoogtransHash = /googtrans/i.test(window.location.hash);
+      if (hasGoogtransHash) {
+        // ハッシュごと消したクリーンなURLへ遷移（翻訳が再適用されないように）
+        window.location.href = window.location.pathname + window.location.search;
+      } else {
+        window.location.reload();
+      }
     }
-    window.location.reload();
   }, [lang]);
 
   return (
