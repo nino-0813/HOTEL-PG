@@ -87,39 +87,41 @@ const LanguageSwitcher: React.FC<Props> = ({ className = '' }) => {
   }, []);
 
   const toggle = useCallback(() => {
-    const target: 'ja' | 'en' = lang === 'ja' ? 'en' : 'ja';
+    if (lang === 'en') {
+      // 英語 → 日本語: 翻訳を完全に解除して“元のサイト（英語見出し混在のオリジナル）”に戻す。
+      //  combo を 'ja' にすると元々英語だった見出しまで翻訳されてしまうため、必ずリセット(再描画)する。
+      setGoogtrans(null);
+      setLang('ja');
+      const clean = window.location.pathname + window.location.search;
+      if (window.location.hash) {
+        window.location.href = clean; // #googtrans 等を除去してクリーンに再読込
+      } else {
+        window.location.reload();
+      }
+      return;
+    }
 
-    // ナビゲーション後も状態が残るようクッキーも同期しておく
-    setGoogtrans(null);
-    if (target === 'en') setGoogtrans('/ja/en');
+    // 日本語 → 英語: クッキー同期 ＋ ウィジェットの combo をその場で切替（即時反映）
+    setGoogtrans('/ja/en');
+    setLang('en');
 
-    // ウィジェットのプルダウン(.goog-te-combo)を直接操作して、その場で切り替える（最も確実）
-    const applyViaCombo = (): boolean => {
+    const applyEnViaCombo = (): boolean => {
       const combo = document.querySelector<HTMLSelectElement>('.goog-te-combo');
       if (!combo) return false;
-      // target='ja' は pageLanguage と同じ＝原文表示に戻る
-      combo.value = target;
+      combo.value = 'en';
       combo.dispatchEvent(new Event('change'));
       return true;
     };
 
-    setLang(target);
+    if (applyEnViaCombo()) return;
 
-    if (applyViaCombo()) return;
-
-    // ウィジェット初期化前なら少し待ってリトライ。それでも無理なら最終手段でリロード
+    // ウィジェット初期化前なら少し待ってリトライ。それでも無理ならリロードでクッキー反映
     let tries = 0;
     const iv = window.setInterval(() => {
       tries += 1;
-      if (applyViaCombo() || tries > 25) {
+      if (applyEnViaCombo() || tries > 25) {
         window.clearInterval(iv);
-        if (tries > 25) {
-          if (target === 'ja') {
-            window.location.href = window.location.pathname + window.location.search;
-          } else {
-            window.location.reload();
-          }
-        }
+        if (tries > 25) window.location.reload();
       }
     }, 120);
   }, [lang]);
