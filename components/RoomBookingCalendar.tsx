@@ -870,7 +870,8 @@ export function RoomBookingCalendar({
         </div>
       ) : null}
 
-      <div className="mt-3 grid grid-cols-7 gap-1 sm:gap-1.5">
+      {/* 翻訳で曜日(日月火→day/month/fire)や空室表記が伸びてセルが崩れるため、グリッドは翻訳対象外にする */}
+      <div className="notranslate mt-3 grid grid-cols-7 gap-1 sm:gap-1.5" translate="no">
         {JP_WEEKDAYS.map((w) => (
           <div
             key={w}
