@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Calendar, ArrowLeft } from 'lucide-react';
+import { Calendar, ArrowLeft, Phone } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useCms } from '@/context/CmsContext';
@@ -24,9 +24,28 @@ const formatDate = (iso: string | null): string => {
 /** 縦向き表示したい画像（90度回転して表示） */
 const ROTATE_IMAGE_IDS = ['8B785325-48D5-4928-9252-A3541EA5A7E6'];
 
+/** トリミングせず全体を表示したい画像（チラシなど。自然な縦横比で表示） */
+const CONTAIN_IMAGE_IDS = ['hanabi-2026-seats', 'hanabi-2026-hero'];
+
 /** 画像を figure + 写真説明（figcaption）で表示 */
 function MarkdownImageWithCaption({ src, alt }: { src?: string | null; alt?: string | null }) {
   const isRotate = src && ROTATE_IMAGE_IDS.some((id) => src.includes(id));
+  const isContain = src && CONTAIN_IMAGE_IDS.some((id) => src.includes(id));
+  if (isContain) {
+    return (
+      <figure>
+        <Image
+          src={src || ''}
+          alt={alt || ''}
+          width={1330}
+          height={1183}
+          sizes="(max-width: 768px) 100vw, 720px"
+          className="w-full h-auto rounded-xl"
+        />
+        {alt && <figcaption>{alt}</figcaption>}
+      </figure>
+    );
+  }
   return (
     <figure>
       <div
@@ -90,6 +109,19 @@ function createMarkdownComponents(articleSlug: string) {
     },
     a: ({ href, children, node: _mdNode, ...rest }: React.ComponentProps<'a'> & { node?: unknown }) => {
       const isReservationAnchor = href === '/#reservation' || href === '#reservation';
+      const isTel = typeof href === 'string' && href.startsWith('tel:');
+      if (isTel) {
+        return (
+          <a
+            href={href}
+            className="not-prose inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 rounded-full bg-textMain text-white font-display text-sm tracking-[0.15em] no-underline shadow-sm hover:opacity-90 transition-opacity"
+            {...rest}
+          >
+            <Phone size={18} />
+            {children}
+          </a>
+        );
+      }
       return (
         <a
           href={href}
@@ -227,15 +259,26 @@ export default function BlogArticleClient({ slug, initialArticle, staticPost }: 
                 ブログ一覧に戻る
               </Link>
               {staticPost.image && (
-                <div className="relative w-full aspect-[2/1] overflow-hidden rounded-2xl mb-10 shadow-sm">
+                CONTAIN_IMAGE_IDS.some((id) => staticPost.image!.includes(id)) ? (
                   <Image
                     src={staticPost.image}
                     alt={staticPost.title}
-                    fill
+                    width={1536}
+                    height={1024}
                     sizes="(max-width: 768px) 100vw, 720px"
-                    className="object-cover"
+                    className="w-full h-auto rounded-2xl mb-10 shadow-sm"
                   />
-                </div>
+                ) : (
+                  <div className="relative w-full aspect-[2/1] overflow-hidden rounded-2xl mb-10 shadow-sm">
+                    <Image
+                      src={staticPost.image}
+                      alt={staticPost.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 720px"
+                      className="object-cover"
+                    />
+                  </div>
+                )
               )}
               <header className="mb-10">
                 <h1 className="font-display text-2xl sm:text-3xl md:text-[2rem] font-normal text-textMain leading-snug tracking-tight">
