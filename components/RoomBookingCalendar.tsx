@@ -50,6 +50,32 @@ function yen(amount: number): string {
     .replace('￥', '¥');
 }
 
+const SAME_DAY_CUTOFF_HOUR = 18;
+
+/** 日本時間での「今日の日付」と「現在の時」を取得（サーバー/訪問者のタイムゾーンに依存しない） */
+function getJstDateAndHour(d: Date): { dateStr: string; hour: number } {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    hour12: false,
+  }).formatToParts(d);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+  const hourPart = get('hour');
+  return {
+    dateStr: `${get('year')}-${get('month')}-${get('day')}`,
+    hour: hourPart === '24' ? 0 : parseInt(hourPart, 10),
+  };
+}
+
+/** 当日の18時以降は、当日分の新規予約を締め切る（翌日以降の予約には影響しない） */
+function sameDayCutoffDateStr(d: Date): string | null {
+  const { dateStr, hour } = getJstDateAndHour(d);
+  return hour >= SAME_DAY_CUTOFF_HOUR ? dateStr : null;
+}
+
 function gridDayCount(startStr: string, endExclusiveStr: string): number {
   const s = toDate(startStr);
   const e = toDate(endExclusiveStr);
@@ -109,6 +135,7 @@ export function RoomBookingCalendar({
   const [loading, setLoading] = useState(true);
   const [viewMonth, setViewMonth] = useState(() => startOfMonth(new Date()));
   const [advanceMonths, setAdvanceMonths] = useState(0);
+  const [todayCutoffDateStr, setTodayCutoffDateStr] = useState<string | null>(null);
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [infants, setInfants] = useState(0);
@@ -142,6 +169,14 @@ export function RoomBookingCalendar({
       mounted = false;
     };
   }, [roomKey]);
+
+  // 当日18時以降は当日分の予約を締め切る（日本時間基準）。1分おきに再判定する。
+  useEffect(() => {
+    const update = () => setTodayCutoffDateStr(sameDayCutoffDateStr(new Date()));
+    update();
+    const id = setInterval(update, 60 * 1000);
+    return () => clearInterval(id);
+  }, []);
 
   /** 受付上限日（この日まで予約可。null は無制限） */
   const maxBookableDateStr = useMemo(() => {
@@ -317,13 +352,14 @@ export function RoomBookingCalendar({
       if (guestCountError) return true;
       if (availabilityError) return true;
       if (maxBookableDateStr && dateStr > maxBookableDateStr) return true;
+      if (todayCutoffDateStr && dateStr === todayCutoffDateStr) return true;
       const row = availabilityByDate[dateStr];
       if (!row) return true;
       if (!row.bookable) return true;
       if (row.availableRooms <= 0) return true;
       return false;
     };
-  }, [availabilityByDate, availabilityError, guestCountError, maxBookableDateStr]);
+  }, [availabilityByDate, availabilityError, guestCountError, maxBookableDateStr, todayCutoffDateStr]);
 
   const blocked = useMemo(() => {
     if (!checkin || !checkout) return false;
@@ -892,15 +928,18 @@ export function RoomBookingCalendar({
           const ds = cell.dateStr;
           const row = availabilityByDate[ds];
           const beyondWindow = !!maxBookableDateStr && ds > maxBookableDateStr;
+          const pastCutoff = !!todayCutoffDateStr && ds === todayCutoffDateStr;
           const isBlocked = blockedDay(ds);
           const isSelected = inSelectedRange(ds);
           const isToday = ds === toDateStr(new Date());
           const isFull =
             !row || row.availableRooms <= 0 || !row.bookable;
-          const showAvail = !beyondWindow && row && row.bookable && row.availableRooms > 0;
+          const showAvail = !beyondWindow && !pastCutoff && row && row.bookable && row.availableRooms > 0;
           const line1 = beyondWindow
             ? '受付期間外'
-            : !row
+            : pastCutoff
+              ? '本日受付終了'
+              : !row
               ? availabilityError || guestCountError
                 ? '—'
                 : loading
