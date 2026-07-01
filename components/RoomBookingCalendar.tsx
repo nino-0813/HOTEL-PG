@@ -136,6 +136,7 @@ export function RoomBookingCalendar({
   const [viewMonth, setViewMonth] = useState(() => startOfMonth(new Date()));
   const [advanceMonths, setAdvanceMonths] = useState(0);
   const [todayCutoffDateStr, setTodayCutoffDateStr] = useState<string | null>(null);
+  const [todayDateStr, setTodayDateStr] = useState<string | null>(null);
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [infants, setInfants] = useState(0);
@@ -171,8 +172,13 @@ export function RoomBookingCalendar({
   }, [roomKey]);
 
   // 当日18時以降は当日分の予約を締め切る（日本時間基準）。1分おきに再判定する。
+  // あわせて「今日」の日付（日本時間）も保持し、過去日を選べないようにする。
   useEffect(() => {
-    const update = () => setTodayCutoffDateStr(sameDayCutoffDateStr(new Date()));
+    const update = () => {
+      const now = new Date();
+      setTodayCutoffDateStr(sameDayCutoffDateStr(now));
+      setTodayDateStr(getJstDateAndHour(now).dateStr);
+    };
     update();
     const id = setInterval(update, 60 * 1000);
     return () => clearInterval(id);
@@ -190,6 +196,12 @@ export function RoomBookingCalendar({
   const maxViewMonthStr = useMemo(
     () => (maxBookableDateStr ? toDateStr(startOfMonth(toDate(maxBookableDateStr))) : null),
     [maxBookableDateStr],
+  );
+
+  /** 今日を含む月（これより前の月へは戻れない） */
+  const minViewMonthStr = useMemo(
+    () => (todayDateStr ? toDateStr(startOfMonth(toDate(todayDateStr))) : null),
+    [todayDateStr],
   );
 
   const apiBase = process.env.NEXT_PUBLIC_AVAILABILITY_API_URL?.trim() ?? '';
@@ -351,6 +363,7 @@ export function RoomBookingCalendar({
     return (dateStr: string) => {
       if (guestCountError) return true;
       if (availabilityError) return true;
+      if (todayDateStr && dateStr < todayDateStr) return true;
       if (maxBookableDateStr && dateStr > maxBookableDateStr) return true;
       if (todayCutoffDateStr && dateStr === todayCutoffDateStr) return true;
       const row = availabilityByDate[dateStr];
@@ -359,7 +372,14 @@ export function RoomBookingCalendar({
       if (row.availableRooms <= 0) return true;
       return false;
     };
-  }, [availabilityByDate, availabilityError, guestCountError, maxBookableDateStr, todayCutoffDateStr]);
+  }, [
+    availabilityByDate,
+    availabilityError,
+    guestCountError,
+    maxBookableDateStr,
+    todayCutoffDateStr,
+    todayDateStr,
+  ]);
 
   const blocked = useMemo(() => {
     if (!checkin || !checkout) return false;
@@ -688,8 +708,15 @@ export function RoomBookingCalendar({
           </button>
           <button
             type="button"
-            onClick={() => setViewMonth((m) => addMonths(m, -1))}
-            className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 font-display text-[10px] tracking-[0.18em] uppercase text-gray-600 hover:border-gray-400 transition-colors"
+            onClick={() =>
+              setViewMonth((m) => {
+                const prev = addMonths(m, -1);
+                if (minViewMonthStr && toDateStr(prev) < minViewMonthStr) return m;
+                return prev;
+              })
+            }
+            disabled={!!minViewMonthStr && toDateStr(viewMonth) <= minViewMonthStr}
+            className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 font-display text-[10px] tracking-[0.18em] uppercase text-gray-600 hover:border-gray-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-gray-200"
             aria-label="Prev month"
           >
             ‹
@@ -927,27 +954,31 @@ export function RoomBookingCalendar({
           }
           const ds = cell.dateStr;
           const row = availabilityByDate[ds];
+          const isPast = !!todayDateStr && ds < todayDateStr;
           const beyondWindow = !!maxBookableDateStr && ds > maxBookableDateStr;
           const pastCutoff = !!todayCutoffDateStr && ds === todayCutoffDateStr;
           const isBlocked = blockedDay(ds);
           const isSelected = inSelectedRange(ds);
-          const isToday = ds === toDateStr(new Date());
+          const isToday = !!todayDateStr && ds === todayDateStr;
           const isFull =
             !row || row.availableRooms <= 0 || !row.bookable;
-          const showAvail = !beyondWindow && !pastCutoff && row && row.bookable && row.availableRooms > 0;
-          const line1 = beyondWindow
-            ? '受付期間外'
-            : pastCutoff
-              ? '本日受付終了'
-              : !row
-              ? availabilityError || guestCountError
-                ? '—'
-                : loading
-                  ? '…'
-                  : '—'
-              : isFull
-                ? '満室'
-                : `空き: ${row.availableRooms}`;
+          const showAvail =
+            !isPast && !beyondWindow && !pastCutoff && row && row.bookable && row.availableRooms > 0;
+          const line1 = isPast
+            ? ''
+            : beyondWindow
+              ? '受付期間外'
+              : pastCutoff
+                ? '本日受付終了'
+                : !row
+                ? availabilityError || guestCountError
+                  ? '—'
+                  : loading
+                    ? '…'
+                    : '—'
+                : isFull
+                  ? '満室'
+                  : `空き: ${row.availableRooms}`;
           const line2 =
             showAvail && row ? (
               <div className="text-gray-500 font-serif whitespace-nowrap text-[9px] sm:text-[11px]">
