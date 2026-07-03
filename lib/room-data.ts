@@ -436,7 +436,7 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
     mapLabel: 'HOTEL PGⅢ',
     facts: [
       { label: '個室', value: '個室' },
-      { label: '人数', value: '1〜6名' },
+      { label: '人数', value: '1〜4名' },
       { label: '寝室', value: '寝室 1' },
       { label: '寝具', value: '寝具 6' },
       { label: '浴室', value: '浴室 1' },
@@ -447,7 +447,7 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
       description: [
         'メゾネットタイプの特別室です。',
         '上下階に分かれた開放感のある空間で、ご家族やグループ旅行、長期滞在にも快適にお過ごしいただけます。',
-        '1〜6名まで宿泊可能です。',
+        '1〜4名まで宿泊可能です。',
         '専用バスルーム、無料Wi-Fi、キッチン、洗濯機、乾燥機、冷蔵庫、電子レンジ、TVを備えています。',
       ],
     },

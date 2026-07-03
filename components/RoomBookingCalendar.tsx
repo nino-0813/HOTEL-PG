@@ -211,14 +211,9 @@ export function RoomBookingCalendar({
 
   useEffect(() => {
     const paying = adults + children;
-    if (pricingRoomKey === 'pg2_family' && paying > 4) {
-      setGuestCountError('最大4名までです');
-    } else if (pricingRoomKey === 'pg3_three' && paying > 3) {
-      setGuestCountError('最大3名までです');
-    } else if (pricingRoomKey === 'pg3_four' && paying > 4) {
-      setGuestCountError('最大4名までです');
-    } else if (pricingRoomKey === 'pg3_maisonette' && paying > 6) {
-      setGuestCountError('最大6名までです');
+    const roomMax = ROOM_PRICING[pricingRoomKey]?.maxGuests;
+    if (roomMax !== undefined && paying > roomMax) {
+      setGuestCountError(`最大${roomMax}名までです`);
     } else {
       setGuestCountError(null);
     }
@@ -236,31 +231,8 @@ export function RoomBookingCalendar({
         }
         return;
       }
-      if (pricingRoomKey === 'pg2_family' && adults + children > 4) {
-        if (mounted) {
-          setAvailabilityByDate({});
-          setAvailabilityError(null);
-          setLoading(false);
-        }
-        return;
-      }
-      if (pricingRoomKey === 'pg3_three' && adults + children > 3) {
-        if (mounted) {
-          setAvailabilityByDate({});
-          setAvailabilityError(null);
-          setLoading(false);
-        }
-        return;
-      }
-      if (pricingRoomKey === 'pg3_four' && adults + children > 4) {
-        if (mounted) {
-          setAvailabilityByDate({});
-          setAvailabilityError(null);
-          setLoading(false);
-        }
-        return;
-      }
-      if (pricingRoomKey === 'pg3_maisonette' && adults + children > 6) {
+      const roomMaxForFetch = ROOM_PRICING[pricingRoomKey]?.maxGuests;
+      if (roomMaxForFetch !== undefined && adults + children > roomMaxForFetch) {
         if (mounted) {
           setAvailabilityByDate({});
           setAvailabilityError(null);
@@ -568,20 +540,9 @@ export function RoomBookingCalendar({
 
     const clampedForApi = clampGuests(pricingRoomKey, adults, children, infants);
     const paying = clampedForApi.adults + clampedForApi.children;
-    if (pricingRoomKey === 'pg2_family' && paying > 4) {
-      setCheckoutError('最大4名までです');
-      return;
-    }
-    if (pricingRoomKey === 'pg3_three' && paying > 3) {
-      setCheckoutError('最大3名までです');
-      return;
-    }
-    if (pricingRoomKey === 'pg3_four' && paying > 4) {
-      setCheckoutError('最大4名までです');
-      return;
-    }
-    if (pricingRoomKey === 'pg3_maisonette' && paying > 6) {
-      setCheckoutError('最大6名までです');
+    const roomMaxForCheckout = ROOM_PRICING[pricingRoomKey]?.maxGuests;
+    if (roomMaxForCheckout !== undefined && paying > roomMaxForCheckout) {
+      setCheckoutError(`最大${roomMaxForCheckout}名までです`);
       return;
     }
 

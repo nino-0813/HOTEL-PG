@@ -54,7 +54,7 @@ export const ROOM_PRICING = {
   /** PG3 メゾネット洋室（サイト表示・人数上限用。実請求は SaaS / Stripe） */
   pg3_maisonette: {
     name: 'HOTEL PG-III メゾネット洋室',
-    maxGuests: 6,
+    maxGuests: 4,
     baseGuests: 2,
     basePrice: 30400,
     weekendPrice: 34400,
