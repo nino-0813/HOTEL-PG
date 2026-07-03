@@ -87,17 +87,25 @@ function addDaysUtc(d: Date, days: number): Date {
   return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + days));
 }
 
-export function clampGuests(roomKey: RoomKey, adults: number, children: number, infants: number) {
+/** maxGuestsOverride: admin の部屋タイプ設定（動的取得値）があればそちらを優先する */
+export function clampGuests(
+  roomKey: RoomKey,
+  adults: number,
+  children: number,
+  infants: number,
+  maxGuestsOverride?: number,
+) {
   const room = ROOM_PRICING[roomKey];
-  if (!room) {
+  const maxGuests = maxGuestsOverride ?? room?.maxGuests;
+  if (maxGuests === undefined) {
     return {
       adults: Math.max(1, adults),
       children: Math.max(0, children),
       infants: Math.max(0, infants),
     };
   }
-  const a = Math.max(1, Math.min(room.maxGuests, adults));
-  const c = Math.max(0, Math.min(room.maxGuests - a, children));
+  const a = Math.max(1, Math.min(maxGuests, adults));
+  const c = Math.max(0, Math.min(maxGuests - a, children));
   const i = Math.max(0, infants);
   return { adults: a, children: c, infants: i };
 }
