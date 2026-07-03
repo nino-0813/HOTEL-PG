@@ -13,14 +13,6 @@ export type PublicRoomSettingRow = {
   is_active: boolean;
 };
 
-export type PublicInventoryCapRow = {
-  property_code: string;
-  room_type: string;
-  min_guests: number;
-  max_guests: number;
-  inventory_cap: number;
-};
-
 export const DEFAULT_ROOM_SETTINGS: PublicRoomSettingRow[] = [
   {
     display_name: 'HOTEL PG -I-',
@@ -102,21 +94,11 @@ export const DEFAULT_ROOM_SETTINGS: PublicRoomSettingRow[] = [
   },
 ];
 
-export const DEFAULT_INVENTORY_CAPS: PublicInventoryCapRow[] = [
-  { property_code: 'PG3', room_type: 'washitsu_modern_3', min_guests: 1, max_guests: 3, inventory_cap: 10 },
-  { property_code: 'PG3', room_type: 'washitsu_modern_4', min_guests: 1, max_guests: 4, inventory_cap: 10 },
-  { property_code: 'PG3', room_type: 'maisonette_6', min_guests: 1, max_guests: 6, inventory_cap: 1 },
-];
-
 /** property_code + room_type で一意（PG3 も washitsu_modern_3 / washitsu_modern_4 / maisonette_6 で区別済み）。
  *  max_guests をキーに含めると、その値自体を変更したときに保存後の再読み込みで自分自身と一致しなくなり、
  *  画面上は変更前のデフォルト値のまま残ってしまう（+ 別行として重複表示される）バグになるため含めない。 */
 function roomKey(r: { property_code: string; room_type: string }) {
   return `${r.property_code}:${r.room_type}`;
-}
-
-function capKey(r: { property_code: string; room_type: string; min_guests: number; max_guests: number }) {
-  return `${r.property_code}:${r.room_type}:${r.min_guests}:${r.max_guests}`;
 }
 
 function normalizeRoomRow(raw: unknown): PublicRoomSettingRow | null {
@@ -140,32 +122,14 @@ function normalizeRoomRow(raw: unknown): PublicRoomSettingRow | null {
   };
 }
 
-function normalizeCapRow(raw: unknown): PublicInventoryCapRow | null {
-  if (!raw || typeof raw !== 'object') return null;
-  const o = raw as Record<string, unknown>;
-  const pc = String(o.property_code ?? '');
-  const rt = String(o.room_type ?? '');
-  if (!pc || !rt) return null;
-  return {
-    property_code: pc,
-    room_type: rt,
-    min_guests: Number(o.min_guests ?? 0) || 0,
-    max_guests: Number(o.max_guests ?? 0) || 0,
-    inventory_cap: Number(o.inventory_cap ?? 0) || 0,
-  };
-}
-
 /** API 行を優先し、欠損キーはデフォルトで補完。同一 property + room_type は max_guests で別行 */
 export function mergeRoomSettingsPayload(data: unknown): {
   room_settings: PublicRoomSettingRow[];
-  inventory_caps: PublicInventoryCapRow[];
 } {
   const root = data && typeof data === 'object' ? (data as Record<string, unknown>) : {};
   const rawRooms = Array.isArray(root.room_settings) ? root.room_settings : [];
-  const rawCaps = Array.isArray(root.inventory_caps) ? root.inventory_caps : [];
 
   const fromApi = rawRooms.map(normalizeRoomRow).filter((x): x is PublicRoomSettingRow => x !== null);
-  const fromApiCaps = rawCaps.map(normalizeCapRow).filter((x): x is PublicInventoryCapRow => x !== null);
 
   const mergedRooms: PublicRoomSettingRow[] = DEFAULT_ROOM_SETTINGS.map((def) => {
     const hit = fromApi.find((r) => roomKey(r) === roomKey(def));
@@ -175,13 +139,5 @@ export function mergeRoomSettingsPayload(data: unknown): {
     if (!mergedRooms.some((m) => roomKey(m) === roomKey(r))) mergedRooms.push(r);
   }
 
-  const mergedCaps: PublicInventoryCapRow[] = DEFAULT_INVENTORY_CAPS.map((def) => {
-    const hit = fromApiCaps.find((c) => capKey(c) === capKey(def));
-    return hit ? { ...def, ...hit } : { ...def };
-  });
-  for (const c of fromApiCaps) {
-    if (!mergedCaps.some((m) => capKey(m) === capKey(c))) mergedCaps.push(c);
-  }
-
-  return { room_settings: mergedRooms, inventory_caps: mergedCaps };
+  return { room_settings: mergedRooms };
 }

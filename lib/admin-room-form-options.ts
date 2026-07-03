@@ -53,9 +53,6 @@ export const ADMIN_ROOM_INCLUDED_GUESTS_OPTIONS = intOptions(1, 8, (n) => `${n}�
 /** 部屋タイプカード・在庫上限：販売在庫 */
 export const ADMIN_INVENTORY_CAP_OPTIONS = intOptions(0, 50, (n) => String(n));
 
-/** 在庫 caps テーブル：人数レンジ */
-export const ADMIN_CAP_GUEST_COUNT_OPTIONS = intOptions(0, 10, (n) => `${n}名`);
-
 /** PG3 の表示名（SaaS / 掲載用の固定候補） */
 export const ADMIN_PG3_DISPLAY_NAME_OPTIONS: string[] = [
   '【OPEN記念価格】2名利用でお得｜和モダン客室｜最大3名｜無料駐車場｜長期滞在歓迎',
