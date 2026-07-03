@@ -108,9 +108,11 @@ export const DEFAULT_INVENTORY_CAPS: PublicInventoryCapRow[] = [
   { property_code: 'PG3', room_type: 'maisonette_6', min_guests: 1, max_guests: 6, inventory_cap: 1 },
 ];
 
-/** 同一施設・同一 room_type でも最大人数が違えば別プラン（例: 旧 PG3 family の 3名 / 4名）。PG3 は現状 room_type で区別 */
-function roomKey(r: { property_code: string; room_type: string; max_guests: number }) {
-  return `${r.property_code}:${r.room_type}:${r.max_guests}`;
+/** property_code + room_type で一意（PG3 も washitsu_modern_3 / washitsu_modern_4 / maisonette_6 で区別済み）。
+ *  max_guests をキーに含めると、その値自体を変更したときに保存後の再読み込みで自分自身と一致しなくなり、
+ *  画面上は変更前のデフォルト値のまま残ってしまう（+ 別行として重複表示される）バグになるため含めない。 */
+function roomKey(r: { property_code: string; room_type: string }) {
+  return `${r.property_code}:${r.room_type}`;
 }
 
 function capKey(r: { property_code: string; room_type: string; min_guests: number; max_guests: number }) {
