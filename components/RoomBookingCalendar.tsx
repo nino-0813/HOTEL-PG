@@ -18,6 +18,8 @@ type SaasAvailabilityResponse = {
   start?: string;
   days?: number;
   dates?: SaasAvailabilityDay[];
+  /** admin の「部屋タイプ」設定（public_room_settings.max_guests）由来。管理画面の変更を即時反映する */
+  maxGuests?: number;
 };
 
 function toDate(d: string): Date {
@@ -143,6 +145,8 @@ export function RoomBookingCalendar({
   const [guestName, setGuestName] = useState('');
   const [guestEmail, setGuestEmail] = useState('');
   const [guestPhone, setGuestPhone] = useState('');
+  /** admin の部屋タイプ設定から取得した実際の最大人数。未取得時は lib/pricing.ts の値にフォールバック */
+  const [dynamicMaxGuests, setDynamicMaxGuests] = useState<number | null>(null);
 
   const visibleRange = useMemo(() => {
     const first = startOfMonth(viewMonth);
@@ -208,16 +212,18 @@ export function RoomBookingCalendar({
   const saasBase = process.env.NEXT_PUBLIC_SAAS_API_BASE_URL?.trim() ?? '';
   const saasQuery = useMemo(() => saasAvailabilityQueryForRoom(roomKey), [roomKey]);
   const pricingRoomKey = roomKey as PricingRoomKey;
+  /** admin の部屋タイプ設定を優先し、未取得時のみ静的設定にフォールバック */
+  const effectiveMaxGuests = dynamicMaxGuests ?? ROOM_PRICING[pricingRoomKey]?.maxGuests;
 
   useEffect(() => {
     const paying = adults + children;
-    const roomMax = ROOM_PRICING[pricingRoomKey]?.maxGuests;
+    const roomMax = effectiveMaxGuests;
     if (roomMax !== undefined && paying > roomMax) {
       setGuestCountError(`最大${roomMax}名までです`);
     } else {
       setGuestCountError(null);
     }
-  }, [pricingRoomKey, adults, children]);
+  }, [pricingRoomKey, adults, children, effectiveMaxGuests]);
 
   useEffect(() => {
     let mounted = true;
@@ -231,7 +237,7 @@ export function RoomBookingCalendar({
         }
         return;
       }
-      const roomMaxForFetch = ROOM_PRICING[pricingRoomKey]?.maxGuests;
+      const roomMaxForFetch = effectiveMaxGuests;
       if (roomMaxForFetch !== undefined && adults + children > roomMaxForFetch) {
         if (mounted) {
           setAvailabilityByDate({});
@@ -255,6 +261,7 @@ export function RoomBookingCalendar({
         adults,
         children,
         infants,
+        effectiveMaxGuests,
       );
       if (mounted) setAvailabilityByDate({});
       try {
@@ -295,6 +302,10 @@ export function RoomBookingCalendar({
           setAvailabilityError('空室情報を取得できませんでした');
           return;
         }
+        const apiMaxGuests = (json as SaasAvailabilityResponse).maxGuests;
+        if (typeof apiMaxGuests === 'number' && Number.isFinite(apiMaxGuests) && apiMaxGuests > 0) {
+          setDynamicMaxGuests(apiMaxGuests);
+        }
         if (process.env.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console -- 開発時のみ: API レスポンス先頭の確認用
           console.log('[RoomBookingCalendar] dates (first 5):', dates.slice(0, 5));
@@ -318,9 +329,9 @@ export function RoomBookingCalendar({
     return () => {
       mounted = false;
     };
-  }, [apiBase, saasQuery, visibleRange.start, visibleRange.end, pricingRoomKey, adults, children, infants]);
+  }, [apiBase, saasQuery, visibleRange.start, visibleRange.end, pricingRoomKey, adults, children, infants, effectiveMaxGuests]);
 
-  const maxGuests = ROOM_PRICING[pricingRoomKey]?.maxGuests ?? 1;
+  const maxGuests = effectiveMaxGuests ?? 1;
   // 人数入力を隠す部屋（現在はなし）。シングルも最大2名のため人数選択を表示する。
   const isSingleFixed = false;
 
@@ -378,8 +389,8 @@ export function RoomBookingCalendar({
 
   const clamped = useMemo(() => {
     if (!ROOM_PRICING[pricingRoomKey]) return { adults: 1, children: 0, infants: 0 };
-    return clampGuests(pricingRoomKey, adults, children, infants);
-  }, [pricingRoomKey, adults, children, infants]);
+    return clampGuests(pricingRoomKey, adults, children, infants, effectiveMaxGuests);
+  }, [pricingRoomKey, adults, children, infants, effectiveMaxGuests]);
 
   useEffect(() => {
     if (clamped.adults !== adults) setAdults(clamped.adults);
@@ -427,7 +438,7 @@ export function RoomBookingCalendar({
       setEstimateFetchFailed(false);
       try {
         const url = `${saasBase.replace(/\/$/, '')}/api/public/checkout-estimate`;
-        const clampedForApi = clampGuests(pricingRoomKey, adults, children, infants);
+        const clampedForApi = clampGuests(pricingRoomKey, adults, children, infants, effectiveMaxGuests);
         const res = await fetch(url, {
           method: 'POST',
           signal: ac.signal,
@@ -502,6 +513,7 @@ export function RoomBookingCalendar({
     guestCountError,
     selectionBlocked,
     blocked,
+    effectiveMaxGuests,
   ]);
 
   const canSubmitCheckout = useMemo(() => {
@@ -538,9 +550,9 @@ export function RoomBookingCalendar({
       return;
     }
 
-    const clampedForApi = clampGuests(pricingRoomKey, adults, children, infants);
+    const clampedForApi = clampGuests(pricingRoomKey, adults, children, infants, effectiveMaxGuests);
     const paying = clampedForApi.adults + clampedForApi.children;
-    const roomMaxForCheckout = ROOM_PRICING[pricingRoomKey]?.maxGuests;
+    const roomMaxForCheckout = effectiveMaxGuests;
     if (roomMaxForCheckout !== undefined && paying > roomMaxForCheckout) {
       setCheckoutError(`最大${roomMaxForCheckout}名までです`);
       return;
