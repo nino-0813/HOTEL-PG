@@ -1,14 +1,12 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Loader2, Plus, Trash2, Save } from 'lucide-react';
+import { Loader2, Save } from 'lucide-react';
 import {
   mergeRoomSettingsPayload,
-  type PublicInventoryCapRow,
   type PublicRoomSettingRow,
 } from '@/lib/admin-room-settings-defaults';
 import {
-  ADMIN_CAP_GUEST_COUNT_OPTIONS,
   ADMIN_INVENTORY_CAP_OPTIONS,
   ADMIN_PG3_DISPLAY_NAME_OPTIONS,
   ADMIN_PG3_DISPLAY_NAME_SELECT_CLASS,
@@ -20,10 +18,6 @@ import {
 } from '@/lib/admin-room-form-options';
 import AdminSeasonalRoomRatesSection from '@/components/admin/AdminSeasonalRoomRatesSection';
 import AdminBookingWindowSection from '@/components/admin/AdminBookingWindowSection';
-
-function emptyCapRow(): PublicInventoryCapRow {
-  return { property_code: 'PG3', room_type: 'washitsu_modern_4', min_guests: 1, max_guests: 4, inventory_cap: 0 };
-}
 
 /** 管理画面表示用（施設コード → ホテル名） */
 function propertyBlockMeta(code: string): { title: string; description: string; accent: string } {
@@ -63,7 +57,6 @@ export default function AdminRoomSettings() {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveOk, setSaveOk] = useState(false);
   const [roomSettings, setRoomSettings] = useState<PublicRoomSettingRow[]>([]);
-  const [inventoryCaps, setInventoryCaps] = useState<PublicInventoryCapRow[]>([]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -75,7 +68,6 @@ export default function AdminRoomSettings() {
       if (res.status === 401) {
         setLoadError('管理画面のセッションが無効です。一度ログアウトしてから再度ログインしてください。');
         setRoomSettings([]);
-        setInventoryCaps([]);
         return;
       }
       if (!res.ok) {
@@ -88,17 +80,14 @@ export default function AdminRoomSettings() {
         setLoadError(hint ? `${baseMsg}\n\n${hint}` : baseMsg);
         const merged = mergeRoomSettingsPayload({});
         setRoomSettings(merged.room_settings);
-        setInventoryCaps(merged.inventory_caps);
         return;
       }
       const merged = mergeRoomSettingsPayload(json);
       setRoomSettings(merged.room_settings);
-      setInventoryCaps(merged.inventory_caps);
     } catch {
       setLoadError('ネットワークエラーで読み込めませんでした。');
       const merged = mergeRoomSettingsPayload({});
       setRoomSettings(merged.room_settings);
-      setInventoryCaps(merged.inventory_caps);
     } finally {
       setLoading(false);
     }
@@ -116,10 +105,6 @@ export default function AdminRoomSettings() {
 
   const updateRoom = (index: number, patch: Partial<PublicRoomSettingRow>) => {
     setRoomSettings((prev) => prev.map((r, i) => (i === index ? { ...r, ...patch } : r)));
-  };
-
-  const updateCap = (index: number, patch: Partial<PublicInventoryCapRow>) => {
-    setInventoryCaps((prev) => prev.map((r, i) => (i === index ? { ...r, ...patch } : r)));
   };
 
   const roomSettingsByProperty = useMemo(() => {
@@ -178,13 +163,6 @@ export default function AdminRoomSettings() {
           max_guests: Number(r.max_guests),
           inventory_cap: Number(r.inventory_cap),
           is_active: !!r.is_active,
-        })),
-        inventory_caps: inventoryCaps.map((c) => ({
-          property_code: c.property_code,
-          room_type: c.room_type,
-          min_guests: Number(c.min_guests),
-          max_guests: Number(c.max_guests),
-          inventory_cap: Number(c.inventory_cap),
         })),
       };
       const res = await fetch('/api/admin/public-room-settings', {
@@ -456,130 +434,6 @@ export default function AdminRoomSettings() {
               </div>
             );
           })}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="font-display text-lg text-textMain mb-4 tracking-[0.12em]">人数別在庫上限（public_inventory_caps）</h2>
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200 text-left">
-                <th className="px-4 py-3 font-display text-xs tracking-wider text-gray-500">property</th>
-                <th className="px-4 py-3 font-display text-xs tracking-wider text-gray-500">room_type</th>
-                <th className="px-4 py-3 font-display text-xs tracking-wider text-gray-500">min</th>
-                <th className="px-4 py-3 font-display text-xs tracking-wider text-gray-500">max</th>
-                <th className="px-4 py-3 font-display text-xs tracking-wider text-gray-500">在庫上限</th>
-                <th className="px-4 py-3 w-12" />
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {inventoryCaps.map((row, idx) => (
-                <tr key={`${row.property_code}-${row.room_type}-${row.min_guests}-${row.max_guests}-${idx}`}>
-                  <td className="px-4 py-2">
-                    <select
-                      value={row.property_code}
-                      onChange={(e) => updateCap(idx, { property_code: e.target.value })}
-                      className={`${ADMIN_SELECT_CLASS} text-xs py-1.5`}
-                    >
-                      {!ADMIN_PROPERTY_OPTIONS.some((o) => o.value === row.property_code) ? (
-                        <option value={row.property_code}>{row.property_code}（現在）</option>
-                      ) : null}
-                      {ADMIN_PROPERTY_OPTIONS.map((o) => (
-                        <option key={o.value} value={o.value}>
-                          {o.value}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="px-4 py-2">
-                    <select
-                      value={row.room_type}
-                      onChange={(e) => updateCap(idx, { room_type: e.target.value })}
-                      className={`${ADMIN_SELECT_CLASS} text-xs py-1.5`}
-                    >
-                      {!adminRoomTypeOptionsForProperty(row.property_code).some((o) => o.value === row.room_type) ? (
-                        <option value={row.room_type}>{row.room_type}（現在）</option>
-                      ) : null}
-                      {adminRoomTypeOptionsForProperty(row.property_code).map((o) => (
-                        <option key={o.value} value={o.value}>
-                          {o.label}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="px-4 py-2">
-                    <select
-                      value={row.min_guests}
-                      onChange={(e) => updateCap(idx, { min_guests: Number(e.target.value) || 0 })}
-                      className={`${ADMIN_SELECT_CLASS} text-xs py-1.5 w-full max-w-[5.5rem]`}
-                    >
-                      {!ADMIN_CAP_GUEST_COUNT_OPTIONS.some((o) => o.value === row.min_guests) ? (
-                        <option value={row.min_guests}>{row.min_guests}名（現在）</option>
-                      ) : null}
-                      {ADMIN_CAP_GUEST_COUNT_OPTIONS.map((o) => (
-                        <option key={o.value} value={o.value}>
-                          {o.label}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="px-4 py-2">
-                    <select
-                      value={row.max_guests}
-                      onChange={(e) => updateCap(idx, { max_guests: Number(e.target.value) || 0 })}
-                      className={`${ADMIN_SELECT_CLASS} text-xs py-1.5 w-full max-w-[5.5rem]`}
-                    >
-                      {!ADMIN_CAP_GUEST_COUNT_OPTIONS.some((o) => o.value === row.max_guests) ? (
-                        <option value={row.max_guests}>{row.max_guests}名（現在）</option>
-                      ) : null}
-                      {ADMIN_CAP_GUEST_COUNT_OPTIONS.map((o) => (
-                        <option key={o.value} value={o.value}>
-                          {o.label}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="px-4 py-2">
-                    <select
-                      value={row.inventory_cap}
-                      onChange={(e) => updateCap(idx, { inventory_cap: Number(e.target.value) || 0 })}
-                      className={`${ADMIN_SELECT_CLASS} text-xs py-1.5 w-full max-w-[6rem]`}
-                    >
-                      {!ADMIN_INVENTORY_CAP_OPTIONS.some((o) => o.value === row.inventory_cap) ? (
-                        <option value={row.inventory_cap}>{row.inventory_cap}（現在）</option>
-                      ) : null}
-                      {ADMIN_INVENTORY_CAP_OPTIONS.map((o) => (
-                        <option key={o.value} value={o.value}>
-                          {o.label}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="px-2 py-2">
-                    <button
-                      type="button"
-                      onClick={() => setInventoryCaps((prev) => prev.filter((_, i) => i !== idx))}
-                      className="p-2 text-gray-400 hover:text-red-600 rounded"
-                      title="行を削除"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="p-3 border-t border-gray-100 bg-gray-50">
-            <button
-              type="button"
-              onClick={() => setInventoryCaps((prev) => [...prev, emptyCapRow()])}
-              className="inline-flex items-center gap-2 text-sm text-textMain hover:opacity-80"
-            >
-              <Plus size={16} />
-              行を追加
-            </button>
-          </div>
         </div>
       </section>
 
