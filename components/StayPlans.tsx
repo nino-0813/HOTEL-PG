@@ -93,7 +93,7 @@ const StayPlans: React.FC = () => {
                 </p>
               </div>
               <a
-                href="#reservation"
+                href="/reserve"
                 className="inline-flex items-center gap-2 font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-white bg-textMain px-6 py-3 hover:bg-textLight transition-colors"
               >
                 ご予約はこちら
@@ -321,7 +321,7 @@ const StayPlans: React.FC = () => {
                         </p>
                       </div>
                       <a
-                        href="#reservation"
+                        href="/reserve"
                         onClick={() => setSelectedPlan(null)}
                         className="inline-block px-8 py-4 bg-textMain text-white hover:bg-textLight transition-colors duration-300 font-body text-xs tracking-widest uppercase whitespace-nowrap"
                       >

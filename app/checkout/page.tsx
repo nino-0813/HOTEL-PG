@@ -19,7 +19,7 @@ export default function CheckoutDeprecatedPage() {
             お部屋ページへ（PG-I）
           </Link>
           <Link
-            href="/#reservation"
+            href="/reserve"
             className="inline-flex justify-center font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-textMain border border-gray-200 px-8 py-4 hover:border-gray-400 transition-colors duration-300 rounded"
           >
             トップへ戻る

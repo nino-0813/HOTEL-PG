@@ -108,7 +108,7 @@ function createMarkdownComponents(articleSlug: string) {
       return <p {...rest}>{children}</p>;
     },
     a: ({ href, children, node: _mdNode, ...rest }: React.ComponentProps<'a'> & { node?: unknown }) => {
-      const isReservationAnchor = href === '/#reservation' || href === '#reservation';
+      const isReservationAnchor = href === '/reserve' || href === '/#reservation' || href === '#reservation';
       const isTel = typeof href === 'string' && href.startsWith('tel:');
       if (isTel) {
         return (

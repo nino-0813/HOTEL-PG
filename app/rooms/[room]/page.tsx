@@ -38,7 +38,7 @@ export default async function RoomDetailPage({
       <section className="relative pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16">
         <div className="container mx-auto px-4 sm:px-6 md:px-12">
           <a
-            href="/#reservation"
+            href="/reserve"
             className="inline-flex items-center gap-2 font-display text-[11px] tracking-[0.2em] uppercase text-gray-500 hover:text-textMain transition-colors"
           >
             ← 予約一覧へ戻る

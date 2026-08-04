@@ -163,7 +163,7 @@ export default function ExperiencePlansListPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link
-                href="/#reservation"
+                href="/reserve"
                 className="inline-block px-8 py-4 bg-textMain text-white hover:bg-textLight transition-colors font-body text-xs tracking-widest uppercase text-center"
               >
                 ご予約・お問い合わせ

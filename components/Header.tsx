@@ -142,29 +142,16 @@ const Header: React.FC = () => {
             />
 
             {/* デスクトップ: 予約CTA */}
-            {isTop ? (
-              <a
-                href="#reservation"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick('#reservation');
-                }}
-                className={`hidden lg:inline-flex items-center px-5 py-2 rounded-full font-display text-[12px] tracking-[0.16em] transition-colors ${
-                  showTransparent
-                    ? 'border border-white/70 text-white hover:bg-white hover:text-[#1a1a1a]'
-                    : 'bg-[#1a1a1a] text-white hover:opacity-85'
-                }`}
-              >
-                ご予約
-              </a>
-            ) : (
-              <Link
-                href="/#reservation"
-                className="hidden lg:inline-flex items-center px-5 py-2 rounded-full bg-[#1a1a1a] text-white font-display text-[12px] tracking-[0.16em] hover:opacity-85 transition-colors"
-              >
-                ご予約
-              </Link>
-            )}
+            <Link
+              href="/reserve"
+              className={`hidden lg:inline-flex items-center px-5 py-2 rounded-full font-display text-[12px] tracking-[0.16em] transition-colors ${
+                showTransparent
+                  ? 'border border-white/70 text-white hover:bg-white hover:text-[#1a1a1a]'
+                  : 'bg-[#1a1a1a] text-white hover:opacity-85'
+              }`}
+            >
+              ご予約
+            </Link>
 
             <button
               type="button"
@@ -234,26 +221,13 @@ const Header: React.FC = () => {
               </ul>
 
               {/* 予約CTA */}
-              {isTop ? (
-                <a
-                  href="#reservation"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick('#reservation');
-                  }}
-                  className="mt-7 inline-flex items-center justify-center w-full px-6 py-3.5 rounded-full bg-[#1a1a1a] text-white font-display text-sm tracking-[0.16em]"
-                >
-                  ご予約
-                </a>
-              ) : (
-                <Link
-                  href="/#reservation"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="mt-7 inline-flex items-center justify-center w-full px-6 py-3.5 rounded-full bg-[#1a1a1a] text-white font-display text-sm tracking-[0.16em]"
-                >
-                  ご予約
-                </Link>
-              )}
+              <Link
+                href="/reserve"
+                onClick={() => setIsMenuOpen(false)}
+                className="mt-7 inline-flex items-center justify-center w-full px-6 py-3.5 rounded-full bg-[#1a1a1a] text-white font-display text-sm tracking-[0.16em]"
+              >
+                ご予約
+              </Link>
 
               {/* 補助リンク */}
               <ul className="mt-8 pt-6 border-t border-black/10 space-y-0">

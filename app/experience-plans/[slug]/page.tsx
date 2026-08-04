@@ -304,7 +304,7 @@ export default async function ExperiencePlanDetailPage(
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link
-                  href="/#reservation"
+                  href="/reserve"
                   className="inline-block px-10 py-4 bg-white text-textMain hover:bg-gray-100 transition-colors font-body text-xs tracking-widest uppercase"
                 >
                   ご予約・お問い合わせ

@@ -19,13 +19,13 @@ export default function CheckoutCancel() {
 
         <div className="mt-10 flex gap-3">
           <a
-            href="/#reservation"
+            href="/reserve"
             className="inline-block font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-white bg-textMain px-8 py-4 hover:bg-textLight transition-colors duration-300 rounded"
           >
             予約ページへ戻る
           </a>
           <a
-            href="/#reservation"
+            href="/reserve"
             className="inline-block font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-textMain border border-gray-200 px-8 py-4 hover:border-gray-400 transition-colors duration-300 rounded"
           >
             トップへ戻る

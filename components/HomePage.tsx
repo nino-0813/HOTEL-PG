@@ -6,7 +6,6 @@ import Hero from './Hero';
 import Section from './Section';
 import News from './News';
 import Blog from './Blog';
-import Reservation from './Reservation';
 import StayPlans from './StayPlans';
 import Hotels from './Hotels';
 import Gallery from './Gallery';
@@ -48,7 +47,6 @@ const HomePage: React.FC = () => {
           <Section id="dining" data={content.dining} reverse index={2} />
           <Section id="activity" data={content.activity} index={3} />
           <Gallery />
-          <Reservation />
           <StayPlans />
           <Blog />
           <Hotels />

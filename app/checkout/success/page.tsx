@@ -85,7 +85,7 @@ export default function CheckoutSuccess() {
 
           <div className="mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4">
             <a
-              href="/#reservation"
+              href="/reserve"
               className="w-full sm:w-auto text-center font-display text-xs sm:text-sm tracking-[0.2em] uppercase text-textMain border border-gray-200 px-8 py-4 hover:border-gray-400 transition-colors duration-300 rounded"
             >
               トップへ戻る
