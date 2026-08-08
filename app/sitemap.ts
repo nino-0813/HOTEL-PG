@@ -10,6 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_ORIGIN}/`, lastModified: now, changeFrequency: 'weekly', priority: 1 },
     { url: `${SITE_ORIGIN}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
     { url: `${SITE_ORIGIN}/innoshima-hotel-guide`, lastModified: now, changeFrequency: 'monthly', priority: 0.85 },
+    { url: `${SITE_ORIGIN}/cycling-shimanami-2026-stay`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${SITE_ORIGIN}/privacy`, lastModified: now, changeFrequency: 'yearly', priority: 0.4 },
     { url: `${SITE_ORIGIN}/recruit`, lastModified: now, changeFrequency: 'monthly', priority: 0.65 },
     { url: `${SITE_ORIGIN}/reserve`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
