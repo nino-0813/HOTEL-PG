@@ -93,6 +93,20 @@
   .article-prose code {
     @apply font-mono text-sm;
   }
+  /* Markdown表（GFM）。狭い画面では表内だけ横スクロールさせ、ページ全体は崩さない */
+  .article-prose table {
+    @apply block w-full overflow-x-auto my-8 font-serif text-[15px] sm:text-base;
+    border-collapse: collapse;
+    -webkit-overflow-scrolling: touch;
+  }
+  .article-prose thead th {
+    @apply bg-gray-50 text-textMain font-medium text-left whitespace-nowrap;
+  }
+  .article-prose th,
+  .article-prose td {
+    @apply border border-gray-200 px-3 py-2.5 sm:px-4 align-top text-textLight;
+    line-height: 1.75;
+  }
 }
 
 /* Google翻訳ウィジェットのUI（バナー・ツールチップ）を隠す */
