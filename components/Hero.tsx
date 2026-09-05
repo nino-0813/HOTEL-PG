@@ -61,7 +61,7 @@ const Hero: React.FC = () => {
         <div className="flex flex-col items-center space-y-3 sm:space-y-4 md:space-y-6">
           {/* メインタイトル */}
           <motion.div
-            className="overflow-hidden rounded-sm bg-black/30 py-2"
+            className="overflow-hidden"
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
@@ -73,7 +73,7 @@ const Hero: React.FC = () => {
 
           {/* サブタイトル */}
           <motion.div
-            className="overflow-hidden rounded-sm bg-black/30 py-2"
+            className="overflow-hidden"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
@@ -93,7 +93,7 @@ const Hero: React.FC = () => {
 
           {/* キャッチコピー */}
           <motion.div
-            className="overflow-hidden rounded-sm bg-black/30 py-2"
+            className="overflow-hidden"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1.2, delay: 1.2, ease: "easeOut" }}
@@ -106,7 +106,7 @@ const Hero: React.FC = () => {
 
           {/* HOTEL PG ブランド名 */}
           <motion.div
-            className="overflow-hidden rounded-sm bg-black/30 py-2"
+            className="overflow-hidden"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1.2, delay: 1.5, ease: "easeOut" }}
