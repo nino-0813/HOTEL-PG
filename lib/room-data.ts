@@ -1,3 +1,4 @@
+import { CANCELLATION_POLICY } from '@/lib/guest-notices';
 export type RoomSlug = 'pg1' | 'pg2-single' | 'pg2-family' | 'pg3' | 'pg3-four' | 'pg3-maisonette';
 export type CheckoutRoomKey =
   | 'pg1'
@@ -69,11 +70,7 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
       { label: '喫煙', value: 'いいえ' },
       { label: 'イベント&パーティ', value: 'いいえ' },
     ],
-    cancellationPolicy: [
-      'チェックイン5日前まではキャンセル無料',
-      'チェックイン4日前〜当日：合計料金の100%',
-      '連絡なし不泊：合計料金の100%',
-    ],
+    cancellationPolicy: CANCELLATION_POLICY,
     checkin: '15:00〜20:00',
     checkout: '〜10:00',
     parking: '無料あり',
@@ -148,11 +145,7 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
       { label: '喫煙', value: 'いいえ' },
       { label: 'イベント&パーティ', value: 'いいえ' },
     ],
-    cancellationPolicy: [
-      'チェックイン5日前まではキャンセル無料',
-      'チェックイン4日前〜当日：合計料金の100%',
-      '連絡なし不泊：合計料金の100%',
-    ],
+    cancellationPolicy: CANCELLATION_POLICY,
     checkin: '15:00〜17:00',
     checkout: '〜10:00',
     parking: '無料あり',
@@ -221,11 +214,7 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
       { label: '喫煙', value: 'いいえ' },
       { label: 'イベント&パーティ', value: 'いいえ' },
     ],
-    cancellationPolicy: [
-      'チェックイン5日前まではキャンセル無料',
-      'チェックイン4日前〜当日：合計料金の100%',
-      '連絡なし不泊：合計料金の100%',
-    ],
+    cancellationPolicy: CANCELLATION_POLICY,
     checkin: '15:00〜17:00',
     checkout: '〜10:00',
     parking: '無料あり',
@@ -316,10 +305,7 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
       { label: 'イベント&パーティOK', value: 'はい' },
       { label: '団体様での貸切可能', value: 'はい' },
     ],
-    cancellationPolicy: [
-      'チェックイン5日前まではキャンセル無料',
-      'チェックイン4日前 - 当日合計料金の100%',
-    ],
+    cancellationPolicy: CANCELLATION_POLICY,
     checkin: '15:00〜18:00',
     checkout: '〜10:00',
     parking: '無料駐車場完備（マイクロバス可）',
@@ -405,10 +391,7 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
       { label: 'イベント&パーティOK', value: 'はい' },
       { label: '団体様での貸切可能', value: 'はい' },
     ],
-    cancellationPolicy: [
-      'チェックイン5日前まではキャンセル無料',
-      'チェックイン4日前 - 当日合計料金の100%',
-    ],
+    cancellationPolicy: CANCELLATION_POLICY,
     checkin: '15:00〜18:00',
     checkout: '〜10:00',
     parking: '無料駐車場完備（マイクロバス可）',
@@ -469,10 +452,7 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
       { label: 'イベント&パーティOK', value: 'はい' },
       { label: '団体様での貸切可能', value: 'はい' },
     ],
-    cancellationPolicy: [
-      'チェックイン5日前まではキャンセル無料',
-      'チェックイン4日前 - 当日合計料金の100%',
-    ],
+    cancellationPolicy: CANCELLATION_POLICY,
     checkin: '15:00〜18:00',
     checkout: '〜10:00',
     parking: '無料駐車場完備（マイクロバス可）',

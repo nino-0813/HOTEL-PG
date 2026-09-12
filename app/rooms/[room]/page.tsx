@@ -1,3 +1,4 @@
+import { LUGGAGE_DELIVERY_NOTICE } from '@/lib/guest-notices';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ROOMS, type RoomSlug } from '@/lib/room-data';
@@ -32,6 +33,7 @@ export default async function RoomDetailPage({
   const slug = roomParam as RoomSlug;
   const room = ROOMS[slug];
   if (!room) return notFound();
+  const notes = Array.from(new Set([...(room.notes ?? []), LUGGAGE_DELIVERY_NOTICE]));
 
   return (
     <main className="min-h-screen bg-background">
@@ -217,13 +219,13 @@ export default async function RoomDetailPage({
                   </div>
                 ) : null}
 
-                {room.notes?.length ? (
+                {notes.length ? (
                   <div className="mt-10">
                     <div className="font-display text-[11px] tracking-[0.2em] uppercase text-gray-500">
                       注意点
                     </div>
                     <ul className="mt-3 space-y-2">
-                      {room.notes.map((p) => (
+                      {notes.map((p) => (
                         <li key={p} className="font-serif text-sm text-textMain leading-relaxed">
                           - {p}
                         </li>

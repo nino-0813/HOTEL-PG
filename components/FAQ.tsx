@@ -1,3 +1,4 @@
+import { CANCELLATION_POLICY, LUGGAGE_DELIVERY_NOTICE } from '@/lib/guest-notices';
 import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -39,7 +40,7 @@ const FAQ_CATEGORIES: FAQCategory[] = [
       { question: 'チェックイン・チェックアウトの時間は？', answer: 'チェックイン：15:00〜／チェックアウト：〜10:00\n※ご希望の場合は事前にお問い合わせください。' },
       { question: 'チェックイン方法は？', answer: 'セルフチェックインです。ご予約後のお案内に沿って、暗証番号またはスマートロックでご入室いただけます。' },
       { question: 'スタッフの対応は？', answer: '常駐スタッフはいませんが、電話・メッセージでのサポートに対応しています。\n対応時間：9:00〜17:00' },
-      { question: '荷物の預かりは？', answer: '原則お預かりは行っておりません。ご希望の場合は事前にご相談ください。' },
+      { question: '荷物の預かりは？', answer: `原則お預かりは行っておりません。ご希望の場合は事前にご相談ください。\n${LUGGAGE_DELIVERY_NOTICE}` },
     ],
   },
   {
@@ -62,7 +63,7 @@ const FAQ_CATEGORIES: FAQCategory[] = [
           'しまなみ海道の「SAGAWA手ぶらサービス（手ぶらサイクリング）」をご利用いただけます。\n詳細はこちら： https://www.sagawa-exp.co.jp/hands-freetravel/service/cycling/',
       },
       { question: 'ペットは宿泊できますか？', answer: '申し訳ございませんが、ペットの宿泊はお断りしております。' },
-      { question: 'キャンセルポリシーは？', answer: 'ご予約されたサイトの条件に準じます。詳細は予約時の内容をご確認ください。' },
+      { question: 'キャンセルポリシーは？', answer: CANCELLATION_POLICY.join('\n') },
       { question: 'お問い合わせ方法は？', answer: 'お電話、予約サイトのメッセージ、SNS（Instagram DMなど）からご連絡ください。' },
     ],
   },

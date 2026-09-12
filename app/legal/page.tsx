@@ -1,5 +1,7 @@
 'use client';
 
+import { CANCELLATION_POLICY } from '@/lib/guest-notices';
+
 import React, { useRef } from 'react';
 import Link from 'next/link';
 import { motion, useInView } from 'framer-motion';
@@ -113,7 +115,7 @@ export default function LegalPage() {
               </div>
               <div>
                 <div className="text-textMain font-medium">キャンセルポリシー</div>
-                <div>5日前まで：無料 / 4日前〜当日：宿泊料金の100% / 連絡なし不泊：宿泊料金の100%</div>
+                <ul className="space-y-1">{CANCELLATION_POLICY.map((item) => <li key={item}>{item}</li>)}</ul>
               </div>
               <div>
                 <div className="text-textMain font-medium">返金について</div>

@@ -1,3 +1,4 @@
+import { LUGGAGE_DELIVERY_NOTICE } from '@/lib/guest-notices';
 import React, { useState, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -264,6 +265,11 @@ const StayPlans: React.FC = () => {
                         ))}
                       </div>
                     )}
+                  </div>
+
+                  <div className="px-8 py-6 md:px-12 border-b border-gray-200">
+                    <h3 className="font-serif text-sm text-textMain mb-3">ご注意</h3>
+                    <p className="font-serif text-sm text-gray-700 leading-relaxed">{LUGGAGE_DELIVERY_NOTICE}</p>
                   </div>
 
                   {/* Schedule */}

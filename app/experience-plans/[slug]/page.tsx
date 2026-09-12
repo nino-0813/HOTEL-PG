@@ -1,3 +1,4 @@
+import { LUGGAGE_DELIVERY_NOTICE } from '@/lib/guest-notices';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -52,6 +53,8 @@ export default async function ExperiencePlanDetailPage(
   if (!plan) {
     notFound();
   }
+
+  const notes = Array.from(new Set([...(plan.notes ?? []), LUGGAGE_DELIVERY_NOTICE]));
 
   return (
     <div className="min-h-screen relative bg-white">
@@ -252,13 +255,13 @@ export default async function ExperiencePlanDetailPage(
               )}
             </div>
 
-            {plan.notes && plan.notes.length > 0 && (
+            {notes.length > 0 && (
               <div className="mt-8 sm:mt-10 bg-gray-50 border border-gray-200 p-6 sm:p-8">
                 <h3 className="font-body text-xs tracking-[0.25em] uppercase text-gray-500 mb-4">
                   NOTES / ご注意
                 </h3>
                 <ul className="space-y-2 list-disc list-inside">
-                  {plan.notes.map((note, i) => (
+                  {notes.map((note, i) => (
                     <li
                       key={i}
                       className="font-serif text-xs sm:text-sm text-gray-600 leading-relaxed"
