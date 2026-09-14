@@ -259,7 +259,6 @@ export default async function RoomDetailPage({
                         {room.phone}
                       </a>
                     </div>
-                    <div className="font-serif text-xs text-gray-500 mt-2">{room.parking}</div>
                   </div>
                 </div>
 
