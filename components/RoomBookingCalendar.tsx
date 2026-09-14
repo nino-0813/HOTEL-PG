@@ -921,7 +921,7 @@ export function RoomBookingCalendar({
             return (
               <div
                 key={`e-${idx}`}
-                className="h-[56px] sm:h-[72px] rounded-lg bg-gray-50 border border-gray-100"
+                className="h-[64px] sm:h-[80px] rounded-lg bg-gray-50 border border-gray-100"
               />
             );
           }
@@ -965,7 +965,7 @@ export function RoomBookingCalendar({
               onClick={() => onPickDay(ds)}
               disabled={isBlocked}
               className={[
-                'h-[56px] sm:h-[72px] rounded-lg border text-left px-1.5 py-1.5 sm:px-2 sm:py-2 transition-colors',
+                'h-[64px] sm:h-[80px] rounded-lg border text-left px-1.5 py-1.5 sm:px-2 sm:py-2 transition-colors',
                 isSelected ? 'border-textMain bg-[#f5f2ea]' : 'border-gray-200 bg-white',
                 isBlocked ? 'opacity-55 cursor-not-allowed bg-gray-50' : 'hover:border-gray-300',
               ].join(' ')}
@@ -973,7 +973,7 @@ export function RoomBookingCalendar({
               <div className="flex items-start justify-between">
                 <div
                   className={[
-                    'font-display text-[11px] sm:text-xs tracking-[0.08em]',
+                    'font-body text-base sm:text-lg font-semibold leading-none tabular-nums',
                     isToday ? 'text-textMain' : 'text-gray-700',
                   ].join(' ')}
                 >
