@@ -1,5 +1,6 @@
 'use client';
 
+import { calendarDayInfo } from '@/lib/calendar-day-style';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ROOM_PRICING, clampGuests, type RoomKey as PricingRoomKey } from '@/lib/pricing';
 import { fetchPublicBookingWindows, advanceMonthsForRoom } from '@/lib/booking-window';
@@ -906,12 +907,17 @@ export function RoomBookingCalendar({
         </div>
       ) : null}
 
+      <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-xs text-gray-600" aria-label="カレンダーの見方">
+        <span className="text-blue-700">土曜</span><span className="text-red-700">日曜・祝日</span>
+        <span><span className="rounded bg-amber-100 px-1 text-amber-900">連休</span> 土日祝が3日以上</span>
+        <span className="rounded bg-gray-200 px-1 text-gray-600">× 満室</span>
+      </div>
       {/* 翻訳で曜日(日月火→day/month/fire)や空室表記が伸びてセルが崩れるため、グリッドは翻訳対象外にする */}
       <div className="notranslate mt-3 grid grid-cols-7 gap-1 sm:gap-1.5" translate="no">
-        {JP_WEEKDAYS.map((w) => (
+        {JP_WEEKDAYS.map((w, weekday) => (
           <div
             key={w}
-            className="text-center font-serif text-xs sm:text-sm text-gray-600 py-1.5"
+            className={`text-center font-serif text-xs sm:text-sm py-1.5 ${weekday === 0 ? 'text-red-700' : weekday === 6 ? 'text-blue-700' : 'text-gray-600'}`}
           >
             {w}
           </div>
@@ -921,11 +927,12 @@ export function RoomBookingCalendar({
             return (
               <div
                 key={`e-${idx}`}
-                className="h-[64px] sm:h-[80px] rounded-lg bg-gray-50 border border-gray-100"
+                className="h-[88px] sm:h-[100px] rounded-lg bg-gray-50 border border-gray-100"
               />
             );
           }
           const ds = cell.dateStr;
+          const { weekday, holiday, longWeekend } = calendarDayInfo(ds);
           const row = availabilityByDate[ds];
           const isPast = !!todayDateStr && ds < todayDateStr;
           const beyondWindow = !!maxBookableDateStr && ds > maxBookableDateStr;
@@ -934,7 +941,7 @@ export function RoomBookingCalendar({
           const isSelected = inSelectedRange(ds);
           const isToday = !!todayDateStr && ds === todayDateStr;
           const isFull =
-            !row || row.availableRooms <= 0 || !row.bookable;
+            !!row && row.availableRooms <= 0;
           const showAvail =
             !isPast && !beyondWindow && !pastCutoff && row && row.bookable && row.availableRooms > 0;
           const line1 = isPast
@@ -950,8 +957,10 @@ export function RoomBookingCalendar({
                     ? '…'
                     : '—'
                 : isFull
-                  ? '満室'
-                  : `空き: ${row.availableRooms}`;
+                  ? '× 満室'
+                  : !row.bookable
+                    ? '受付停止'
+                    : `空き: ${row.availableRooms}`;
           const line2 =
             showAvail && row ? (
               <div className="text-gray-500 font-serif whitespace-nowrap text-[9px] sm:text-[11px]">
@@ -964,17 +973,20 @@ export function RoomBookingCalendar({
               type="button"
               onClick={() => onPickDay(ds)}
               disabled={isBlocked}
+              aria-label={`${ds}${holiday ? ` ${holiday}` : ''}${longWeekend ? ' 連休' : ''}${isToday ? ' 今日' : ''} ${isPast ? '過去の日付' : line1}`}
+              title={holiday}
               className={[
-                'h-[64px] sm:h-[80px] rounded-lg border text-left px-1.5 py-1.5 sm:px-2 sm:py-2 transition-colors',
-                isSelected ? 'border-textMain bg-[#f5f2ea]' : 'border-gray-200 bg-white',
-                isBlocked ? 'opacity-55 cursor-not-allowed bg-gray-50' : 'hover:border-gray-300',
+                'h-[88px] sm:h-[100px] rounded-lg border text-left px-1.5 py-1.5 sm:px-2 sm:py-2 transition-colors',
+                isSelected ? 'border-textMain bg-[#f5f2ea] ring-1 ring-textMain' : isBlocked ? 'border-gray-200 bg-gray-100' : longWeekend ? 'border-amber-200 bg-amber-50/50' : 'border-gray-200 bg-white',
+                isPast ? 'opacity-50' : '',
+                isBlocked ? 'cursor-not-allowed' : 'hover:border-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
               ].join(' ')}
             >
               <div className="flex items-start justify-between">
                 <div
                   className={[
                     'font-body text-base sm:text-lg font-semibold leading-none tabular-nums',
-                    isToday ? 'text-textMain' : 'text-gray-700',
+                    holiday || weekday === 0 ? 'text-red-700' : weekday === 6 ? 'text-blue-700' : 'text-gray-700',
                   ].join(' ')}
                 >
                   {cell.date.getUTCDate()}
@@ -985,8 +997,11 @@ export function RoomBookingCalendar({
                   </span>
                 ) : null}
               </div>
+              <div className="mt-1 h-4 text-[9px] sm:text-[10px] leading-4">
+                {longWeekend ? <span className="rounded bg-amber-100 px-1 text-amber-900">連休</span> : holiday ? <span className="text-red-700">祝日</span> : null}
+              </div>
               <div className="mt-1 text-[10px] sm:text-[11px] leading-tight">
-                <div className="text-gray-700 font-serif whitespace-nowrap">{line1}</div>
+                <div className={`font-serif break-words ${line1 === '× 満室' ? 'inline-block rounded bg-gray-200 px-1 py-0.5 font-medium text-gray-600' : 'text-gray-700'}`}>{line1}</div>
                 {line2}
               </div>
             </button>

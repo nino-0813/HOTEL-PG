@@ -12,6 +12,7 @@
     "images:convert-webp": "node scripts/convert-to-webp.mjs"
   },
   "dependencies": {
+    "@holiday-jp/holiday_jp": "^2.5.1",
     "@supabase/supabase-js": "^2.93.1",
     "@vercel/analytics": "^1.6.1",
     "framer-motion": "^12.23.26",
