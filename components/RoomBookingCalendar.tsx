@@ -661,7 +661,7 @@ export function RoomBookingCalendar({
   };
 
   return (
-    <div className="mt-4 w-full max-w-none rounded-xl border border-gray-200 bg-white/90 backdrop-blur p-5">
+    <div className="mt-4 w-full max-w-none rounded-xl border border-gray-200 bg-white/90 backdrop-blur p-2 sm:p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="font-display text-sm sm:text-base font-light text-textMain tracking-wide">
@@ -909,6 +909,7 @@ export function RoomBookingCalendar({
       ) : null}
 
       <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-xs text-gray-600" aria-label="カレンダーの見方">
+        <span className="sm:hidden">○＝空室数・料金は円</span>
         <span className="text-blue-700">土曜</span><span className="text-red-700">日曜・祝日</span>
         <span><span className="rounded bg-amber-100 px-1 text-amber-900">連休</span> 土日祝が3日以上</span>
         <span className="rounded bg-gray-200 px-1 text-gray-600">× 満室</span>
@@ -962,10 +963,12 @@ export function RoomBookingCalendar({
                   : !row.bookable
                     ? '受付停止'
                     : `空き: ${row.availableRooms}`;
+          const mobileStatus = isPast ? '' : showAvail ? `○${row.availableRooms}` : line1 === '× 満室' ? '満室' : beyondWindow ? '期間外' : pastCutoff || (row && !row.bookable) ? '終了' : line1;
           const line2 =
             showAvail && row ? (
-              <div className="text-gray-500 font-serif whitespace-nowrap text-[9px] sm:text-[11px]">
-                {row.minPrice !== null ? yen(row.minPrice) : '料金未設定'}
+              <div className="mt-0.5 text-gray-600 font-body tabular-nums whitespace-nowrap text-[8px] sm:text-[11px] leading-3">
+                <span className="sm:hidden">{row.minPrice !== null ? new Intl.NumberFormat('ja-JP').format(row.minPrice) : '未設定'}</span>
+                <span className="hidden sm:inline">{row.minPrice !== null ? yen(row.minPrice) : '料金未設定'}</span>
               </div>
             ) : null;
           return (
@@ -977,13 +980,13 @@ export function RoomBookingCalendar({
               aria-label={`${ds}${holiday ? ` ${holiday}` : ''}${longWeekend ? ' 連休' : ''}${isToday ? ' 今日' : ''} ${isPast ? '過去の日付' : line1}`}
               title={holiday}
               className={[
-                'h-[88px] sm:h-[100px] rounded-lg border text-left px-1.5 py-1.5 sm:px-2 sm:py-2 transition-colors',
+                'flex min-w-0 h-[88px] sm:h-[100px] flex-col rounded-lg border text-center sm:text-left px-0.5 py-2 sm:px-2 transition-colors',
                 isSelected ? 'border-textMain bg-[#f5f2ea] ring-1 ring-textMain' : isBlocked ? 'border-gray-200 bg-gray-100' : longWeekend ? 'border-amber-200 bg-amber-50/50' : 'border-gray-200 bg-white',
                 isPast ? 'opacity-50' : '',
                 isBlocked ? 'cursor-not-allowed' : 'hover:border-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
               ].join(' ')}
             >
-              <div className="flex items-start justify-between">
+              <div className="flex w-full items-start justify-center sm:justify-between">
                 <div
                   className={[
                     'font-body text-base sm:text-lg font-semibold leading-none tabular-nums',
@@ -998,11 +1001,11 @@ export function RoomBookingCalendar({
                   </span>
                 ) : null}
               </div>
-              <div className="mt-1 h-4 text-[9px] sm:text-[10px] leading-4">
+              <div className="mt-1 h-4 w-full shrink-0 whitespace-nowrap text-[9px] sm:text-[10px] leading-4">
                 {longWeekend ? <span className="rounded bg-amber-100 px-1 text-amber-900">連休</span> : holiday ? <span className="text-red-700">祝日</span> : null}
               </div>
-              <div className="mt-1 text-[10px] sm:text-[11px] leading-tight">
-                <div className={`font-serif break-words ${line1 === '× 満室' ? 'inline-block rounded bg-gray-200 px-1 py-0.5 font-medium text-gray-600' : 'text-gray-700'}`}>{line1}</div>
+              <div className="mt-1 w-full text-[10px] sm:text-[11px] leading-tight">
+                <div className={`font-sans whitespace-nowrap ${line1 === '× 満室' ? 'inline-block rounded bg-gray-200 px-0.5 sm:px-1 py-0.5 font-medium text-gray-600' : 'text-gray-700'}`}><span className="sm:hidden">{mobileStatus}</span><span className="hidden sm:inline">{line1}</span></div>
                 {line2}
               </div>
             </button>

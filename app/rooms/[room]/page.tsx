@@ -113,7 +113,7 @@ export default async function RoomDetailPage({
               </p>
 
               <div className="mt-6 space-y-6">
-                <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 md:p-8 shadow-sm">
+                <div className="rounded-2xl border border-gray-200 bg-white p-2 sm:p-6 md:p-8 shadow-sm">
                   <h2 className="font-serif text-lg sm:text-xl text-textMain font-medium tracking-wide">
                     空室を確認してご予約
                   </h2>
