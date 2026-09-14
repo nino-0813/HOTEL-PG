@@ -1,6 +1,7 @@
 'use client';
 
 import { calendarDayInfo } from '@/lib/calendar-day-style';
+import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ROOM_PRICING, clampGuests, type RoomKey as PricingRoomKey } from '@/lib/pricing';
 import { fetchPublicBookingWindows, advanceMonthsForRoom } from '@/lib/booking-window';
@@ -661,13 +662,13 @@ export function RoomBookingCalendar({
 
   return (
     <div className="mt-4 w-full max-w-none rounded-xl border border-gray-200 bg-white/90 backdrop-blur p-5">
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="font-display text-sm sm:text-base font-light text-textMain tracking-wide">
             空き状況カレンダー
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2" role="group" aria-label="カレンダーの月を移動">
           <button
             type="button"
             onClick={() => {
@@ -675,10 +676,10 @@ export function RoomBookingCalendar({
               setCheckout('');
               setViewMonth(startOfMonth(new Date()));
             }}
-            className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-2.5 py-2 font-display text-[10px] tracking-[0.18em] uppercase text-gray-600 hover:border-gray-400 transition-colors"
-            aria-label="Reset"
+            className="inline-flex min-h-11 items-center justify-center gap-1 rounded-lg border border-gray-300 bg-white px-2 sm:px-3 font-sans text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            aria-label="日程をリセットして今月へ戻る"
           >
-            ↺
+            <RotateCcw size={16} aria-hidden="true" /> 今月へ
           </button>
           <button
             type="button"
@@ -690,10 +691,10 @@ export function RoomBookingCalendar({
               })
             }
             disabled={!!minViewMonthStr && toDateStr(viewMonth) <= minViewMonthStr}
-            className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 font-display text-[10px] tracking-[0.18em] uppercase text-gray-600 hover:border-gray-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-gray-200"
-            aria-label="Prev month"
+            className="inline-flex min-h-11 items-center justify-center gap-1 rounded-lg border border-textMain bg-textMain px-2 sm:px-4 font-sans text-sm font-medium text-white hover:bg-gray-700 transition-colors disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-textMain"
+            aria-label="前の月へ"
           >
-            ‹
+            <ChevronLeft size={20} aria-hidden="true" /> 前の月
           </button>
           <button
             type="button"
@@ -705,10 +706,10 @@ export function RoomBookingCalendar({
               })
             }
             disabled={!!maxViewMonthStr && toDateStr(viewMonth) >= maxViewMonthStr}
-            className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 font-display text-[10px] tracking-[0.18em] uppercase text-gray-600 hover:border-gray-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-gray-200"
-            aria-label="Next month"
+            className="inline-flex min-h-11 items-center justify-center gap-1 rounded-lg border border-textMain bg-textMain px-2 sm:px-4 font-sans text-sm font-medium text-white hover:bg-gray-700 transition-colors disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-textMain"
+            aria-label="次の月へ"
           >
-            ›
+            次の月 <ChevronRight size={20} aria-hidden="true" />
           </button>
         </div>
       </div>
