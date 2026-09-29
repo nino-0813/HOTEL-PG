@@ -52,7 +52,10 @@ export async function listNews(publishedOnly = true): Promise<NewsArticle[]> {
   let query = db().from(TABLE).select('*');
   if (publishedOnly) query = query.eq('published', true);
   const { data, error } = await query.order('date', { ascending: false }).order('updatedAt', { ascending: false });
-  if (error) dbError(error.code);
+  if (error) {
+    if (publishedOnly) return publicNews(sampleNews);
+    dbError(error.code);
+  }
   const rows = (data ?? []) as NewsArticle[];
   if (publishedOnly && rows.length === 0) return publicNews(sampleNews);
   return sortNews(rows);
@@ -61,7 +64,7 @@ export async function findNews(slug: string) {
   if (useLocalNews()) return (await listNews()).find(a => a.slug === slug) ?? null;
   if (!isServerSupabaseConfigured()) return publicNews(sampleNews).find(a => a.slug === slug) ?? null;
   const { data, error } = await db().from(TABLE).select('*').eq('slug', slug).eq('published', true).maybeSingle();
-  if (error) dbError(error.code);
+  if (error) return publicNews(sampleNews).find(a => a.slug === slug) ?? null;
   return (data as NewsArticle | null) ?? publicNews(sampleNews).find(a => a.slug === slug) ?? null;
 }
 export async function saveNews(input: NewsInput, id?: string, version?: string): Promise<NewsArticle> {
