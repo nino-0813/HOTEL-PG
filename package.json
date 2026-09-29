@@ -14,6 +14,10 @@
   "dependencies": {
     "@holiday-jp/holiday_jp": "^2.5.1",
     "@supabase/supabase-js": "^2.93.1",
+    "@tiptap/extension-text-style": "^3.31.3",
+    "@tiptap/pm": "^3.31.3",
+    "@tiptap/react": "^3.31.3",
+    "@tiptap/starter-kit": "^3.31.3",
     "@vercel/analytics": "^1.6.1",
     "framer-motion": "^12.23.26",
     "lucide-react": "^0.556.0",

@@ -10,6 +10,7 @@ import LanguageSwitcher from './LanguageSwitcher';
 /** デスクトップの横並びナビに出す主要項目（厳選）。残りはメニューに収納。
  *  page: true は別ページへのリンク（/blog など）、それ以外はトップ内のセクション(#xxx)。 */
 const PRIMARY_NAV: { label: string; href: string; page?: boolean }[] = [
+  { label: 'News', href: '#news' },
   { label: 'Concept', href: '#concept' },
   { label: 'Gallery', href: '#gallery' },
   { label: 'Blog', href: '/blog', page: true },

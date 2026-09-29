@@ -36,7 +36,7 @@ const News: React.FC = () => {
   }, [isInView, scriptLoaded]);
 
   return (
-    <section id="news" className="relative py-12 sm:py-20 md:py-32 lg:py-48">
+    <section id="instagram" className="relative py-12 sm:py-20 md:py-32 lg:py-48">
       <div className="container mx-auto px-4 sm:px-6 md:px-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

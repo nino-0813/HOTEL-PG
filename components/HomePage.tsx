@@ -15,7 +15,7 @@ import Recruit from './Recruit';
 import Footer from './Footer';
 import { useCms } from '@/context/CmsContext';
 
-const HomePage: React.FC = () => {
+const HomePage = ({ news }: { news: React.ReactNode }) => {
   const { content } = useCms();
 
   useEffect(() => {
@@ -42,6 +42,7 @@ const HomePage: React.FC = () => {
         </div>
 
         <div className="relative z-10 bg-background shadow-[0_-40px_80px_rgba(0,0,0,0.05)] rounded-t-[20px] sm:rounded-t-[40px] sm:-mt-20 pt-0 sm:pt-20 pb-20 sm:pb-32">
+          {news}
           <Section id="concept" data={content.concept} reverse index={0} />
           <Section id="rooms" data={content.rooms} index={1} />
           <Section id="dining" data={content.dining} reverse index={2} />

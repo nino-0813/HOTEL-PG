@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import NewsSection from '@/components/NewsSection';
 import HomePage from '@/components/HomePage';
 import { DEFAULT_DESCRIPTION, DEFAULT_PAGE_TITLE, SITE_NAME } from '@/lib/site';
 
@@ -15,6 +16,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const dynamic = 'force-dynamic';
+
 export default function Page() {
-  return <HomePage />;
+  return <HomePage news={<NewsSection />} />;
 }

@@ -44,7 +44,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex flex-col sm:flex-row items-center justify-center">
         <Loader2 className="w-9 h-9 text-textMain animate-spin" aria-label="読み込み中" />
       </div>
     );
@@ -52,7 +52,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
 
   if (!isAdminLoggedIn()) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex flex-col sm:flex-row items-center justify-center">
         <Loader2 className="w-9 h-9 text-textMain animate-spin" aria-label="読み込み中" />
       </div>
     );
@@ -71,13 +71,14 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
   const nav = [
     { path: '/admin/bookings', label: '予約一覧', icon: CalendarDays },
     { path: '/admin/room-settings', label: '料金・在庫設定', icon: SlidersHorizontal },
+    { path: '/admin/news', label: 'お知らせ', icon: FileText },
     { path: '/admin/blog', label: 'ブログ', icon: FileText },
     { path: '/admin/content', label: 'コンテンツ・写真', icon: Image },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <aside className="w-56 bg-white border-r border-gray-200 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col sm:flex-row">
+      <aside className="w-full sm:w-56 sm:shrink-0 bg-white border-r border-gray-200 flex flex-col">
         <div className="p-4 border-b border-gray-200">
           <h1 className="font-display text-lg text-textMain">HOTEL PG 管理</h1>
         </div>
@@ -172,7 +173,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
           </button>
         </div>
       </aside>
-      <main className="flex-1 overflow-auto p-6 sm:p-8">{children}</main>
+      <main className="min-w-0 flex-1 overflow-auto p-4 sm:p-8">{children}</main>
     </div>
   );
 }
