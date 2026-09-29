@@ -70,7 +70,11 @@ const Section: React.FC<SectionProps> = ({ id, data, reverse, index }) => {
                       className="relative w-full h-full min-h-[200px] sm:min-h-[300px]"
                     >
                       <Image
-                        src={id === 'activity' ? ACTIVITY_HERO_IMAGE : data.images[0]}
+                        src={id === 'activity'
+                          ? ACTIVITY_HERO_IMAGE
+                          : id === 'dining'
+                            ? '/news/breakfast-2026/IMG_4263.webp'
+                            : data.images[0]}
                         alt={data.title}
                         fill
                         sizes="(max-width: 640px) 85vw, (max-width: 1024px) 65vw, 600px"

@@ -27,13 +27,13 @@ const breakfastBody = {
 };
 
 export const BREAKFAST_GALLERY_IMAGES = [
+  '/news/breakfast-2026/IMG_4283.webp',
   '/news/breakfast-2026/IMG_4201.webp',
   '/news/breakfast-2026/IMG_4222.webp',
   '/news/breakfast-2026/IMG_4230.webp',
   '/news/breakfast-2026/IMG_4263.webp',
   '/news/breakfast-2026/IMG_4271.webp',
   '/news/breakfast-2026/IMG_4275.webp',
-  '/news/breakfast-2026/IMG_4283.webp',
   '/news/breakfast-2026/IMG_4285.webp',
   '/news/breakfast-2026/IMG_4287.webp',
   '/news/breakfast-2026/IMG_4288.webp',
