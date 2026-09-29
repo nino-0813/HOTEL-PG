@@ -26,6 +26,19 @@ const breakfastBody = {
   ],
 };
 
+export const BREAKFAST_GALLERY_IMAGES = [
+  '/news/breakfast-2026/IMG_4201.webp',
+  '/news/breakfast-2026/IMG_4222.webp',
+  '/news/breakfast-2026/IMG_4230.webp',
+  '/news/breakfast-2026/IMG_4263.webp',
+  '/news/breakfast-2026/IMG_4271.webp',
+  '/news/breakfast-2026/IMG_4275.webp',
+  '/news/breakfast-2026/IMG_4283.webp',
+  '/news/breakfast-2026/IMG_4285.webp',
+  '/news/breakfast-2026/IMG_4287.webp',
+  '/news/breakfast-2026/IMG_4288.webp',
+] as const;
+
 // 初回公開時に表示する正式なお知らせです。管理画面の保存先が空の場合にも表示します。
 export const sampleNews: NewsArticle[] = [
   {
@@ -35,7 +48,7 @@ export const sampleNews: NewsArticle[] = [
     category: '施設・サービス',
     tags: ['朝食', '料金改定'],
     title: '朝食料金改定のご案内',
-    image: '/images/gallery/82dfe2c3189024a50b197d92a5436f68492ab111.47.9.26.3.webp',
+    image: BREAKFAST_GALLERY_IMAGES[0],
     body: NEWS_BODY_PREFIX + JSON.stringify(breakfastBody),
     published: true,
     updatedAt: '2026-09-29T12:00:00.000Z',

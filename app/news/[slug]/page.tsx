@@ -4,8 +4,10 @@ import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import NewsImage from '@/components/NewsImage';
+import NewsGallery from '@/components/NewsGallery';
 import { formatNewsDate } from '@/lib/news';
 import { findNews } from '@/lib/news-store';
+import { BREAKFAST_GALLERY_IMAGES } from '@/data/news';
 export const dynamic = 'force-dynamic';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -25,7 +27,9 @@ export default async function NewsDetailPage({ params }: Props) {
       <h1 className="mb-10 mt-5 font-serif text-2xl leading-relaxed tracking-wider sm:text-3xl">{article.title}</h1>
       {article.sample && <p className="mb-8 border-l-2 border-divider pl-4 text-sm text-textLight">ローカル確認用のサンプル記事です。</p>}
       <div className="mb-6 flex flex-wrap gap-4 text-sm text-textLight">{article.tags.map(tag => <a key={tag} href={`/news?tag=${encodeURIComponent(tag)}`} className="inline-flex min-h-11 items-center hover:underline">#{tag}</a>)}</div>
-      <NewsImage src={article.image} sizes="(min-width: 768px) 768px, 100vw" />
+      {article.slug === 'breakfast-price-revision-2026'
+        ? <NewsGallery images={BREAKFAST_GALLERY_IMAGES} title={article.title} />
+        : <NewsImage src={article.image} sizes="(min-width: 768px) 768px, 100vw" />}
       <div className="py-10"><NewsBody body={article.body} /></div>
       <div className="border-t border-divider pt-8"><a href="/news" className="inline-flex min-h-11 items-center text-sm tracking-widest hover:underline">← お知らせ一覧へ</a></div>
     </article>
