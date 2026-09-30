@@ -49,16 +49,15 @@ export async function listNews(publishedOnly = true): Promise<NewsArticle[]> {
   if (!isServerSupabaseConfigured()) {
     return publishedOnly ? publicNews(sampleNews) : sortNews(sampleNews);
   }
-  let query = db().from(TABLE).select('*');
-  if (publishedOnly) query = query.eq('published', true);
-  const { data, error } = await query.order('date', { ascending: false }).order('updatedAt', { ascending: false });
+  const { data, error } = await db().from(TABLE).select('*').order('date', { ascending: false }).order('updatedAt', { ascending: false });
   if (error) {
     if (publishedOnly) return publicNews(sampleNews);
     dbError(error.code);
   }
   const rows = (data ?? []) as NewsArticle[];
-  if (publishedOnly && rows.length === 0) return publicNews(sampleNews);
-  return sortNews(rows);
+  if (!publishedOnly) return sortNews(rows);
+  const storedSlugs = new Set(rows.map(article => article.slug));
+  return publicNews([...sampleNews.filter(article => !storedSlugs.has(article.slug)), ...rows]);
 }
 export async function findNews(slug: string) {
   if (useLocalNews()) return (await listNews()).find(a => a.slug === slug) ?? null;

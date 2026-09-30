@@ -36,7 +36,7 @@ try {
   assert.equal(publicList.articles[0].slug, input.slug);
   const home = await (await api('/')).text();
   const section = home.match(/<section id="news"[\s\S]*?<\/section>/)?.[0] ?? '';
-  assert.equal((section.match(/<article>/g) ?? []).length, 2, 'home shows the published test article and the initial announcement');
+  assert.equal((section.match(/<article>/g) ?? []).length, 3, 'home shows the published test article and the two initial announcements');
   assert.ok(section.includes(input.title));
   assert.ok(section.includes('もっと見る'));
   const filtered = await (await api(`/news?category=${encodeURIComponent('イベント')}&tag=${encodeURIComponent('テスト')}`)).text();
