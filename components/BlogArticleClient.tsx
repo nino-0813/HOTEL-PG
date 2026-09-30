@@ -11,7 +11,7 @@ import Footer from '@/components/Footer';
 import { useCms } from '@/context/CmsContext';
 import { toPublicStorageUrl } from '@/lib/upload';
 import { BlogBlockRenderer } from '@/components/BlogBlockRenderer';
-import { trackReservationClick } from '@/utils/analytics';
+import { trackReservationCta } from '@/utils/analytics';
 import type { BlogArticle } from '@/types';
 import type { BlogPost } from '@/types';
 
@@ -125,7 +125,7 @@ function createMarkdownComponents(articleSlug: string) {
       return (
         <a
           href={href}
-          onClick={isReservationAnchor ? () => trackReservationClick(`blog_reservation_cta:${articleSlug}`) : undefined}
+          onClick={isReservationAnchor ? () => trackReservationCta(`blog:${articleSlug}`) : undefined}
           {...rest}
         >
           {children}

@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ROOM_PRICING, clampGuests, type RoomKey as PricingRoomKey } from '@/lib/pricing';
 import { fetchPublicBookingWindows, advanceMonthsForRoom } from '@/lib/booking-window';
+import { trackBeginCheckout } from '@/utils/analytics';
 
 const JP_WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'] as const;
 
@@ -560,6 +561,12 @@ export function RoomBookingCalendar({
       return;
     }
 
+    trackBeginCheckout({
+      roomSlug: pricingRoomKey,
+      checkin,
+      checkout,
+      guests: paying + clampedForApi.infants,
+    });
     setCheckoutLoading(true);
     try {
       const endpoint = `${saasBase.replace(/\/$/, '')}/api/public/create-checkout-session`;
@@ -1047,4 +1054,3 @@ export function RoomBookingCalendar({
     </div>
   );
 }
-

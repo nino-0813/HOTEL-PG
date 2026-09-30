@@ -19,6 +19,7 @@ import {
 } from '@/lib/site';
 import { Providers } from './providers';
 import FloatingReservationButton from '@/components/FloatingReservationButton';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 import './globals.css';
 
 /** GA4 測定ID（環境変数で上書き可能） */
@@ -112,19 +113,7 @@ export default function RootLayout({
   return (
     <html lang="ja" suppressHydrationWarning className={`${notoSansJP.variable} ${shipporiMincho.variable} ${cormorant.variable} ${figtree.variable}`}>
       <body suppressHydrationWarning className="relative min-h-screen text-textMain font-sans selection:bg-gray-200 selection:text-textMain antialiased">
-        {/* Google tag (gtag.js) - 全ページで計測。window.gtag は utils/analytics.ts の reservation_click で使用 */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="ga4-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}');
-          `}
-        </Script>
+        <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
         {jsonLdGraph.map((schema, i) => (
           <JsonLd key={i} data={schema} />
         ))}

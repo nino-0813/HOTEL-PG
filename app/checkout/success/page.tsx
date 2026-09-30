@@ -1,13 +1,22 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
+import { trackBookingComplete } from '@/utils/analytics';
 
 export default function CheckoutSuccess() {
   const searchParams = useSearchParams();
   const room = searchParams.get('room') ?? '-';
   const sessionId = searchParams.get('session_id') ?? '-';
+
+  useEffect(() => {
+    if (!sessionId || sessionId === '-') return;
+    const storageKey = `ga4_booking_complete:${sessionId}`;
+    if (window.sessionStorage.getItem(storageKey)) return;
+    trackBookingComplete(sessionId, room);
+    window.sessionStorage.setItem(storageKey, '1');
+  }, [room, sessionId]);
 
   const roomLabel = useMemo(() => {
     if (room === 'pg1') return 'HOTEL PG -I-';
@@ -96,4 +105,3 @@ export default function CheckoutSuccess() {
     </main>
   );
 }
-

@@ -13,7 +13,7 @@ export default function RakutenReserveButton({ href, roomSlug, className }: Prop
   return (
     <a
       href={href}
-      onClick={() => trackReservationClick(`rakuten_reserve:${roomSlug}`)}
+      onClick={() => trackReservationClick(roomSlug)}
       target="_blank"
       rel="noopener noreferrer"
       className={className}
@@ -22,4 +22,3 @@ export default function RakutenReserveButton({ href, roomSlug, className }: Prop
     </a>
   );
 }
-

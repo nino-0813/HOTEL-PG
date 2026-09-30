@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { trackReservationClick } from '../utils/analytics';
+import { trackRoomView } from '../utils/analytics';
 
 interface GalleryImage {
   src: string;
@@ -195,7 +195,7 @@ const Gallery: React.FC = () => {
                 <div className={galleryReserveBandClass}>
                   <a
                     href="/rooms/pg1"
-                    onClick={() => trackReservationClick('gallery_room:pg1')}
+                    onClick={() => trackRoomView('pg1', 'gallery')}
                     className={galleryReserveBtnClass}
                   >
                     HOTEL PG -I- のご予約・詳細
@@ -244,7 +244,7 @@ const Gallery: React.FC = () => {
                   <div className={galleryReserveBandClass}>
                     <a
                       href="/rooms/pg2-single"
-                      onClick={() => trackReservationClick('gallery_room:pg2_single')}
+                      onClick={() => trackRoomView('pg2_single', 'gallery')}
                       className={galleryReserveBtnClass}
                     >
                       シングルタイプのご予約・詳細
@@ -286,7 +286,7 @@ const Gallery: React.FC = () => {
                   <div className={galleryReserveBandClass}>
                     <a
                       href="/rooms/pg2-family"
-                      onClick={() => trackReservationClick('gallery_room:pg2_family')}
+                      onClick={() => trackRoomView('pg2_family', 'gallery')}
                       className={galleryReserveBtnClass}
                     >
                       ファミリータイプのご予約・詳細
@@ -334,7 +334,7 @@ const Gallery: React.FC = () => {
                     <div className={galleryReserveBandClass}>
                       <a
                         href="/rooms/pg3"
-                        onClick={() => trackReservationClick('gallery_room:pg3_three')}
+                        onClick={() => trackRoomView('pg3_three', 'gallery')}
                         className={galleryReserveBtnClass}
                       >
                         PG-III 3名タイプのご予約・詳細
@@ -374,7 +374,7 @@ const Gallery: React.FC = () => {
                     <div className={galleryReserveBandClass}>
                       <a
                         href="/rooms/pg3-four"
-                        onClick={() => trackReservationClick('gallery_room:pg3_four')}
+                        onClick={() => trackRoomView('pg3_four', 'gallery')}
                         className={galleryReserveBtnClass}
                       >
                         PG-III 4名タイプのご予約・詳細
@@ -414,7 +414,7 @@ const Gallery: React.FC = () => {
                     <div className={galleryReserveBandClass}>
                       <a
                         href="/rooms/pg3-maisonette"
-                        onClick={() => trackReservationClick('gallery_room:pg3_maisonette')}
+                        onClick={() => trackRoomView('pg3_maisonette', 'gallery')}
                         className={galleryReserveBtnClass}
                       >
                         PG-III メゾネット洋室のご予約・詳細
