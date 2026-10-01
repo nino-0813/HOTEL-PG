@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <rect width="1200" height="1200" rx="64" fill="#FAF9F6"/>
+  <circle cx="600" cy="600" r="430" fill="none" stroke="#252525" stroke-width="2"/>
+  <path d="M390 455H810" stroke="#B5A58C" stroke-width="3"/>
+  <text x="600" y="585" text-anchor="middle" fill="#1F1F1F"
+        font-family="'Times New Roman', 'Noto Serif', serif" font-size="142" letter-spacing="24">HOTEL</text>
+  <text x="600" y="745" text-anchor="middle" fill="#1F1F1F"
+        font-family="'Times New Roman', 'Noto Serif', serif" font-size="190" letter-spacing="30">PG</text>
+  <text x="600" y="835" text-anchor="middle" fill="#756D63"
+        font-family="Arial, 'Noto Sans', sans-serif" font-size="28" letter-spacing="11">INNOSHIMA · HIROSHIMA</text>
+</svg>

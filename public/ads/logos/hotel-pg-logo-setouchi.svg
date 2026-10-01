@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <rect width="1200" height="1200" rx="64" fill="#183F4A"/>
+  <circle cx="600" cy="485" r="305" fill="none" stroke="#F4EFE5" stroke-width="5"/>
+  <circle cx="600" cy="485" r="270" fill="none" stroke="#C9B98F" stroke-width="2"/>
+  <path d="M370 535C450 480 510 485 600 535C690 585 758 580 830 525" fill="none" stroke="#C9B98F" stroke-width="17" stroke-linecap="round"/>
+  <path d="M380 595C460 550 525 555 610 595C695 635 758 635 820 598" fill="none" stroke="#F4EFE5" stroke-width="9" stroke-linecap="round"/>
+  <path d="M480 495C530 425 670 425 720 495C655 478 545 478 480 495Z" fill="#C9B98F"/>
+  <text x="600" y="405" text-anchor="middle" fill="#F4EFE5"
+        font-family="'Times New Roman', 'Noto Serif', serif" font-size="134" letter-spacing="19">PG</text>
+  <text x="600" y="880" text-anchor="middle" fill="#F4EFE5"
+        font-family="'Times New Roman', 'Noto Serif', serif" font-size="72" letter-spacing="17">HOTEL PG</text>
+  <text x="600" y="940" text-anchor="middle" fill="#C9B98F"
+        font-family="Arial, 'Noto Sans', sans-serif" font-size="25" letter-spacing="9">INNOSHIMA</text>
+</svg>

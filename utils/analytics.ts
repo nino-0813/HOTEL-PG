@@ -1,11 +1,20 @@
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
+    dataLayer?: unknown[];
   }
 }
 
 function trackEvent(name: string, params: Record<string, string | number> = {}): void {
-  window.gtag?.('event', name, params);
+  if (window.gtag) {
+    window.gtag('event', name, params);
+    return;
+  }
+
+  // Next.js の画面表示がGA4スクリプトの初期化より先に完了しても、
+  // イベントを破棄せず、gtag.jsが読み込まれた時に処理できるようキューへ積む。
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push(['event', name, params]);
 }
 
 /** 外部予約サイトへ移動した時だけ送信する。 */
