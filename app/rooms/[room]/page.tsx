@@ -1,4 +1,4 @@
-import { HORS_D_OEUVRE_OPTION, LUGGAGE_DELIVERY_NOTICE } from '@/lib/guest-notices';
+import { LUGGAGE_DELIVERY_NOTICE } from '@/lib/guest-notices';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ROOMS, type RoomSlug } from '@/lib/room-data';
@@ -203,19 +203,6 @@ export default async function RoomDetailPage({
                     </div>
                   </div>
                 ) : null}
-
-                <section className="mt-8 rounded-xl border border-amber-200 bg-amber-50/60 p-5 sm:p-6" aria-labelledby="hors-doeuvre-heading">
-                  <h2 id="hors-doeuvre-heading" className="font-serif text-base font-medium tracking-wider text-textMain">
-                    【{HORS_D_OEUVRE_OPTION.title}】
-                  </h2>
-                  <div className="mt-3 space-y-3">
-                    {HORS_D_OEUVRE_OPTION.paragraphs.map((paragraph) => (
-                      <p key={paragraph} className="font-serif text-sm leading-relaxed text-textMain">
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                </section>
 
                 {room.about?.length ? (
                   <div className="mt-10">

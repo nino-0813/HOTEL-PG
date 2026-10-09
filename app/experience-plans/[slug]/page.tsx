@@ -303,7 +303,7 @@ export default async function ExperiencePlanDetailPage(
                 この体験プランを予約する
               </h2>
               <p className="font-serif text-sm sm:text-base text-white/85 leading-relaxed mb-8 max-w-2xl mx-auto">
-                日程・人数・オプション（オードブル等）の詳細は、ご予約・お問い合わせフォームよりご連絡ください。スケジュール調整・カスタマイズもご相談いただけます。
+                日程・人数・オプションの詳細は、ご予約・お問い合わせフォームよりご連絡ください。スケジュール調整・カスタマイズもご相談いただけます。
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link
