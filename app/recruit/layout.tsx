@@ -3,7 +3,7 @@ import { DEFAULT_OG_IMAGE_PATH, SITE_NAME, SITE_ORIGIN } from '@/lib/site';
 
 const title = 'スタッフ募集';
 const description =
-  '因島に誕生するHOTEL PG -III-のスタッフを募集しています。HK（ハウスキーパー）・事務員。未経験OK、主婦・主夫、学生歓迎。土生町エリア、時給1,100円〜、社保完備。';
+  '因島に誕生するHOTEL PG -III-のスタッフを募集しています。HK（ハウスキーパー）・朝食スタッフ。未経験OK、主婦・主夫、学生歓迎。土生町エリア、時給1,141円〜、社保完備。';
 
 export const metadata: Metadata = {
   title,

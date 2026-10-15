@@ -72,22 +72,18 @@ export default function RecruitPage() {
               <FileText size={24} className="text-textMain/60" />
               募集職種
             </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 gap-4">
               <div className="border border-gray-200 rounded-xl p-6 bg-white hover:border-textMain/30 transition-colors">
                 <h3 className="font-display text-xl font-light text-textMain mb-2 tracking-wider">HK（ハウスキーパー）</h3>
                 <p className="font-serif text-sm text-textLight">客室の清掃・メイクを担当。丁寧な仕事がお客様の滞在を支えます。</p>
               </div>
               <div className="border border-gray-200 rounded-xl p-6 bg-white hover:border-textMain/30 transition-colors">
-                <h3 className="font-display text-xl font-light text-textMain mb-2 tracking-wider">事務員</h3>
-                <p className="font-serif text-sm text-textLight">予約対応・窓口業務など、ホテル運営をサポートします。</p>
-              </div>
-              <div className="border border-gray-200 rounded-xl p-6 bg-white hover:border-textMain/30 transition-colors sm:col-span-2 lg:col-span-1">
                 <h3 className="font-display text-xl font-light text-textMain mb-2 tracking-wider">朝食スタッフ</h3>
-                <p className="font-serif text-sm text-textLight">朝食の提供・配膳を担当。6:30〜10:30の時間帯でお客様の朝のひとときを支えます。</p>
+                <p className="font-serif text-sm text-textLight">朝食の提供・配膳を担当。6:00〜10:30の時間帯でお客様の朝のひとときを支えます。</p>
               </div>
             </div>
             <p className="mt-4 font-serif text-sm text-textLight">
-              HKのみ・事務のみ・朝食スタッフ・両方など、ご希望に合わせてご相談ください。
+              HKのみ・朝食スタッフのみ・両方など、ご希望に合わせてご相談ください。
             </p>
           </motion.section>
 
@@ -136,7 +132,7 @@ export default function RecruitPage() {
                     <td className="py-4 px-6 font-serif text-sm text-textLight">給与</td>
                     <td className="py-4 px-6 font-serif text-sm text-textMain flex items-center gap-2">
                       <Banknote size={16} className="flex-shrink-0 text-textMain/60" />
-                      時給 1,100円〜
+                      時給 1,141円〜
                     </td>
                   </tr>
                   <tr>
@@ -149,8 +145,8 @@ export default function RecruitPage() {
                       <div className="flex items-start gap-2">
                         <Clock size={16} className="flex-shrink-0 mt-0.5 text-textMain/60" />
                         <div>
-                          <p>10:30 〜 14:30</p>
-                          <p className="mt-2 text-textLight text-xs">朝食スタッフ：6:30 〜 10:30（時給 1,100円 ＋ その他手当500円）</p>
+                          <p>10:00 〜 14:30</p>
+                          <p className="mt-2 text-textLight text-xs">朝食スタッフ：6:00 〜 10:30（時給 1,141円〜 ＋ その他手当500円）</p>
                         </div>
                       </div>
                     </td>

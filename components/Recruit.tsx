@@ -21,7 +21,7 @@ const Recruit: React.FC = () => {
             </div>
             <p className="font-serif text-sm text-textLight leading-relaxed mb-8">
               これからできる HOTEL PG -III- の仲間を募集しています。
-              HK（ハウスキーパー）・事務員・朝食スタッフ。未経験OK、主婦・主夫、学生歓迎。土生町エリア、時給1,100円〜、社保完備。
+              HK（ハウスキーパー）・朝食スタッフ。未経験OK、主婦・主夫、学生歓迎。土生町エリア、時給1,141円〜、社保完備。
             </p>
             <Link
               href="/recruit"
