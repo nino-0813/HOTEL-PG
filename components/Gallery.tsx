@@ -45,12 +45,11 @@ const GALLERY_IMAGES: GalleryImage[] = [
   { src: '/hotel3/pg3-three-03.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'single' },
   { src: '/hotel3/pg3-three-04.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'single' },
   { src: '/hotel3/pg3-three-05.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'single' },
-  // ROOM category images - HOTEL PG -III- 4名タイプ (5 images)
+  // ROOM category images - HOTEL PG -III- 4名タイプ
   { src: '/hotel3/pg3-room-01.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'family' },
   { src: '/hotel3/pg3-room-02.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'family' },
   { src: '/hotel3/pg3-room-03.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'family' },
   { src: '/hotel3/pg3-room-04.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'family' },
-  { src: '/hotel3/pg3-room-05.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'family' },
   // ROOM category images - HOTEL PG -III- メゾネット洋室 (5 images)
   { src: '/hotel3/pg3-maisonette-01.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'maisonette' },
   { src: '/hotel3/pg3-maisonette-02.webp', alt: '客室', category: 'room', hotel: 'III', roomType: 'maisonette' },

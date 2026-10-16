@@ -367,6 +367,41 @@ export function RoomBookingCalendar({
     todayDateStr,
   ]);
 
+  /**
+   * チェックアウト日はその日の在庫を消費しないため、満室・受付停止でも選択できる。
+   * ただし、チェックイン日からチェックアウト前日までに予約不可日があれば選択不可。
+   */
+  const selectableAsCheckout = useMemo(() => {
+    return (dateStr: string) => {
+      if (!checkin || checkout || dateStr <= checkin) return false;
+      if (loading || guestCountError || availabilityError) return false;
+      if (todayDateStr && dateStr < todayDateStr) return false;
+      if (maxBookableDateStr && dateStr > maxBookableDateStr) return false;
+      if (!availabilityByDate[dateStr]) return false;
+
+      const start = toDate(checkin);
+      const end = toDate(dateStr);
+      for (
+        let d = new Date(start);
+        d.getTime() < end.getTime();
+        d = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + 1))
+      ) {
+        if (blockedDay(toDateStr(d))) return false;
+      }
+      return true;
+    };
+  }, [
+    availabilityByDate,
+    availabilityError,
+    blockedDay,
+    checkin,
+    checkout,
+    guestCountError,
+    loading,
+    maxBookableDateStr,
+    todayDateStr,
+  ]);
+
   const blocked = useMemo(() => {
     if (!checkin || !checkout) return false;
     if (checkin >= checkout) return true;
@@ -647,7 +682,7 @@ export function RoomBookingCalendar({
 
   const onPickDay = (dateStr: string) => {
     // 1st click => checkin, 2nd click => checkout
-    if (blockedDay(dateStr)) return;
+    if (blockedDay(dateStr) && !selectableAsCheckout(dateStr)) return;
     if (!checkin || (checkin && checkout)) {
       setCheckin(dateStr);
       setCheckout('');
@@ -946,7 +981,8 @@ export function RoomBookingCalendar({
           const isPast = !!todayDateStr && ds < todayDateStr;
           const beyondWindow = !!maxBookableDateStr && ds > maxBookableDateStr;
           const pastCutoff = !!todayCutoffDateStr && ds === todayCutoffDateStr;
-          const isBlocked = blockedDay(ds);
+          const checkoutOnly = blockedDay(ds) && selectableAsCheckout(ds);
+          const isBlocked = blockedDay(ds) && !checkoutOnly;
           const isSelected = inSelectedRange(ds);
           const isToday = !!todayDateStr && ds === todayDateStr;
           const isFull =
@@ -984,8 +1020,8 @@ export function RoomBookingCalendar({
               type="button"
               onClick={() => onPickDay(ds)}
               disabled={isBlocked}
-              aria-label={`${ds}${holiday ? ` ${holiday}` : ''}${longWeekend ? ' 連休' : ''}${isToday ? ' 今日' : ''} ${isPast ? '過去の日付' : line1}`}
-              title={holiday}
+              aria-label={`${ds}${holiday ? ` ${holiday}` : ''}${longWeekend ? ' 連休' : ''}${isToday ? ' 今日' : ''} ${checkoutOnly ? 'チェックアウト日として選択可能' : isPast ? '過去の日付' : line1}`}
+              title={checkoutOnly ? '満室ですが、チェックアウト日として選択できます' : holiday}
               className={[
                 'flex min-w-0 h-[88px] sm:h-[100px] flex-col rounded-lg border text-center sm:text-left px-0.5 py-2 sm:px-2 transition-colors',
                 isSelected ? 'border-textMain bg-[#f5f2ea] ring-1 ring-textMain' : isBlocked ? 'border-gray-200 bg-gray-100' : longWeekend ? 'border-amber-200 bg-amber-50/50' : 'border-gray-200 bg-white',

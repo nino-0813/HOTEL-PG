@@ -407,7 +407,6 @@ export const ROOMS: Record<RoomSlug, RoomDetail> = {
       '/hotel3/pg3-room-02.webp',
       '/hotel3/pg3-room-03.webp',
       '/hotel3/pg3-room-04.webp',
-      '/hotel3/pg3-room-05.webp',
     ],
   },
   'pg3-maisonette': {
