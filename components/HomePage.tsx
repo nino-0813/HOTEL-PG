@@ -41,7 +41,7 @@ const HomePage = ({ news }: { news: React.ReactNode }) => {
           <Hero />
         </div>
 
-        <div className="relative z-10 bg-background shadow-[0_-40px_80px_rgba(0,0,0,0.05)] rounded-t-[20px] sm:rounded-t-[40px] sm:-mt-20 pt-0 sm:pt-20 pb-20 sm:pb-32">
+        <div className="relative z-10 bg-background shadow-[0_-40px_80px_rgba(0,0,0,0.05)] rounded-t-[20px] sm:rounded-t-[40px] sm:-mt-20 md:mt-0 pt-0 sm:pt-20 pb-20 sm:pb-32">
           {news}
           <Section id="concept" data={content.concept} reverse index={0} />
           <Section id="rooms" data={content.rooms} index={1} />

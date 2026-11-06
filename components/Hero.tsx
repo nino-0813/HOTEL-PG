@@ -9,14 +9,29 @@ const fallbackImages = [
   'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2560&auto=format&fit=crop',
 ];
 
+const HERO_DESKTOP_VIDEO = '/videos/hotel-pg-hero-desktop.mp4?v=20261106-2';
+
 const Hero: React.FC = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [currentImageUrl, setCurrentImageUrl] = useState(HERO_IMAGE);
 
   return (
     <div id="home" className="relative w-full h-screen sm:h-[80vh] md:h-screen overflow-hidden bg-[#0a0a0a]">
-      {/* 背景画像 - next/image で最適化 */}
-      <div className="absolute inset-0 w-full h-full z-0">
+      {/* デスクトップは動画、スマートフォンは従来の背景画像を表示 */}
+      <video
+        className="absolute inset-0 z-0 hidden h-full w-full object-cover md:block"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        poster={HERO_IMAGE}
+        aria-hidden="true"
+      >
+        <source src={HERO_DESKTOP_VIDEO} type="video/mp4" />
+      </video>
+
+      <div className="absolute inset-0 z-0 h-full w-full md:hidden">
         <Image
           src={currentImageUrl}
           alt="因島の夜"
@@ -36,7 +51,7 @@ const Hero: React.FC = () => {
       {/* ズームアニメーション用の別レイヤー */}
       {imageLoaded && (
         <motion.div
-          className="absolute inset-0 w-full h-full z-0 overflow-hidden"
+          className="absolute inset-0 z-0 h-full w-full overflow-hidden md:hidden"
           animate={{ scale: [1, 1.1] }}
           transition={{
             duration: 20,
@@ -58,7 +73,7 @@ const Hero: React.FC = () => {
       
       {/* Content - タイトルとSCROLLインジケーター */}
       <div className="relative z-10 h-full flex flex-col justify-center items-center text-white pointer-events-none">
-        <div className="flex flex-col items-center space-y-3 sm:space-y-4 md:space-y-6">
+        <div className="flex flex-col items-center space-y-3 sm:space-y-4 md:hidden">
           {/* メインタイトル */}
           <motion.div
             className="overflow-hidden"
