@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { CTA_IMAGE, INSTAGRAM_DM_URL } from '../constants';
+import BrandLogo from './BrandLogo';
 
 const Footer: React.FC = () => {
   return (
@@ -18,7 +19,7 @@ const Footer: React.FC = () => {
         {/* Footer Info - コンパクトに */}
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-8 md:gap-12">
           <div className="flex flex-col items-center md:items-start gap-1 text-center md:text-left">
-            <h3 className="font-display text-xl sm:text-2xl tracking-widest">HOTEL PG</h3>
+            <BrandLogo className="mb-2 h-16 w-16 sm:h-20 sm:w-20" sizes="80px" />
             <p className="text-xs text-white/60 font-serif">広島県尾道市因島土生町1896-8</p>
           </div>
 

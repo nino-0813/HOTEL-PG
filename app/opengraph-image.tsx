@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { BRAND_LOGO_DATA_URI } from './_assets/brand-logo-data';
 
 export const alt = 'HOTEL PG Innoshima — Shimanami Kaido';
 export const size = { width: 1200, height: 630 };
@@ -23,20 +24,17 @@ export default function OpenGraphImage() {
           color: '#ebe6dc',
         }}
       >
-        <div
-          style={{
-            fontSize: 86,
-            fontWeight: 600,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase' as const,
-          }}
-        >
-          HOTEL PG
-        </div>
+        <img
+          src={BRAND_LOGO_DATA_URI}
+          alt="HOTEL PG"
+          width={220}
+          height={220}
+          style={{ objectFit: 'contain' }}
+        />
         <div
           style={{
             fontSize: 34,
-            marginTop: 20,
+            marginTop: 24,
             letterSpacing: '0.42em',
             textTransform: 'uppercase' as const,
             opacity: 0.92,

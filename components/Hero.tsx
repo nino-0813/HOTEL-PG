@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { HERO_IMAGE } from '../constants';
 import { motion } from 'framer-motion';
+import BrandLogo from './BrandLogo';
 
 const fallbackImages = [
   'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2560&auto=format&fit=crop',
@@ -126,9 +127,7 @@ const Hero: React.FC = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1.2, delay: 1.5, ease: "easeOut" }}
           >
-            <p className="font-display text-xl sm:text-2xl md:text-3xl lg:text-4xl tracking-[0.2em] sm:tracking-[0.25em] text-white text-center font-normal drop-shadow-lg px-4">
-              HOTEL PG
-            </p>
+            <BrandLogo className="h-16 w-16 shadow-lg sm:h-20 sm:w-20" sizes="80px" priority />
           </motion.div>
         </div>
 

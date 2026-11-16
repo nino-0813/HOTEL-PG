@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import LanguageSwitcher from './LanguageSwitcher';
+import BrandLogo from './BrandLogo';
 
 /** デスクトップの横並びナビに出す主要項目（厳選）。残りはメニューに収納。
  *  page: true は別ページへのリンク（/blog など）、それ以外はトップ内のセクション(#xxx)。 */
@@ -90,11 +91,10 @@ const Header: React.FC = () => {
                 handleNavClick('#home');
               }
             }}
-            className={`font-display text-[13px] sm:text-sm tracking-[0.25em] transition-colors shrink-0 ${
-              showTransparent ? 'text-white/95' : 'text-[#1a1a1a]'
-            }`}
+            className="shrink-0"
+            aria-label="HOTEL PG トップページ"
           >
-            HOTEL PG
+            <BrandLogo className="h-8 w-8 sm:h-9 sm:w-9" sizes="36px" priority />
           </Link>
 
           {/* デスクトップ: 横並びナビ */}
@@ -178,7 +178,7 @@ const Header: React.FC = () => {
             transition={{ duration: 0.2 }}
           >
             <div className="h-12 sm:h-14 flex items-center justify-between px-4 sm:px-6 max-w-6xl mx-auto border-b border-black/5">
-              <span className="font-display text-[13px] tracking-[0.25em] text-[#1a1a1a]">HOTEL PG</span>
+              <BrandLogo className="h-8 w-8" sizes="32px" />
               <button type="button" onClick={() => setIsMenuOpen(false)} aria-label="閉じる">
                 <X size={20} strokeWidth={1.5} className="text-[#1a1a1a]" />
               </button>
