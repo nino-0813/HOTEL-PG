@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Play } from 'lucide-react';
+import { Play, Youtube } from 'lucide-react';
 import { HERO_IMAGE } from '../constants';
 
 const INTRO_VIDEO = '/videos/hotel-pg-hero-desktop.mp4?v=20261106-2';
@@ -66,9 +66,15 @@ export default function MobileIntroVideo() {
           )}
         </div>
 
-        <p className="mt-4 text-center font-serif text-[12px] leading-6 tracking-[0.06em] text-textLight">
-          HOTEL PGの魅力を、映像でご紹介します。
-        </p>
+        <a
+          href="https://www.youtube.com/watch?v=dwRJIQyMgxQ"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mx-auto mt-4 flex h-11 w-11 items-center justify-center rounded-full bg-[#ff0033] text-white shadow-sm transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ff0033]"
+          aria-label="YouTubeでホテル紹介動画を見る"
+        >
+          <Youtube size={25} strokeWidth={1.8} aria-hidden="true" />
+        </a>
       </div>
     </section>
   );
