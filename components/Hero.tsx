@@ -1,24 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { HERO_IMAGE } from '../constants';
 import { motion } from 'framer-motion';
+import { HERO_IMAGE } from '../constants';
 import BrandLogo from './BrandLogo';
-
-const fallbackImages = [
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2560&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=2560&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2560&auto=format&fit=crop',
-];
 
 const HERO_DESKTOP_VIDEO = '/videos/hotel-pg-hero-desktop.mp4?v=20261106-2';
 
 const Hero: React.FC = () => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [currentImageUrl, setCurrentImageUrl] = useState(HERO_IMAGE);
-
   return (
-    <div id="home" className="relative w-full h-screen sm:h-[80vh] md:h-screen overflow-hidden bg-[#0a0a0a]">
-      {/* デスクトップは動画、スマートフォンは従来の背景画像を表示 */}
+    <div
+      id="home"
+      className="relative h-[54dvh] min-h-[420px] max-h-[560px] w-full overflow-hidden bg-[#0a0a0a] md:h-screen md:min-h-0 md:max-h-none"
+    >
+      {/* デスクトップ表示は従来どおり、全画面の自動再生動画を維持 */}
       <video
         className="absolute inset-0 z-0 hidden h-full w-full object-cover md:block"
         autoPlay
@@ -32,117 +26,79 @@ const Hero: React.FC = () => {
         <source src={HERO_DESKTOP_VIDEO} type="video/mp4" />
       </video>
 
-      <div className="absolute inset-0 z-0 h-full w-full md:hidden">
+      {/* スマートフォンは既存写真を維持し、直下の紹介動画まで見える高さに調整 */}
+      <div className="absolute inset-0 z-0 md:hidden">
         <Image
-          src={currentImageUrl}
-          alt="因島の夜"
+          src={HERO_IMAGE}
+          alt="因島の海と橋を望む風景"
           fill
           priority
           sizes="100vw"
           quality={70}
-          className="object-cover"
-          onLoad={() => setImageLoaded(true)}
-          onError={() => {
-            const nextImage = fallbackImages.find(url => url !== currentImageUrl);
-            if (nextImage) setCurrentImageUrl(nextImage);
-          }}
+          className="object-cover object-center"
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/55" aria-hidden="true" />
       </div>
 
-      {/* ズームアニメーション用の別レイヤー */}
-      {imageLoaded && (
-        <motion.div
-          className="absolute inset-0 z-0 h-full w-full overflow-hidden md:hidden"
-          animate={{ scale: [1, 1.1] }}
-          transition={{
-            duration: 20,
-            ease: "linear",
-            repeat: Infinity,
-            repeatType: "reverse"
-          }}
-        >
-          <Image
-            src={currentImageUrl}
-            alt=""
-            fill
-            sizes="100vw"
-            quality={70}
-            className="object-cover pointer-events-none"
-          />
-        </motion.div>
-      )}
-      
-      {/* Content - タイトルとSCROLLインジケーター */}
-      <div className="relative z-10 h-full flex flex-col justify-center items-center text-white pointer-events-none">
-        <div className="flex flex-col items-center space-y-3 sm:space-y-4 md:hidden">
-          {/* メインタイトル */}
+      <div className="pointer-events-none relative z-10 flex h-full flex-col items-center justify-center text-white">
+        <div className="flex flex-col items-center space-y-2.5 px-5 pt-8 md:hidden">
           <motion.div
             className="overflow-hidden"
-            initial={{ y: 50, opacity: 0 }}
+            initial={{ y: 28, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
+            transition={{ duration: 0.9, delay: 0.2, ease: 'easeOut' }}
           >
-            <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl tracking-[0.1em] sm:tracking-[0.15em] font-light text-center leading-tight text-white px-4">
+            <h1 className="text-center font-display text-[2.35rem] font-light leading-tight tracking-[0.12em] drop-shadow-lg">
               因島の夜に
             </h1>
           </motion.div>
 
-          {/* サブタイトル */}
-          <motion.div
-            className="overflow-hidden"
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
+          <motion.p
+            className="font-serif text-[10px] tracking-[0.28em] opacity-90 drop-shadow-md"
+            initial={{ y: 18, opacity: 0 }}
+            animate={{ y: 0, opacity: 0.9 }}
+            transition={{ duration: 0.9, delay: 0.45, ease: 'easeOut' }}
           >
-            <p className="font-serif text-xs sm:text-sm md:text-base tracking-[0.2em] sm:tracking-[0.3em] uppercase opacity-90 text-center drop-shadow-md px-4">
-              INNOSHIMA, HIROSHIMA
-            </p>
-          </motion.div>
+            INNOSHIMA, HIROSHIMA
+          </motion.p>
 
-          {/* 装飾的な区切り線 */}
           <motion.div
-            className="w-[1px] bg-white/60"
-            initial={{ height: 0 }}
-            animate={{ height: 40 }}
-            transition={{ duration: 1, delay: 1, ease: "circOut" }}
+            className="h-8 w-px bg-white/65"
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ duration: 0.7, delay: 0.7, ease: 'circOut' }}
           />
 
-          {/* キャッチコピー */}
-          <motion.div
-            className="overflow-hidden"
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 1.2, delay: 1.2, ease: "easeOut" }}
+          <motion.p
+            className="text-center font-serif text-[11px] font-light leading-6 tracking-[0.16em] opacity-90 drop-shadow-md"
+            initial={{ y: 16, opacity: 0 }}
+            animate={{ y: 0, opacity: 0.9 }}
+            transition={{ duration: 0.9, delay: 0.85, ease: 'easeOut' }}
           >
-            <p className="font-serif text-xs sm:text-sm md:text-sm tracking-widest opacity-80 text-center font-light drop-shadow-md max-w-md px-4 sm:px-6">
-              瀬戸内の凪に包まれる、<br className="hidden sm:block" />
-              隠れ家リゾート
-            </p>
-          </motion.div>
+            瀬戸内の凪に包まれる、隠れ家リゾート
+          </motion.p>
 
-          {/* HOTEL PG ブランド名 */}
           <motion.div
-            className="overflow-hidden"
-            initial={{ y: 30, opacity: 0 }}
+            initial={{ y: 16, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 1.2, delay: 1.5, ease: "easeOut" }}
+            transition={{ duration: 0.9, delay: 1, ease: 'easeOut' }}
           >
-            <BrandLogo className="h-16 w-16 shadow-lg sm:h-20 sm:w-20" sizes="80px" priority />
+            <BrandLogo className="h-16 w-16 shadow-lg" sizes="64px" priority />
           </motion.div>
         </div>
 
-        {/* Scroll Indicator */}
-        <motion.div 
-          className="absolute bottom-8 sm:bottom-12 flex flex-col items-center gap-2 opacity-60"
+        {/* デスクトップのスクロール案内は従来どおり */}
+        <motion.div
+          className="absolute bottom-12 hidden flex-col items-center gap-2 opacity-60 md:flex"
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.6 }}
           transition={{ delay: 2, duration: 1 }}
         >
-          <span className="text-[10px] tracking-widest uppercase writing-vertical h-16 border-r border-white/50 pr-2">Scroll</span>
-          <motion.div 
-            className="w-[1px] h-12 bg-white"
-            animate={{ scaleY: [0, 1, 0], transformOrigin: ["top", "top", "bottom"] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          <span className="writing-vertical h-16 border-r border-white/50 pr-2 text-[10px] uppercase tracking-widest">Scroll</span>
+          <motion.div
+            className="h-12 w-px bg-white"
+            animate={{ scaleY: [0, 1, 0], transformOrigin: ['top', 'top', 'bottom'] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           />
         </motion.div>
       </div>

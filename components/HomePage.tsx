@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import Header from './Header';
 import Hero from './Hero';
+import MobileIntroVideo from './MobileIntroVideo';
 import Section from './Section';
 import News from './News';
 import Blog from './Blog';
@@ -37,11 +38,12 @@ const HomePage = ({ news }: { news: React.ReactNode }) => {
       <Header />
 
       <main className="relative w-full">
-        <div className="relative h-screen sm:h-[80vh] md:h-screen w-full z-0">
+        <div className="relative z-0 h-[54dvh] min-h-[420px] max-h-[560px] w-full md:h-screen md:min-h-0 md:max-h-none">
           <Hero />
         </div>
 
         <div className="relative z-10 bg-background shadow-[0_-40px_80px_rgba(0,0,0,0.05)] rounded-t-[20px] sm:rounded-t-[40px] sm:-mt-20 md:mt-0 pt-0 sm:pt-20 pb-20 sm:pb-32">
+          <MobileIntroVideo />
           {news}
           <Section id="concept" data={content.concept} reverse index={0} />
           <Section id="rooms" data={content.rooms} index={1} />
