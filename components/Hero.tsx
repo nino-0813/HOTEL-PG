@@ -2,7 +2,6 @@ import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { HERO_IMAGE } from '../constants';
-import BrandLogo from './BrandLogo';
 
 const HERO_DESKTOP_VIDEO = '/videos/hotel-pg-hero-desktop.mp4?v=20261106-2';
 
@@ -78,13 +77,14 @@ const Hero: React.FC = () => {
             瀬戸内の凪に包まれる、隠れ家リゾート
           </motion.p>
 
-          <motion.div
+          <motion.p
+            className="font-display text-lg tracking-[0.24em] drop-shadow-lg"
             initial={{ y: 16, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.9, delay: 1, ease: 'easeOut' }}
           >
-            <BrandLogo className="h-16 w-16 shadow-lg" sizes="64px" priority />
-          </motion.div>
+            HOTEL PG
+          </motion.p>
         </div>
 
         {/* デスクトップのスクロール案内は従来どおり */}
